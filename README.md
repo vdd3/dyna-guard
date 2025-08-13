@@ -106,7 +106,7 @@ public class UserService {
 
 ### 自定义校验器
 
-实现 [Validator](file://F:\workspeace\dyna-guard\dyna-guard-core\src\main\java\com\dg\core\engine\Validator.java#L11-L28)
+实现 [Validator]
 接口并注册到 SPI：
 
 ```java
