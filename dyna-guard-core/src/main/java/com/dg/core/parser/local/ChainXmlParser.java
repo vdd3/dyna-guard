@@ -8,11 +8,11 @@ import com.dg.domain.config.ChainXmlConfig;
 import com.dg.domain.config.LocalChainDataConfig;
 import com.dg.domain.config.ValidationChainConfig;
 import com.dg.domain.enums.ParserTypeEnum;
+import com.dg.domain.exception.ValidationChainParserException;
 import com.dg.utils.BeanMapUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.dom4j.Document;
-import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 
@@ -59,34 +59,33 @@ public class ChainXmlParser extends LocalChainFileParser {
 
         // 解析
         List<ValidationChain> resultList = Lists.newArrayList();
-        for (String fileInfo : fileInfoList) {
-            Document document;
-            try {
-                document = DocumentHelper.parseText(fileInfo);
-            } catch (DocumentException e) {
-                throw new RuntimeException("解析文件失败：" + fileInfo, e);
+        try {
+            for (String fileInfo : fileInfoList) {
+                Document document = DocumentHelper.parseText(fileInfo);
+                Element rootElement = document.getRootElement();
+                List<Element> chainElementList = rootElement.elements(config.getChainField());
+                chainElementList.forEach(chainElement -> {
+                    ValidationChain chain = new ValidationChain();
+                    String chainId = chainElement.attributeValue(config.getChainIdField());
+                    List<Element> nodeElementList = chainElement.elements(config.getNodeField());
+                    chain.setChainId(chainId);
+                    chain.setGroup(type().getType());
+                    chain.setGuardExpire(Long.parseLong(chainElement.attributeValue(config.getGuardExpireField())));
+                    chain.setGuardThreshold(Long.parseLong(chainElement.attributeValue(config.getGuardThresholdField())));
+                    chain.setNodes(nodeElementList.stream().map(nodeElement -> {
+                        ValidationNode node = new ValidationNode();
+                        node.setLanguage(nodeElement.attributeValue(config.getLanguageField()));
+                        node.setScript(nodeElement.getText());
+                        node.setOrder(Integer.parseInt(nodeElement.attributeValue(config.getOrderField())));
+                        node.setMessage(nodeElement.attributeValue(config.getMessageField()));
+                        node.setFastFail(Boolean.parseBoolean(nodeElement.attributeValue(config.getFastFailField())));
+                        return node;
+                    }).sorted(Comparator.comparingInt(ValidationNode::getOrder)).collect(Collectors.toList()));
+                    resultList.add(chain);
+                });
             }
-            Element rootElement = document.getRootElement();
-            List<Element> chainElementList = rootElement.elements(config.getChainField());
-            chainElementList.forEach(chainElement -> {
-                ValidationChain chain = new ValidationChain();
-                String chainId = chainElement.attributeValue(config.getChainIdField());
-                List<Element> nodeElementList = chainElement.elements(config.getNodeField());
-                chain.setChainId(chainId);
-                chain.setGroup(type().getType());
-                chain.setGuardExpire(Long.parseLong(chainElement.attributeValue(config.getGuardExpireField())));
-                chain.setGuardThreshold(Long.parseLong(chainElement.attributeValue(config.getGuardThresholdField())));
-                chain.setNodes(nodeElementList.stream().map(nodeElement -> {
-                    ValidationNode node = new ValidationNode();
-                    node.setLanguage(nodeElement.attributeValue(config.getLanguageField()));
-                    node.setScript(nodeElement.getText());
-                    node.setOrder(Integer.parseInt(nodeElement.attributeValue(config.getOrderField())));
-                    node.setMessage(nodeElement.attributeValue(config.getMessageField()));
-                    node.setFastFail(Boolean.parseBoolean(nodeElement.attributeValue(config.getFastFailField())));
-                    return node;
-                }).sorted(Comparator.comparingInt(ValidationNode::getOrder)).collect(Collectors.toList()));
-                resultList.add(chain);
-            });
+        } catch (Exception e) {
+            throw new ValidationChainParserException("xml parser exception : " + e.getMessage(), e);
         }
         return resultList;
     }

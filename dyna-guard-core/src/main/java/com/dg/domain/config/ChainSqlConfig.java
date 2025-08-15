@@ -35,11 +35,6 @@ public class ChainSqlConfig extends ChainDataConfig {
     private String password;
 
     /**
-     * 应用名
-     */
-    private String applicationName;
-
-    /**
      * 核心线程数
      */
     private Long corePoolSize = 1L;
@@ -172,14 +167,6 @@ public class ChainSqlConfig extends ChainDataConfig {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getApplicationName() {
-        return applicationName;
-    }
-
-    public void setApplicationName(String applicationName) {
-        this.applicationName = applicationName;
     }
 
     public String getTableName() {
