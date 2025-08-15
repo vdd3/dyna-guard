@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.dg</groupId>
+    <groupId>com.easytu</groupId>
     <artifactId>dyna-guard</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
@@ -20,6 +20,15 @@
         </license>
     </licenses>
 
+    <developers>
+        <developer>
+            <id>vdd3</id>
+            <name>vd</name>
+            <email>vd_developer@163.com</email>
+            <url>https://github.com/vdd3</url>
+        </developer>
+    </developers>
+
     <distributionManagement>
         <snapshotRepository>
             <id>ossrh</id>
@@ -32,9 +41,9 @@
     </distributionManagement>
 
     <scm>
-        <connection>scm:git:git://github.com/vdd3/dyna-guard.git</connection>
-        <developerConnection>scm:git:ssh://github.com:vdd3/dyna-guard.git</developerConnection>
-        <url>https://github.com/vdd3/dyna-guard/tree/main</url>
+        <connection>scm:git@github.com:vdd3/dyna-guard.git</connection>
+        <developerConnection>scm:git@github.com:vdd3/dyna-guard.git</developerConnection>
+        <url>git@github.com:vdd3/dyna-guard.git</url>
     </scm>
 
     <modules>
@@ -62,12 +71,12 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>com.dg</groupId>
+                <groupId>com.easytu</groupId>
                 <artifactId>dyna-guard-core</artifactId>
                 <version>${dg.core.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.dg</groupId>
+                <groupId>com.easytu</groupId>
                 <artifactId>dyna-guard-spring-boot-starter</artifactId>
                 <version>${dg.spring.version}</version>
             </dependency>
@@ -175,6 +184,17 @@
 
     <build>
         <plugins>
+            <plugin>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.2.2</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
             <!-- 源码插件 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -231,6 +251,31 @@
                     <serverId>ossrh</serverId>
                     <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
                     <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>flatten-maven-plugin</artifactId>
+                <version>1.2.7</version>
+                <executions>
+                    <execution>
+                        <id>flatten</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>flatten</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>flatten.clean</id>
+                        <phase>clean</phase>
+                        <goals>
+                            <goal>clean</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <updatePomFile>true</updatePomFile>
+                    <flattenMode>resolveCiFriendliesOnly</flattenMode>
                 </configuration>
             </plugin>
         </plugins>

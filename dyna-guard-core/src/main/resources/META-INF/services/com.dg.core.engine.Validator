@@ -1,4 +1,0 @@
-com.dg.core.engine.groovy.GroovyValidator
-com.dg.core.engine.JavaScriptValidator
-com.dg.core.engine.PythonValidator
-com.dg.core.engine.qle.GuardScriptValidator

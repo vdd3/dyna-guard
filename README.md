@@ -30,7 +30,7 @@ dyna-guard/
 ```xml
 
 <dependency>
-    <groupId>com.dg</groupId>
+    <groupId>com.easytucom.easytu</groupId>
     <artifactId>dyna-guard-spring-boot-starter</artifactId>
     <version>1.0.0</version>
 </dependency>
@@ -118,7 +118,7 @@ public class CustomValidator extends BaseValidator {
 }
 ```
 
-在 `META-INF/services/com.dg.core.engine.Validator` 文件中添加实现类：
+在 `META-INF/services/com.easytu.dynaguard.core.engine.Validator` 文件中添加实现类：
 
 ```
 com.example.CustomValidator

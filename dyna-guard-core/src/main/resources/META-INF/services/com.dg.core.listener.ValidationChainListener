@@ -1,3 +1,0 @@
-com.dg.core.listener.ChainXmlListener
-com.dg.core.listener.ChainSqlListener
-com.dg.core.listener.ChainJsonListener

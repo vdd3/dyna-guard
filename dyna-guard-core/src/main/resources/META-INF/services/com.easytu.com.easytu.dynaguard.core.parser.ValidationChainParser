@@ -1,0 +1,3 @@
+com.easytu.dynaguard.core.parser.sql.ChainSqlParser
+com.easytu.dynaguard.core.parser.local.ChainXmlParser
+com.easytu.dynaguard.core.parser.local.ChainJsonParser

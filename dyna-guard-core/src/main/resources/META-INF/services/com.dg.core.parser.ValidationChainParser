@@ -1,3 +1,0 @@
-com.dg.core.parser.sql.ChainSqlParser
-com.dg.core.parser.local.ChainXmlParser
-com.dg.core.parser.local.ChainJsonParser
