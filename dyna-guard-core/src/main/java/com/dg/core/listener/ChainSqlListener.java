@@ -12,12 +12,12 @@ import com.dg.domain.enums.ParserTypeEnum;
 import com.dg.utils.ChainSqlUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
@@ -103,7 +103,9 @@ public class ChainSqlListener implements ValidationChainListener {
      */
     private void execute(ChainSqlConfig sqlConfig) {
         // 获取当前时间的前2秒
-        Date updateTime = DateUtils.addSeconds(new Date(), -2);
+        String updateTime = LocalDateTime.now()
+                .minusSeconds(TimeUnit.SECONDS.toSeconds(sqlConfig.getListenerInterval()))
+                .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         String sql = ChainSqlUtils.genSelectUpdateSql(sqlConfig, updateTime);
         // 查询所有更新过的chainId
         List<String> chainIdList = ChainSqlUtils.executeSql(sqlConfig, sql, ChainSqlUtils::executeSelectSql)

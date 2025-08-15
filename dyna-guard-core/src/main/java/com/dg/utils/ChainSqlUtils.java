@@ -1,9 +1,7 @@
 package com.dg.utils;
 
-import com.dg.core.holder.ChainConfigHolder;
 import com.dg.core.parser.sql.ChainSqlDO;
 import com.dg.domain.config.ChainSqlConfig;
-import com.dg.domain.enums.ParserTypeEnum;
 import com.dg.domain.exception.ChainSqlExecuteException;
 import com.google.common.collect.Lists;
 
@@ -11,7 +9,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.Date;
 import java.util.List;
 import java.util.function.BiFunction;
 
@@ -31,7 +28,7 @@ public class ChainSqlUtils {
     /**
      * 获取分页sql
      */
-    private static final String PAGE_SQL = "select %s from %s where %s = 0 order by %s limit %s,%s";
+    private static final String PAGE_SQL = "select %s from %s where %s = 0 order by id limit %s,%s";
 
     /**
      * 获取分页更新sql
@@ -46,33 +43,11 @@ public class ChainSqlUtils {
     /**
      * 生成流程数量sql
      *
-     * @return sql
-     */
-    public static String genCountSql() {
-        ChainSqlConfig sqlConfig = (ChainSqlConfig) ChainConfigHolder.getDataConfig(ParserTypeEnum.SQL.getType());
-        return genCountSql(sqlConfig);
-    }
-
-    /**
-     * 生成流程数量sql
-     *
      * @param sqlConfig 配置
      * @return sql
      */
     public static String genCountSql(ChainSqlConfig sqlConfig) {
         return String.format(COUNT_SQL, sqlConfig.getTableName(), sqlConfig.getDeletedField());
-    }
-
-    /**
-     * 生成分页sql
-     *
-     * @param pageNum  页码
-     * @param pageSize 每页数量
-     * @return sql
-     */
-    public static String genPageSql(Integer pageNum, Integer pageSize) {
-        ChainSqlConfig sqlConfig = (ChainSqlConfig) ChainConfigHolder.getDataConfig(ParserTypeEnum.SQL.getType());
-        return genPageSql(sqlConfig, pageNum, pageSize);
     }
 
     /**
@@ -88,7 +63,6 @@ public class ChainSqlUtils {
                 String.join(",", getColumnList(sqlConfig)),
                 sqlConfig.getTableName(),
                 sqlConfig.getDeletedField(),
-                sqlConfig.getOrderField(),
                 (pageNum - 1) * pageSize,
                 pageSize);
     }
@@ -100,12 +74,11 @@ public class ChainSqlUtils {
      * @param updateTime 更新时间
      * @return sql
      */
-    public static String genSelectUpdateSql(ChainSqlConfig sqlConfig, Date updateTime) {
+    public static String genSelectUpdateSql(ChainSqlConfig sqlConfig, String updateTime) {
         return String.format(SELECT_UPDATE_SQL,
                 String.join(",", getColumnList(sqlConfig)),
                 sqlConfig.getTableName(),
                 sqlConfig.getUpdateTimeField(),
-                // TODO
                 updateTime);
     }
 
@@ -122,16 +95,6 @@ public class ChainSqlUtils {
                 sqlConfig.getTableName(),
                 sqlConfig.getChainIdField(),
                 String.join(",", chainIdList));
-    }
-
-    /**
-     * 获取字段列表
-     *
-     * @return 字段列表
-     */
-    public static List<String> getColumnList() {
-        ChainSqlConfig sqlConfig = (ChainSqlConfig) ChainConfigHolder.getDataConfig(ParserTypeEnum.SQL.getType());
-        return getColumnList(sqlConfig);
     }
 
     /**
