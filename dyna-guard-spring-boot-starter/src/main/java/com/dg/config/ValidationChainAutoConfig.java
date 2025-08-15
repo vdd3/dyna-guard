@@ -20,7 +20,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @AutoConfigureAfter({ValidationChainPropertyAutoConfiguration.class})
 @ConditionalOnBean(ValidationChainConfig.class)
-public class ValidationChainAutoConfiguration {
+public class ValidationChainAutoConfig {
 
     /**
      * 创建验证流程管理器
@@ -43,6 +43,16 @@ public class ValidationChainAutoConfiguration {
     @Bean
     public CounterGuardManager counterGuardManager() {
         return CounterGuardManager.getInstance();
+    }
+
+    /**
+     * 创建全局bean注册器
+     *
+     * @return GlobalBeanRegister
+     */
+    @Bean
+    public GlobalBeanRegister globalBeanRegister() {
+        return new GlobalBeanRegister();
     }
 
     /**
@@ -76,10 +86,13 @@ public class ValidationChainAutoConfiguration {
      *
      * @param validationChainManager 验证流程管理器
      * @param counterGuardManager    熔断管理器
+     * @param globalBeanRegister     全局bean注册器
      * @return ValidationChainInit
      */
     @Bean
-    public ValidationChainInit validationChainInit(ValidationChainManager validationChainManager, CounterGuardManager counterGuardManager) {
+    public ValidationChainInit validationChainInit(ValidationChainManager validationChainManager,
+                                                   CounterGuardManager counterGuardManager,
+                                                   GlobalBeanRegister globalBeanRegister) {
         ValidationChainInit init = new ValidationChainInit();
         init.setValidationChainManager(validationChainManager);
         init.setCounterGuardManager(counterGuardManager);

@@ -17,11 +17,6 @@ import java.util.Optional;
 public class LocalChainFilePathParser implements ChainFilePathParser {
 
     /**
-     * 类路径前缀
-     */
-    private static final String CLASS_PATH_PREFIX = "classpath:";
-
-    /**
      * 解析流程文件路径
      *
      * @param pathList 路径列表
@@ -37,8 +32,8 @@ public class LocalChainFilePathParser implements ChainFilePathParser {
                 result.addAll(FileUtils.getFileAbsolutePath(path, wildcardMatch));
             } else {
                 // 如果不是绝对路径，则判断是否为classPath路径，如果是则按照当前线程的类加载器获取
-                String dirPath = path.replace(CLASS_PATH_PREFIX + "/", "");
-                if (dirPath.contains("*")) {
+                String dirPath = path.replace(FileUtils.CLASS_PATH_PREFIX, "");
+                if (dirPath.contains(FileUtils.WILD_CARD)) {
                     dirPath = FileUtils.getDirPath(dirPath);
                 }
                 String dir = Optional.ofNullable(Thread.currentThread().getContextClassLoader().getResource(dirPath))

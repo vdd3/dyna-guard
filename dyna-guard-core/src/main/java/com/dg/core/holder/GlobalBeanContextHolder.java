@@ -1,8 +1,10 @@
 package com.dg.core.holder;
 
-import com.dg.core.chain.ValidationChainManager;
-import com.dg.core.guard.CounterGuardManager;
-import com.dg.utils.GlobalBeanContext;
+import com.dg.core.bean.GlobalBeanContext;
+import com.google.common.collect.Lists;
+
+import java.util.Comparator;
+import java.util.ServiceLoader;
 
 /**
  * bean 容器全局容器
@@ -13,53 +15,22 @@ import com.dg.utils.GlobalBeanContext;
 public class GlobalBeanContextHolder {
 
     /**
-     * 单例
-     */
-    private static volatile GlobalBeanContextHolder INSTANCE;
-
-    /**
      * 获取bean容器
      */
-    private GlobalBeanContext beanContext;
+    private static GlobalBeanContext beanContext;
 
     /**
      * 初始化
      *
      * @param beanContext bean容器
      */
-    public static void init(GlobalBeanContext beanContext) {
-        if (INSTANCE == null) {
-            synchronized (GlobalBeanContextHolder.class) {
-                if (INSTANCE == null) {
-                    INSTANCE = new GlobalBeanContextHolder();
-                }
-            }
+    public static GlobalBeanContext getContext() {
+        if (beanContext == null) {
+            beanContext = Lists.newArrayList(ServiceLoader.load(GlobalBeanContext.class))
+                    .stream()
+                    .min(Comparator.comparing(GlobalBeanContext::priority))
+                    .get();
         }
-        INSTANCE.beanContext = beanContext;
-    }
-
-    /**
-     * 获取链路管理器
-     *
-     * @return 链路管理器
-     */
-    public static ValidationChainManager getChainManager() {
-        return INSTANCE.beanContext.getChainManager();
-    }
-
-    /**
-     * 获取计数器管理器
-     *
-     * @return 计数器管理器
-     */
-    public static CounterGuardManager getCounterGuardManager() {
-        return INSTANCE.beanContext.getCounterGuardManager();
-    }
-
-    public static GlobalBeanContext getBeanContext() {
-        return INSTANCE.beanContext;
-    }
-
-    private GlobalBeanContextHolder() {
+        return beanContext;
     }
 }

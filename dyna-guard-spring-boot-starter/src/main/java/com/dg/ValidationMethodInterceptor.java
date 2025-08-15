@@ -4,7 +4,8 @@ package com.dg;
 import com.dg.core.annotation.DynamicGuard;
 import com.dg.core.chain.ValidationChain;
 import com.dg.core.chain.ValidationChainManager;
-import com.dg.domain.ValidationContext;
+import com.dg.domain.SpringValidationContext;
+import com.dg.domain.context.ValidationContext;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.apache.commons.lang3.StringUtils;
@@ -48,6 +49,7 @@ public class ValidationMethodInterceptor implements MethodInterceptor {
         Method method = invocation.getMethod();
         DynamicGuard dynamicGuard = method.getAnnotation(DynamicGuard.class);
         if (dynamicGuard == null) {
+            log.info("dynamicGuard annotation can't find skip validation");
             return invocation.proceed();
         }
 
@@ -63,7 +65,7 @@ public class ValidationMethodInterceptor implements MethodInterceptor {
         }
 
         // 4.构建验证上下文
-        ValidationContext context = new ValidationContext();
+        ValidationContext context = new SpringValidationContext();
         // 这里是为了获取入参的名称
         Parameter[] parameters = method.getParameters();
         // 真实的入参

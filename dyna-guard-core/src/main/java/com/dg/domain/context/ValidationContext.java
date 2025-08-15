@@ -1,12 +1,10 @@
-package com.dg.domain;
+package com.dg.domain.context;
 
-import com.dg.core.holder.GlobalBeanContextHolder;
-import com.dg.utils.GlobalBeanContext;
 import com.google.common.collect.Maps;
 
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 /**
  * 校验器上下文
@@ -14,17 +12,19 @@ import java.util.Optional;
  * @author VD
  * @date 2025/7/27 20:52
  */
-public class ValidationContext {
+public abstract class ValidationContext {
 
     /**
      * 参数
      */
-    private final Map<String, Object> parameters = Maps.newHashMap();
+    protected final Map<String, Object> parameters = Maps.newHashMap();
 
     /**
-     * Bean
+     * 构建执行上下文
+     *
+     * @return 上下文
      */
-    private GlobalBeanContext globalBeanContext;
+    public abstract Consumer<Map<String, Object>> buildExecuteContext();
 
     /**
      * 获取参数
@@ -81,20 +81,5 @@ public class ValidationContext {
         return "ValidationContext{" +
                 "parameters=" + parameters +
                 '}';
-    }
-
-    public ValidationContext() {
-        GlobalBeanContext beanContext = GlobalBeanContextHolder.getBeanContext();
-        if (Objects.nonNull(beanContext)) {
-            this.globalBeanContext = beanContext;
-        }
-    }
-
-    public GlobalBeanContext getGlobalBeanContext() {
-        return globalBeanContext;
-    }
-
-    public void setGlobalBeanContext(GlobalBeanContext globalBeanContext) {
-        this.globalBeanContext = globalBeanContext;
     }
 }

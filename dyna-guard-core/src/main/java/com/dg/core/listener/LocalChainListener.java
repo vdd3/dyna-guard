@@ -41,7 +41,7 @@ public abstract class LocalChainListener implements ValidationChainListener {
      */
     @Override
     public void register() {
-        ValidationChainManager chainManager = GlobalBeanContextHolder.getChainManager();
+        ValidationChainManager chainManager = GlobalBeanContextHolder.getContext().getChainManager();
         LocalChainDataConfig config = getConfig();
         final String type = type().getType();
         if (!config.getEnableListener()) {

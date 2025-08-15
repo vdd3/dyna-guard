@@ -5,9 +5,9 @@ import com.dg.core.guard.CounterGuard;
 import com.dg.core.guard.CounterGuardManager;
 import com.dg.core.guard.LocalCounterGuard;
 import com.dg.core.holder.GlobalBeanContextHolder;
-import com.dg.domain.ValidationContext;
 import com.dg.domain.ValidationNode;
 import com.dg.domain.ValidationResult;
+import com.dg.domain.context.ValidationContext;
 import com.dg.domain.enums.ValidationErrorEnum;
 import com.dg.domain.exception.ValidationFailedException;
 import org.slf4j.Logger;
@@ -141,7 +141,7 @@ public class ValidationChain {
      * @param context 上下文
      */
     public ValidationResult executeGuardResult(ValidationContext context) {
-        CounterGuardManager guardManager = GlobalBeanContextHolder.getCounterGuardManager();
+        CounterGuardManager guardManager = GlobalBeanContextHolder.getContext().getCounterGuardManager();
         CounterGuard guard = guardManager.getGuard(this.chainId);
         if (Objects.isNull(guard)) {
             log.info("guard is null , register local guard : [{}]", this.chainId);

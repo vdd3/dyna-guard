@@ -31,7 +31,17 @@ public class FileUtils {
     /**
      * 文件扩展名分隔符
      */
-    private static final String FILE_EXTENSION_SEPARATOR = ".";
+    public static final String FILE_EXTENSION_SEPARATOR = ".";
+
+    /**
+     * 类路径前缀
+     */
+    public static final String CLASS_PATH_PREFIX = "classpath:";
+
+    /**
+     * 通配符
+     */
+    public static final String WILD_CARD = "*";
 
     /**
      * 判断路径是否为绝对路径
@@ -93,7 +103,7 @@ public class FileUtils {
             return result;
         }
         // 判断是否包含通配符如果包含通配符，进行解析
-        if (path.contains("*")) {
+        if (path.contains(WILD_CARD)) {
             String dirPath = getDirPath(path);
             traverseFolder(dirPath, wildcardMatch, result);
         } else {
@@ -118,7 +128,7 @@ public class FileUtils {
         String[] dirList = path.split("/");
         StringBuilder dirPath = new StringBuilder();
         for (String dir : dirList) {
-            if (!dir.contains("*")) {
+            if (!dir.contains(WILD_CARD)) {
                 dirPath.append(dir).append(File.separator);
             } else {
                 dirPath.deleteCharAt(dirPath.length() - 1);

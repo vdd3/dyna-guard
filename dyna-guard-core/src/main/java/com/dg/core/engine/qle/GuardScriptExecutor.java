@@ -4,12 +4,15 @@ import com.dg.core.engine.qle.operator.bean.GetBeanOfNameOperator;
 import com.dg.core.engine.qle.operator.common.NotNullOperator;
 import com.dg.core.engine.qle.operator.common.PhoneValidatorOperator;
 import com.dg.core.engine.qle.operator.range.*;
-import com.dg.domain.ValidationContext;
 import com.dg.domain.constants.QleConstants;
+import com.dg.domain.context.ValidationContext;
 import com.dg.domain.exception.ResultTypeIllegalException;
 import com.dg.domain.exception.ValidationChainEngineException;
+import com.google.common.collect.Maps;
 import com.ql.util.express.DefaultContext;
 import com.ql.util.express.ExpressRunner;
+
+import java.util.Map;
 
 /**
  * 熔断脚本执行器
@@ -52,8 +55,10 @@ public class GuardScriptExecutor {
      */
     public Boolean execute(String script, ValidationContext context) {
         try {
+            Map<String, Object> params = Maps.newHashMap();
+            context.buildExecuteContext().accept(params);
             DefaultContext<String, Object> expressContext = new DefaultContext<>();
-            expressContext.putAll(context.getParameters());
+            expressContext.putAll(params);
             Object result = EXPRESS_RUNNER.execute(script, expressContext, null, true, true);
             if (!(result instanceof Boolean)) {
                 throw new ResultTypeIllegalException();

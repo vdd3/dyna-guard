@@ -1,4 +1,4 @@
-package com.dg.utils;
+package com.dg.core.bean;
 
 import com.dg.core.chain.ValidationChainManager;
 import com.dg.core.guard.CounterGuardManager;
@@ -28,13 +28,6 @@ public interface GlobalBeanContext {
     Object getBean(Class<?> clazz);
 
     /**
-     * 注册bean容器
-     *
-     * @param beanManager bean容器
-     */
-    void registerBeanManager(Object beanManager);
-
-    /**
      * 获取bean容器
      *
      * @return bean容器
@@ -60,9 +53,7 @@ public interface GlobalBeanContext {
     }
 
     /**
-     * 获取bean容器名称
-     *
-     * @return bean容器名称
+     * 优先级
      */
-    String getBeanContextName();
+    Integer priority();
 }

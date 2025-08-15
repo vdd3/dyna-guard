@@ -3,8 +3,6 @@ package com.dg;
 import com.dg.core.chain.ValidationChainManager;
 import com.dg.core.guard.CounterGuard;
 import com.dg.core.guard.CounterGuardManager;
-import com.dg.core.holder.GlobalBeanContextHolder;
-import com.dg.utils.GlobalBeanContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
@@ -25,7 +23,7 @@ public class ValidationChainInit implements ApplicationListener<ContextRefreshed
     /**
      * 日志
      */
-    private static final Logger log = LoggerFactory.getLogger(ValidationMethodInterceptor.class);
+    private static final Logger log = LoggerFactory.getLogger(ValidationChainInit.class);
 
     /**
      * 验证链管理器
@@ -46,10 +44,6 @@ public class ValidationChainInit implements ApplicationListener<ContextRefreshed
     public void onApplicationEvent(ContextRefreshedEvent event) {
         ApplicationContext applicationContext = event.getApplicationContext();
         log.info("validation chain load chain start");
-
-        // 将applicationContext放入全局bean容器中
-        GlobalBeanContext beanContext = GlobalBeanContextHolder.getBeanContext();
-        beanContext.registerBeanManager(applicationContext);
 
         // 加载流程
         validationChainManager.loadChain();

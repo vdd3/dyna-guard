@@ -116,7 +116,7 @@ public class ChainSqlListener implements ValidationChainListener {
         String sql2 = ChainSqlUtils.genSelectByChainIdSql(sqlConfig, chainIdList);
         List<ChainSqlDO> allChainList = ChainSqlUtils.executeSql(sqlConfig, sql2, ChainSqlUtils::executeSelectSql);
 
-        ValidationChainManager chainManager = GlobalBeanContextHolder.getChainManager();
+        ValidationChainManager chainManager = GlobalBeanContextHolder.getContext().getChainManager();
         // 需要删除的chainId集合
         List<String> removeChainIdList = Lists.newArrayList();
         // 需要更新的chainId map

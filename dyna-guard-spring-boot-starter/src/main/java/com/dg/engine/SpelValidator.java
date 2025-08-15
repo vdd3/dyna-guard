@@ -1,17 +1,21 @@
 package com.dg.engine;
 
+import com.dg.SpringBeanContext;
 import com.dg.core.engine.BaseValidator;
 import com.dg.core.holder.GlobalBeanContextHolder;
-import com.dg.domain.ValidationContext;
+import com.dg.domain.context.ValidationContext;
 import com.dg.domain.enums.RuleEngineEnum;
-import com.dg.domain.exception.DynamicValidationException;
 import com.dg.domain.exception.ResultTypeIllegalException;
+import com.dg.domain.exception.ValidationChainEngineException;
+import com.google.common.collect.Maps;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.expression.BeanFactoryResolver;
 import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
+
+import java.util.Map;
 
 /**
  * spel脚本验证
@@ -20,6 +24,7 @@ import org.springframework.expression.spel.support.StandardEvaluationContext;
  * @date 2025/8/12 20:27
  */
 public class SpelValidator extends BaseValidator {
+
     /**
      * SpEL表达式解析器（线程安全，可全局共享）
      */
@@ -38,18 +43,23 @@ public class SpelValidator extends BaseValidator {
         try {
             StandardEvaluationContext evaluationContext = new StandardEvaluationContext();
 
-            ApplicationContext applicationContext = (ApplicationContext) GlobalBeanContextHolder.getBeanContext().getBeanManager();
-            evaluationContext.setBeanResolver(new BeanFactoryResolver(applicationContext));
+            Object beanManager = GlobalBeanContextHolder.getContext().getBeanManager();
+            if (beanManager instanceof SpringBeanContext) {
+                ApplicationContext applicationContext = (ApplicationContext) beanManager;
+                evaluationContext.setBeanResolver(new BeanFactoryResolver(applicationContext));
+            }
 
             // 注入上下文
-            context.getParameters().forEach(evaluationContext::setVariable);
+            Map<String, Object> params = Maps.newHashMap();
+            context.buildExecuteContext().accept(params);
+            params.forEach(evaluationContext::setVariable);
 
             // 解析并执行SpEL表达式
             Expression expression = parser.parseExpression(script);
             result = expression.getValue(evaluationContext);
         } catch (Exception e) {
             // 保持与JavaScriptValidator一致的异常类型和错误码
-            throw new DynamicValidationException("1", "SpEL表达式执行失败: " + e.getMessage());
+            throw new ValidationChainEngineException("spel execute exception : " + e.getMessage(), e);
         }
 
         // 验证结果类型是否为布尔值

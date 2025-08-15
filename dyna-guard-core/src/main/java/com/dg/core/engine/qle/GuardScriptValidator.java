@@ -1,7 +1,7 @@
 package com.dg.core.engine.qle;
 
 import com.dg.core.engine.BaseValidator;
-import com.dg.domain.ValidationContext;
+import com.dg.domain.context.ValidationContext;
 import com.dg.domain.enums.RuleEngineEnum;
 
 /**

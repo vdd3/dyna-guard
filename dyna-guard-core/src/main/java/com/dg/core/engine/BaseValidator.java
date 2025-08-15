@@ -1,7 +1,7 @@
 package com.dg.core.engine;
 
-import com.dg.domain.ValidationContext;
 import com.dg.domain.ValidationResult;
+import com.dg.domain.context.ValidationContext;
 import com.dg.domain.exception.ResultTypeIllegalException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

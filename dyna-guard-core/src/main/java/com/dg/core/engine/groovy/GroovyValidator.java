@@ -1,11 +1,14 @@
 package com.dg.core.engine.groovy;
 
 import com.dg.core.engine.BaseValidator;
-import com.dg.domain.ValidationContext;
+import com.dg.domain.context.ValidationContext;
 import com.dg.domain.enums.RuleEngineEnum;
 import com.dg.domain.exception.ResultTypeIllegalException;
+import com.google.common.collect.Maps;
 import groovy.lang.Binding;
 import groovy.lang.GroovyShell;
+
+import java.util.Map;
 
 /**
  * groovy规则引擎
@@ -29,9 +32,10 @@ public class GroovyValidator extends BaseValidator {
                 .forEach(source -> ReadOnlyMetaClass.registerReadOnlyMetaClass(source.getClass()));
 
         // 参数传递
+        Map<String, Object> params = Maps.newHashMap();
+        context.buildExecuteContext().accept(params);
         Binding binding = new Binding();
-        context.getParameters().forEach(binding::setVariable);
-        binding.setVariable("beanContext", context.getGlobalBeanContext());
+        params.forEach(binding::setVariable);
 
         // 构建执行器
         GroovyShell shell = new GroovyShell(binding);

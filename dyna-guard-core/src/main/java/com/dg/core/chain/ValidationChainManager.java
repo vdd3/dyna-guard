@@ -4,13 +4,11 @@ import com.dg.core.engine.Validator;
 import com.dg.core.engine.qle.GuardScriptExecutor;
 import com.dg.core.holder.ChainConfigHolder;
 import com.dg.core.holder.ChainFilePathParserHolder;
-import com.dg.core.holder.GlobalBeanContextHolder;
 import com.dg.core.listener.ValidationChainListener;
 import com.dg.core.parser.ValidationChainParser;
 import com.dg.core.path.ChainFilePathParser;
 import com.dg.domain.config.ValidationChainConfig;
 import com.dg.domain.exception.ValidationChainParserException;
-import com.dg.utils.GlobalBeanContext;
 import com.google.common.collect.Maps;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
@@ -71,11 +69,6 @@ public class ValidationChainManager {
     private final Map<String, ValidationChainListener> LISTENERS = Maps.newConcurrentMap();
 
     /**
-     * bean容器
-     */
-    private final Map<String, GlobalBeanContext> BEAN_CONTEXTS = Maps.newConcurrentMap();
-
-    /**
      * 加载验证链
      */
     public void loadChain() {
@@ -86,9 +79,6 @@ public class ValidationChainManager {
         ChainFilePathParserHolder.init(filePathParser);
         // 初始化qle执行器
         GuardScriptExecutor.init();
-        // 初始化bean容器
-        GlobalBeanContext globalBeanContext = BEAN_CONTEXTS.get(config.getBeanContextName());
-        GlobalBeanContextHolder.init(globalBeanContext);
 
         // 根据配置获取对应解析器
         config.getParserList().forEach(parserType -> {
@@ -134,6 +124,8 @@ public class ValidationChainManager {
                 } catch (Exception e) {
                     log.error("validation chain listener register error : {}", e.getMessage());
                 }
+            } else {
+                log.info("validation chain listener not found : {}", parserType);
             }
         });
     }
@@ -273,8 +265,5 @@ public class ValidationChainManager {
         // 监听器
         ServiceLoader<ValidationChainListener> listenerLoader = ServiceLoader.load(ValidationChainListener.class);
         listenerLoader.forEach(listener -> LISTENERS.put(listener.type().getType(), listener));
-        // bean容器
-        ServiceLoader<GlobalBeanContext> beanContexts = ServiceLoader.load(GlobalBeanContext.class);
-        beanContexts.forEach(beanContext -> BEAN_CONTEXTS.put(beanContext.getBeanContextName(), beanContext));
     }
 }

@@ -1,9 +1,8 @@
 package com.dg;
 
+import com.dg.core.bean.GlobalBeanContext;
 import com.dg.core.chain.ValidationChainManager;
 import com.dg.core.guard.CounterGuardManager;
-import com.dg.domain.enums.FreeMarkTypeEnum;
-import com.dg.utils.GlobalBeanContext;
 import org.springframework.context.ApplicationContext;
 
 /**
@@ -17,7 +16,7 @@ public class SpringBeanContext implements GlobalBeanContext {
     /**
      * spring bean容器
      */
-    private ApplicationContext applicationContext;
+    private static ApplicationContext applicationContext;
 
     /**
      * 获取bean
@@ -39,16 +38,6 @@ public class SpringBeanContext implements GlobalBeanContext {
     @Override
     public Object getBean(Class<?> clazz) {
         return applicationContext.getBean(clazz);
-    }
-
-    /**
-     * 注册bean容器
-     *
-     * @param beanManager bean容器
-     */
-    @Override
-    public void registerBeanManager(Object beanManager) {
-        setApplicationContext((ApplicationContext) beanManager);
     }
 
     /**
@@ -82,20 +71,15 @@ public class SpringBeanContext implements GlobalBeanContext {
     }
 
     /**
-     * 获取bean容器名称
-     *
-     * @return bean容器名称
+     * 优先级
      */
     @Override
-    public String getBeanContextName() {
-        return FreeMarkTypeEnum.SPRING.getType();
+    public Integer priority() {
+        return 5;
     }
 
-    public ApplicationContext getApplicationContext() {
-        return applicationContext;
-    }
 
-    public void setApplicationContext(ApplicationContext applicationContext) {
-        this.applicationContext = applicationContext;
+    public static void setApplicationContext(ApplicationContext context) {
+        applicationContext = context;
     }
 }

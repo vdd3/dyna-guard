@@ -1,6 +1,7 @@
 package com.dg.config;
 
 import com.dg.domain.config.ValidationChainConfig;
+import com.google.common.collect.Lists;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,13 +14,26 @@ import org.springframework.context.annotation.PropertySource;
  * @date 2025/8/3 12:03
  */
 @Configuration
-@EnableConfigurationProperties()
-@PropertySource(name = "Liteflow Default Properties", value = "classpath:/liteflow-default.properties")
+@EnableConfigurationProperties(ValidationProperty.class)
+@PropertySource("classpath:validation.properties")
 public class ValidationChainPropertyAutoConfiguration {
 
+    /**
+     * 验证配置
+     *
+     * @param property 验证属性
+     * @return 验证配置
+     */
     @Bean
-    public ValidationChainConfig validationChainConfig() {
+    public ValidationChainConfig validationChainConfig(ValidationProperty property) {
         ValidationChainConfig config = new ValidationChainConfig();
+        config.setParserList(Lists.newArrayList(property.getParser().split(",")));
+        config.setPathParserName(property.getPathParserName());
+        config.setValidationMethodList(Lists.newArrayList(property.getValidationMethod().split(",")));
+        config.setChainFilePath(Lists.newArrayList(property.getChainFilePath().split(",")));
+        config.setSqlChainDataMap(property.getSqlChainDataMap());
+        config.setXmlChainDataMap(property.getXmlChainDataMap());
+        config.setJsonChainDataMap(property.getJsonChainDataMap());
         return config;
     }
 

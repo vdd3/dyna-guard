@@ -1,7 +1,7 @@
 package com.dg.core.engine.qle.operator.bean;
 
+import com.dg.core.bean.GlobalBeanContext;
 import com.dg.core.holder.GlobalBeanContextHolder;
-import com.dg.utils.GlobalBeanContext;
 import com.ql.util.express.Operator;
 
 import java.util.Objects;
@@ -20,7 +20,7 @@ public class GetBeanOfNameOperator extends Operator {
             throw new RuntimeException("参数不足");
         }
         String beanName = (String) list[0];
-        GlobalBeanContext beanContext = GlobalBeanContextHolder.getBeanContext();
+        GlobalBeanContext beanContext = GlobalBeanContextHolder.getContext();
         if (Objects.isNull(beanContext)) {
             throw new RuntimeException("未找到beanContext");
         }

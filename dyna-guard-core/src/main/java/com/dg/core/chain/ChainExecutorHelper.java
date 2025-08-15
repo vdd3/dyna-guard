@@ -1,7 +1,7 @@
 package com.dg.core.chain;
 
 import com.dg.core.holder.GlobalBeanContextHolder;
-import com.dg.domain.ValidationContext;
+import com.dg.domain.context.ValidationContext;
 
 import java.util.Objects;
 
@@ -21,7 +21,7 @@ public class ChainExecutorHelper {
      * @return 验证链
      */
     public static ValidationChain getChain(String group, String chainId) {
-        return GlobalBeanContextHolder.getChainManager().getChain(group, chainId);
+        return GlobalBeanContextHolder.getContext().getChainManager().getChain(group, chainId);
     }
 
     /**
@@ -31,7 +31,7 @@ public class ChainExecutorHelper {
      * @return 验证链
      */
     public static ValidationChain getChain(String chainId) {
-        return GlobalBeanContextHolder.getChainManager().getChain(chainId);
+        return GlobalBeanContextHolder.getContext().getChainManager().getChain(chainId);
     }
 
     /**
@@ -42,7 +42,7 @@ public class ChainExecutorHelper {
      * @param context 上下文
      */
     public static void validateHere(String group, String chainId, ValidationContext context) {
-        ValidationChain chain = GlobalBeanContextHolder.getChainManager().getChain(group, chainId);
+        ValidationChain chain = GlobalBeanContextHolder.getContext().getChainManager().getChain(group, chainId);
         if (Objects.nonNull(chain)) {
             chain.execute(context);
         }
@@ -55,7 +55,7 @@ public class ChainExecutorHelper {
      * @param context 上下文
      */
     public static void validateHere(String chainId, ValidationContext context) {
-        ValidationChain chain = GlobalBeanContextHolder.getChainManager().getChain(chainId);
+        ValidationChain chain = GlobalBeanContextHolder.getContext().getChainManager().getChain(chainId);
         if (Objects.nonNull(chain)) {
             chain.execute(context);
         }

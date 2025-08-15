@@ -1,13 +1,15 @@
 package com.dg.core.engine;
 
-import com.dg.domain.ValidationContext;
+import com.dg.domain.context.ValidationContext;
 import com.dg.domain.enums.RuleEngineEnum;
 import com.dg.domain.exception.ResultTypeIllegalException;
 import com.dg.domain.exception.ValidationChainEngineException;
+import com.google.common.collect.Maps;
 
 import javax.script.Bindings;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
+import java.util.Map;
 
 /**
  * JavaScript规则引擎
@@ -37,9 +39,10 @@ public class JavaScriptValidator extends BaseValidator {
             // 配置引擎，允许访问 Java 对象
             engine.put("polyglot.js.allowAllAccess", true);
             // 创建脚本上下文
+            Map<String, Object> params = Maps.newHashMap();
+            context.buildExecuteContext().accept(params);
             Bindings bindings = engine.createBindings();
-            context.getParameters().forEach(bindings::put);
-            bindings.put("beanContext", context.getGlobalBeanContext());
+            params.forEach(bindings::put);
             // 执行 JavaScript 表达式
             result = engine.eval(script, bindings);
         } catch (Exception e) {
