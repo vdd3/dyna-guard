@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.easytu</groupId>
+    <groupId>cn.easygd</groupId>
     <artifactId>dyna-guard</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
@@ -71,12 +71,12 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>com.easytu</groupId>
+                <groupId>cn.easygd</groupId>
                 <artifactId>dyna-guard-core</artifactId>
                 <version>${dg.core.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.easytu</groupId>
+                <groupId>cn.easygd</groupId>
                 <artifactId>dyna-guard-spring-boot-starter</artifactId>
                 <version>${dg.spring.version}</version>
             </dependency>

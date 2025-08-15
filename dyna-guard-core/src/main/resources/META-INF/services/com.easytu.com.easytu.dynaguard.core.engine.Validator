@@ -1,4 +1,4 @@
-com.easytu.dynaguard.core.engine.groovy.GroovyValidator
-com.easytu.dynaguard.core.engine.JavaScriptValidator
-com.easytu.dynaguard.core.engine.PythonValidator
-com.easytu.dynaguard.core.engine.qle.GuardScriptValidator
+cn.easygd.dynaguard.core.engine.groovy.GroovyValidator
+cn.easygd.dynaguard.core.engine.JavaScriptValidator
+cn.easygd.dynaguard.core.engine.PythonValidator
+cn.easygd.dynaguard.core.engine.qle.GuardScriptValidator
