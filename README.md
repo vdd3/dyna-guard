@@ -30,7 +30,7 @@ dyna-guard/
 ```xml
 
 <dependency>
-    <groupId>com.easytucom.easytu</groupId>
+    <groupId>com.easytu</groupId>
     <artifactId>dyna-guard-spring-boot-starter</artifactId>
     <version>1.0.0</version>
 </dependency>
