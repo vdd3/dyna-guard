@@ -9,12 +9,22 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
+    <name>dyna-guard-spring-boot-starter</name>
     <artifactId>dyna-guard-spring-boot-starter</artifactId>
+    <description>dyna guard spring boot starter</description>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
     </properties>
+
+    <licenses>
+        <license>
+            <name>Apache-2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.html</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
 
     <dependencies>
         <dependency>
