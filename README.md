@@ -2,6 +2,10 @@
 
 Dyna-Guard 是一个基于 Java 的动态校验框架，支持多种脚本语言和规则引擎。它提供了一套灵活的校验链机制，允许开发者通过配置化的方式定义和执行复杂的业务校验逻辑。
 
+## 技术文档
+
+https://www.yuque.com/yuqueyonghuqdqyqs/kswtr7/nqb761u5ni0dgqkg
+
 ## 项目结构
 
 ```
@@ -19,16 +23,6 @@ dyna-guard/
 - **熔断机制**：内置计数器熔断器，防止系统过载
 - **AOP 拦截**：基于注解的方法级校验拦截
 
-## 核心组件
-
-### 校验引擎 (Validation Engine)
-
-### 校验链管理 (Validation Chain)
-
-### 解析器 (Parser)
-
-### 熔断器 (Guard)
-
 ## 安装使用
 
 ### Maven 依赖
@@ -38,7 +32,7 @@ dyna-guard/
 <dependency>
     <groupId>com.dg</groupId>
     <artifactId>dyna-guard-spring-boot-starter</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0</version>
 </dependency>
 ```
 
@@ -48,18 +42,18 @@ dyna-guard/
 
 ```yaml
 validation:
-  chain:
-    # 配置校验链文件路径
-    file-path: classpath:validation-chains/*.json
-    # 配置需要校验的Bean名称列表
-    validation-method-list:
-      - userService
-      - orderService
+  # 解析文件解析器
+  parser: sql,xml,json
+  # 需要拦截的类，如果想使用方法级别校验，请将此参数设置为需要拦截的类名称
+  validation-method: **Service
+  # 存放校验链文件
+  chain-file-path: classpath:chain/*Chain.xml,classpath:chain/*Chain.json
 ```
 
 ### 使用示例
 
-1.
+1.使用json中的校验本流程进行验证
+
 在需要校验的方法上添加 [@DynamicGuard]
 注解：
 
@@ -68,7 +62,7 @@ validation:
 @Service("userService")
 public class UserService {
 
-    @DynamicGuard(chainId = "user.create")
+    @DynamicGuard(group = "json", chainId = "user.create")
     public User createUser(CreateUserRequest request) {
         // 方法实现
         return user;
@@ -79,27 +73,27 @@ public class UserService {
 2. 定义校验链配置（JSON格式）：
 
 ```json
-{
-  "chain": [
-    {
-      "id": "user.create",
-      "nodes": [
-        {
-          "name": "参数非空校验",
-          "script": "request != null && request.name != null",
-          "language": "spel",
-          "error": "参数不能为空"
-        },
-        {
-          "name": "手机号格式校验",
-          "script": "request.phone matches '^1[3-9]\\d{9}$'",
-          "language": "spel",
-          "error": "手机号格式不正确"
-        }
-      ]
-    }
-  ]
-}
+[
+  {
+    "chainId": "user.create",
+    "node": [
+      {
+        "order": 1,
+        "script": "request != null && request.name != null",
+        "language": "spel",
+        "message": "参数不能为空",
+        "fastFail": true
+      },
+      {
+        "order": 2,
+        "script": "request.phone matches '^1[3-9]\\d{9}$'",
+        "language": "spel",
+        "message": "手机号格式不正确",
+        "fastFail": true
+      }
+    ]
+  }
+]
 ```
 
 ## 扩展开发
@@ -128,26 +122,6 @@ public class CustomValidator extends BaseValidator {
 
 ```
 com.example.CustomValidator
-```
-
-### 自定义文件路径解析器
-
-实现 [ChainFilePathParser](file://F:\workspeace\dyna-guard\dyna-guard-core\src\main\java\com\dg\core\path\ChainFilePathParser.java#L10-L26)
-接口以支持自定义文件路径解析：
-
-```java
-public class CustomFilePathParser implements ChainFilePathParser {
-    @Override
-    public List<String> parse(List<String> pathList) {
-        // 实现路径解析逻辑
-        return paths;
-    }
-
-    @Override
-    public String getParserName() {
-        return "custom";
-    }
-}
 ```
 
 ## 技术架构
