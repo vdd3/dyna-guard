@@ -12,6 +12,7 @@ import cn.easygd.dynaguard.domain.exception.ValidationChainParserException;
 import cn.easygd.dynaguard.utils.BeanMapUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
@@ -70,15 +71,24 @@ public class ChainXmlParser extends LocalChainFileParser {
                     List<Element> nodeElementList = chainElement.elements(config.getNodeField());
                     chain.setChainId(chainId);
                     chain.setGroup(type().getType());
-                    chain.setGuardExpire(Long.parseLong(chainElement.attributeValue(config.getGuardExpireField())));
-                    chain.setGuardThreshold(Long.parseLong(chainElement.attributeValue(config.getGuardThresholdField())));
+                    String guardExpire = chainElement.attributeValue(config.getGuardExpireField());
+                    if (StringUtils.isNotBlank(guardExpire)) {
+                        chain.setGuardExpire(Long.parseLong(guardExpire));
+                    }
+                    String guardThreshold = chainElement.attributeValue(config.getGuardThresholdField());
+                    if (StringUtils.isNotBlank(guardThreshold)) {
+                        chain.setGuardThreshold(Long.parseLong(guardThreshold));
+                    }
                     chain.setNodes(nodeElementList.stream().map(nodeElement -> {
                         ValidationNode node = new ValidationNode();
                         node.setLanguage(nodeElement.attributeValue(config.getLanguageField()));
                         node.setScript(nodeElement.getText());
                         node.setOrder(Integer.parseInt(nodeElement.attributeValue(config.getOrderField())));
                         node.setMessage(nodeElement.attributeValue(config.getMessageField()));
-                        node.setFastFail(Boolean.parseBoolean(nodeElement.attributeValue(config.getFastFailField())));
+                        String fastFail = nodeElement.attributeValue(config.getFastFailField());
+                        if (StringUtils.isNotBlank(fastFail)) {
+                            node.setFastFail(Boolean.parseBoolean(fastFail));
+                        }
                         return node;
                     }).sorted(Comparator.comparingInt(ValidationNode::getOrder)).collect(Collectors.toList()));
                     resultList.add(chain);

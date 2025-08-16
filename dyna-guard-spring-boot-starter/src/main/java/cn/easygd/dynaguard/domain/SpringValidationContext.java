@@ -15,6 +15,11 @@ import java.util.function.Consumer;
 public class SpringValidationContext extends ValidationContext {
 
     /**
+     * Bean上下文
+     */
+    public static final String BEAN_CONTEXT = "beanContext";
+
+    /**
      * 构建执行上下文
      *
      * @return 上下文

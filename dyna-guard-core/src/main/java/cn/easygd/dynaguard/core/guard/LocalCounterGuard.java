@@ -109,6 +109,6 @@ public class LocalCounterGuard implements CounterGuard {
      */
     @Override
     public void rollback(String chainId) {
-        throw new GuardException("rollback not support");
+        throw new GuardException(String.format("chain : %s trigger fuse", chainId));
     }
 }

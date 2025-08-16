@@ -8,6 +8,7 @@ import cn.easygd.dynaguard.core.listener.ValidationChainListener;
 import cn.easygd.dynaguard.core.parser.ValidationChainParser;
 import cn.easygd.dynaguard.core.path.ChainFilePathParser;
 import cn.easygd.dynaguard.domain.config.ValidationChainConfig;
+import cn.easygd.dynaguard.domain.exception.ValidationChainListenerException;
 import cn.easygd.dynaguard.domain.exception.ValidationChainParserException;
 import com.google.common.collect.Maps;
 import org.apache.commons.collections.CollectionUtils;
@@ -90,25 +91,32 @@ public class ValidationChainManager {
 
             // 初始化内容，一般是对配置的初始化
             try {
-                log.info("parser init start : {}", parserType);
+                if (log.isDebugEnabled()) {
+                    log.debug("parser init start : {}", parserType);
+                }
+
                 parser.init(config);
             } catch (Exception e) {
                 log.error("parser init error type : {} , msg : {}", parserType, e.getMessage(), e);
                 throw new ValidationChainParserException(String.format("parser init error type : %s , msg : %s", parserType, e.getMessage()), e);
             }
-            log.info("parser init end : {}", parserType);
 
             // 解析内容，解析流程时并不会方式脚本的执行器，解析完成后一并放入，如果有新的解析器，
             // 不需要关注怎么获取对应的脚本执行器，只需要实现解析流程即可
             List<ValidationChain> chainList;
             try {
-                log.info("parser parse start : {}", parserType);
+                if (log.isDebugEnabled()) {
+                    log.debug("parser parse start : {}", parserType);
+                }
                 chainList = parser.parse(config);
             } catch (Exception e) {
                 log.error("parser parse error type : {} , msg : {}", parserType, e.getMessage(), e);
                 throw new ValidationChainParserException(String.format("parser parse error type : %s , msg : %s", parserType, e.getMessage()), e);
             }
-            log.info("parser parse end : {} , this group chain size : {}", parserType, chainList.size());
+            if (log.isDebugEnabled()) {
+                log.debug("parser parse end : {} , this group chain size : {}", parserType, chainList.size());
+            }
+
 
             // 放入对应的脚本解析器中
             if (CollectionUtils.isNotEmpty(chainList)) {
@@ -123,13 +131,15 @@ public class ValidationChainManager {
         config.getParserList().forEach(parserType -> {
             ValidationChainListener chainListener = LISTENERS.get(parserType);
             if (Objects.nonNull(chainListener)) {
+                log.info("validation chain listener register start : {}", parserType);
                 try {
                     chainListener.register();
                 } catch (Exception e) {
                     log.error("validation chain listener register error : {}", e.getMessage());
+                    throw new ValidationChainListenerException(String.format("validation chain listener register error type : %s , msg : %s", parserType, e.getMessage()), e);
                 }
             } else {
-                log.info("validation chain listener not found : {}", parserType);
+                log.warn("validation chain listener not found : {}", parserType);
             }
         });
     }
@@ -194,6 +204,7 @@ public class ValidationChainManager {
         // 获取对应解析器
         ValidationChainParser parser = getChainParser(group);
         if (Objects.nonNull(parser)) {
+            log.info("refresh chain start , group : {}", parser.type().getType());
             List<ValidationChain> validationChainList = parser.parse(config);
             if (CollectionUtils.isNotEmpty(validationChainList)) {
                 Map<String, ValidationChain> chainMap = validationChainList.stream()
@@ -201,6 +212,7 @@ public class ValidationChainManager {
                         .collect(Collectors.toMap(ValidationChain::getChainId, Function.identity(), (old, newOne) -> newOne, Maps::newConcurrentMap));
                 CHAIN_CACHE.put(group, chainMap);
             }
+            log.info("refresh chain end , group : {}", parser.type().getType());
         }
     }
 

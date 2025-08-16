@@ -7,8 +7,6 @@ import cn.easygd.dynaguard.domain.config.ValidationChainConfig;
 import cn.easygd.dynaguard.utils.FileUtils;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,11 +20,6 @@ import java.util.stream.Collectors;
 public abstract class LocalChainFileParser implements ValidationChainParser {
 
     /**
-     * 日志
-     */
-    private static final Logger log = LoggerFactory.getLogger(LocalChainFileParser.class);
-
-    /**
      * 解析
      *
      * @param config 配置
@@ -34,12 +27,15 @@ public abstract class LocalChainFileParser implements ValidationChainParser {
      */
     @Override
     public List<ValidationChain> parse(ValidationChainConfig config) {
+        // 获取当前需要过滤文件后缀
+        String suffix = FileUtils.FILE_EXTENSION_SEPARATOR + type().getType();
         // 获取路径下所有的文件
         List<String> chainFilePath = config.getChainFilePath();
         // 获取文件绝对路径列表
         List<String> pathList = ChainFilePathParserHolder.getParser().parse(chainFilePath);
         // 文件转为string
         List<String> fileInfoList = pathList.stream()
+                .filter(path -> path.endsWith(suffix))
                 .map(FileUtils::getFileInfo)
                 .filter(StringUtils::isNotBlank)
                 .collect(Collectors.toList());

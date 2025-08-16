@@ -1,6 +1,5 @@
 package cn.easygd.dynaguard.engine;
 
-import cn.easygd.dynaguard.SpringBeanContext;
 import cn.easygd.dynaguard.core.engine.BaseValidator;
 import cn.easygd.dynaguard.core.holder.GlobalBeanContextHolder;
 import cn.easygd.dynaguard.domain.context.ValidationContext;
@@ -44,7 +43,7 @@ public class SpelValidator extends BaseValidator {
             StandardEvaluationContext evaluationContext = new StandardEvaluationContext();
 
             Object beanManager = GlobalBeanContextHolder.getContext().getBeanManager();
-            if (beanManager instanceof SpringBeanContext) {
+            if (beanManager instanceof ApplicationContext) {
                 ApplicationContext applicationContext = (ApplicationContext) beanManager;
                 evaluationContext.setBeanResolver(new BeanFactoryResolver(applicationContext));
             }

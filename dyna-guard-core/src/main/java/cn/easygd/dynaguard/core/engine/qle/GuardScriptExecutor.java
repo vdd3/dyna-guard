@@ -1,6 +1,6 @@
 package cn.easygd.dynaguard.core.engine.qle;
 
-import cn.easygd.dynaguard.core.engine.qle.operator.bean.GetBeanOfNameOperator;
+import cn.easygd.dynaguard.core.engine.qle.operator.bean.InvokeBeanMethodOperator;
 import cn.easygd.dynaguard.core.engine.qle.operator.common.NotNullOperator;
 import cn.easygd.dynaguard.core.engine.qle.operator.common.PhoneValidatorOperator;
 import cn.easygd.dynaguard.core.engine.qle.operator.range.*;
@@ -43,7 +43,7 @@ public class GuardScriptExecutor {
         EXPRESS_RUNNER.addFunction(QleConstants.IN_GREATER_THAN_RANGE, new InGreaterThanRangeOperator());
         EXPRESS_RUNNER.addFunction(QleConstants.IN_LESS_THAN_RANGE, new InLessThanRangeOperator());
         EXPRESS_RUNNER.addFunction(QleConstants.IS_PHONE, new PhoneValidatorOperator());
-        EXPRESS_RUNNER.addFunction(QleConstants.GET_BEAN, new GetBeanOfNameOperator());
+        EXPRESS_RUNNER.addFunction(QleConstants.INVOKE_BEAN_METHOD, new InvokeBeanMethodOperator());
     }
 
     /**
@@ -57,6 +57,8 @@ public class GuardScriptExecutor {
         try {
             Map<String, Object> params = Maps.newHashMap();
             context.buildExecuteContext().accept(params);
+            // 对于qle来说无法推断复杂类型的参数，所以无法直接获取bean使用
+            params.remove("beanContext");
             DefaultContext<String, Object> expressContext = new DefaultContext<>();
             expressContext.putAll(params);
             Object result = EXPRESS_RUNNER.execute(script, expressContext, null, true, true);

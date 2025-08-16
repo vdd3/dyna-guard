@@ -70,14 +70,18 @@ public class ChainJsonParser extends LocalChainFileParser {
         try {
             for (String fileInfo : fileInfoList) {
                 JsonNode jsonNode = OBJECT_MAPPER.readTree(fileInfo);
-                jsonNode.iterator().forEachRemaining(jsonNodeElement -> {
+                jsonNode.elements().forEachRemaining(jsonNodeElement -> {
                     ValidationChain chain = new ValidationChain();
                     chain.setChainId(jsonNodeElement.get(config.getChainIdField()).asText());
                     chain.setGroup(type().getType());
-                    chain.setGuardExpire(jsonNodeElement.get(config.getGuardExpireField()).asLong());
-                    chain.setGuardThreshold(jsonNodeElement.get(config.getGuardThresholdField()).asLong());
-                    List<ValidationNode> nodeList = Lists.newArrayList();
+                    if (jsonNode.has(config.getGuardExpireField())) {
+                        chain.setGuardExpire(jsonNodeElement.get(config.getGuardExpireField()).asLong());
+                    }
+                    if (jsonNode.has(config.getGuardThresholdField())) {
+                        chain.setGuardThreshold(jsonNodeElement.get(config.getGuardThresholdField()).asLong());
+                    }
 
+                    List<ValidationNode> nodeList = Lists.newArrayList();
                     jsonNodeElement.get(config.getNodeField()).elements().forEachRemaining(element -> {
                         ValidationNode node = new ValidationNode();
                         node.setScript(element.get(config.getScriptField()).asText());

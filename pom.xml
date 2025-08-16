@@ -65,7 +65,6 @@
         <jackson.version>2.11.4</jackson.version>
         <groovy.version>3.0.17</groovy.version>
         <js.version>20.3.0</js.version>
-        <python.version>20.3.0</python.version>
         <dom4j.version>2.1.4</dom4j.version>
         <common-io.version>2.11.0</common-io.version>
         <springboot.version>2.6.8</springboot.version>
@@ -114,11 +113,6 @@
                 <groupId>org.graalvm.js</groupId>
                 <artifactId>js-scriptengine</artifactId>
                 <version>${js.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.graalvm.python</groupId>
-                <artifactId>python</artifactId>
-                <version>${python.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
@@ -241,7 +235,6 @@
                 <artifactId>maven-gpg-plugin</artifactId>
                 <version>1.6</version>
                 <configuration>
-                    <!-- 改成你自己的路径 -->
                     <executable>E:\Gpg4win\..\GnuPG\bin\gpg.exe</executable>
                 </configuration>
                 <executions>

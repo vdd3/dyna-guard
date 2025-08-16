@@ -21,11 +21,6 @@ public enum RuleEngineEnum implements RuleEngineEnumerable<RuleEngineEnum> {
     JAVA_SCRIPT("JavaScript"),
 
     /**
-     * Python
-     */
-    PYTHON("Python"),
-
-    /**
      * SpEl
      */
     SPEl("SpEl"),

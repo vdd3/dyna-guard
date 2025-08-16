@@ -120,6 +120,7 @@ public class ChainSqlListener implements ValidationChainListener {
             return;
         }
 
+        log.info("need chain size : {}", chainIdList.size());
         // 捞取需更新的chainId
         String sql2 = ChainSqlUtils.genSelectByChainIdSql(sqlConfig, chainIdList);
         List<ChainSqlDO> allChainList = ChainSqlUtils.executeSql(sqlConfig, sql2, ChainSqlUtils::executeSelectSql);
@@ -153,7 +154,9 @@ public class ChainSqlListener implements ValidationChainListener {
             }
         });
 
+        log.info("need remove chain size : {}", removeChainIdList.size());
         chainManager.removeChain(type().getType(), removeChainIdList.toArray(new String[0]));
+        log.info("need update chain size : {}", updateChainMap.size());
         chainManager.updateChain(type().getType(), updateChainMap);
     }
 

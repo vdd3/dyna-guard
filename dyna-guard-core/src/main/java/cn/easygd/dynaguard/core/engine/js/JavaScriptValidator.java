@@ -1,5 +1,6 @@
-package cn.easygd.dynaguard.core.engine;
+package cn.easygd.dynaguard.core.engine.js;
 
+import cn.easygd.dynaguard.core.engine.BaseValidator;
 import cn.easygd.dynaguard.domain.context.ValidationContext;
 import cn.easygd.dynaguard.domain.enums.RuleEngineEnum;
 import cn.easygd.dynaguard.domain.exception.ResultTypeIllegalException;
@@ -35,7 +36,7 @@ public class JavaScriptValidator extends BaseValidator {
     public Boolean validate(String script, ValidationContext context) {
         Object result;
         try {
-            ScriptEngine engine = manager.getEngineByName("graal.js");
+            ScriptEngine engine = manager.getEngineByName("JavaScript");
             // 配置引擎，允许访问 Java 对象
             engine.put("polyglot.js.allowAllAccess", true);
             // 创建脚本上下文

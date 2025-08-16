@@ -27,10 +27,6 @@ public class GroovyValidator extends BaseValidator {
      */
     @Override
     public Boolean validate(String script, ValidationContext context) {
-        // 对传入的参数进行安全限制，防止用户修改参数
-        context.getParameters().values()
-                .forEach(source -> ReadOnlyMetaClass.registerReadOnlyMetaClass(source.getClass()));
-
         // 参数传递
         Map<String, Object> params = Maps.newHashMap();
         context.buildExecuteContext().accept(params);

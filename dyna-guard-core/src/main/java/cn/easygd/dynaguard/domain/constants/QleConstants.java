@@ -59,7 +59,7 @@ public class QleConstants {
     public static final String IS_PHONE = "IsPhone";
 
     /**
-     * 获取bean
+     * 调用bean方法
      */
-    public static final String GET_BEAN = "GetBean";
+    public static final String INVOKE_BEAN_METHOD = "InvokeBeanMethod";
 }

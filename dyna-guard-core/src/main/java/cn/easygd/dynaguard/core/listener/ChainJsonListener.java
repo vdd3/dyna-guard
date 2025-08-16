@@ -1,5 +1,7 @@
 package cn.easygd.dynaguard.core.listener;
 
+import cn.easygd.dynaguard.core.holder.ChainConfigHolder;
+import cn.easygd.dynaguard.domain.config.ChainJsonConfig;
 import cn.easygd.dynaguard.domain.config.LocalChainDataConfig;
 import cn.easygd.dynaguard.domain.constants.ParserTypeEnumerable;
 import cn.easygd.dynaguard.domain.enums.ParserTypeEnum;
@@ -18,7 +20,7 @@ public class ChainJsonListener extends LocalChainListener {
      */
     @Override
     protected LocalChainDataConfig getConfig() {
-        return null;
+        return (ChainJsonConfig) ChainConfigHolder.getDataConfig(type().getType());
     }
 
     /**

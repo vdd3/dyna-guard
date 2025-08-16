@@ -42,10 +42,6 @@
             <groupId>org.graalvm.js</groupId>
             <artifactId>js-scriptengine</artifactId>
         </dependency>
-        <!--        <dependency>-->
-        <!--            <groupId>org.graalvm.python</groupId>-->
-        <!--            <artifactId>python</artifactId>-->
-        <!--        </dependency>-->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>

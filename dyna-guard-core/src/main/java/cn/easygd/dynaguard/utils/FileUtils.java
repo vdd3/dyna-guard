@@ -46,6 +46,11 @@ public class FileUtils {
     public static final String WILD_CARD = "*";
 
     /**
+     * 文件路径前缀
+     */
+    public static final String FILE_PREFIX = "file:";
+
+    /**
      * 判断路径是否为绝对路径
      *
      * @param path 路径
@@ -173,6 +178,7 @@ public class FileUtils {
      */
     public static String getFileInfo(String path) {
         try {
+            path = path.replace(FILE_PREFIX, "");
             return Files.asCharSource(new File(path), StandardCharsets.UTF_8).read();
         } catch (Exception e) {
             log.warn("file to content fail , path : [{}]", path, e);

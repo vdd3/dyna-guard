@@ -77,7 +77,7 @@ public class ValidationResult {
      * @return 验证结果
      */
     public static ValidationResult fail(String message) {
-        return new ValidationResult(false, message, true, null);
+        return new ValidationResult(false, message, false, null);
     }
 
     public Boolean getSuccess() {

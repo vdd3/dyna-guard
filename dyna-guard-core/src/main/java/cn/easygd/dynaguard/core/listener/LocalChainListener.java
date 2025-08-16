@@ -7,6 +7,7 @@ import cn.easygd.dynaguard.core.holder.GlobalBeanContextHolder;
 import cn.easygd.dynaguard.core.parser.ValidationChainParser;
 import cn.easygd.dynaguard.core.path.ChainFilePathParser;
 import cn.easygd.dynaguard.domain.config.LocalChainDataConfig;
+import cn.easygd.dynaguard.domain.exception.ValidationChainListenerException;
 import cn.easygd.dynaguard.utils.FileUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.filefilter.SuffixFileFilter;
@@ -50,7 +51,7 @@ public abstract class LocalChainListener implements ValidationChainListener {
         }
 
         // 按照类型增加文件过滤条件
-        String suffix = "." + type;
+        String suffix = FileUtils.FILE_EXTENSION_SEPARATOR + type;
         // 获取文件监听时间间隔
         long interval = config.getListenerInterval();
         // 对文件的监听路径进行解析
@@ -59,16 +60,19 @@ public abstract class LocalChainListener implements ValidationChainListener {
 
         // 获取文件最大的路径
         if (CollectionUtils.isNotEmpty(pathList)) {
-            Set<String> parentPaths = pathList.stream().map(path -> {
-                try {
-                    File file = new File(path);
-                    return file.getCanonicalPath();
-                } catch (Exception e) {
-                    // 这个地方正常情况不会出现异常，如果出现异常，则说明文件不存在
-                    log.warn("file not found : {}", path);
-                }
-                return null;
-            }).filter(StringUtils::isNotBlank).collect(Collectors.toSet());
+            Set<String> parentPaths = pathList.stream()
+                    .map(path -> path.replace(FileUtils.FILE_PREFIX, ""))
+                    .map(path -> {
+                        try {
+                            File file = new File(path);
+                            // 这个地方获取到的一定是绝对路径，所以获取父文件的路径进行监听
+                            return file.getParent();
+                        } catch (Exception e) {
+                            // 这个地方正常情况不会出现异常，如果出现异常，则说明文件不存在
+                            log.warn("file not found : {}", path);
+                        }
+                        return null;
+                    }).filter(StringUtils::isNotBlank).collect(Collectors.toSet());
 
             // 创建文件监听器
             for (String parentPath : parentPaths) {
@@ -99,7 +103,7 @@ public abstract class LocalChainListener implements ValidationChainListener {
                 try {
                     new FileAlterationMonitor(interval, observer).start();
                 } catch (Exception e) {
-                    throw new RuntimeException(e);
+                    throw new ValidationChainListenerException("local file listener start exception", e);
                 }
             }
         }

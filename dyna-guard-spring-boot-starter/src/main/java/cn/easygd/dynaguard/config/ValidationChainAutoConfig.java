@@ -7,7 +7,6 @@ import cn.easygd.dynaguard.core.guard.CounterGuardManager;
 import cn.easygd.dynaguard.domain.config.ValidationChainConfig;
 import org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -61,11 +60,13 @@ public class ValidationChainAutoConfig {
      * @return BeanNameAutoProxyCreator
      */
     @Bean
-    @ConditionalOnBean(name = "validationMethodInterceptor")
-    public BeanNameAutoProxyCreator proxyCreator(ValidationChainConfig validationChainConfig) {
+    public BeanNameAutoProxyCreator proxyCreator(ValidationChainConfig validationChainConfig,
+                                                 ValidationMethodInterceptor validationMethodInterceptor) {
         BeanNameAutoProxyCreator creator = new BeanNameAutoProxyCreator();
         creator.setBeanNames(validationChainConfig.getValidationMethodList().toArray(new String[0]));
         creator.setInterceptorNames("validationMethodInterceptor");
+        // 必须使用cglb代理
+        creator.setProxyTargetClass(true);
         return creator;
     }
 

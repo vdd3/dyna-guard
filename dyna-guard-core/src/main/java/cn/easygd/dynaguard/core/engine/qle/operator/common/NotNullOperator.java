@@ -22,13 +22,14 @@ public class NotNullOperator extends Operator {
         return Optional.ofNullable(target)
                 .map(source -> {
                     if (source instanceof String) {
-                        return StringUtils.isBlank((String) source);
+                        return StringUtils.isNotBlank((String) source);
                     } else if (source instanceof Collection) {
-                        return CollectionUtils.isEmpty((Collection) source);
+                        return CollectionUtils.isNotEmpty((Collection) source);
                     } else if (source instanceof Map) {
-                        return MapUtils.isEmpty((Map) source);
+                        return MapUtils.isNotEmpty((Map) source);
+                    } else {
+                        return true;
                     }
-                    return false;
-                }).orElse(true);
+                }).orElse(false);
     }
 }

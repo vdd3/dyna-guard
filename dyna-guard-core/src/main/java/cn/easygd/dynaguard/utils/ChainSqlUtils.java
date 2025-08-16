@@ -29,7 +29,7 @@ public class ChainSqlUtils {
     /**
      * 获取分页sql
      */
-    private static final String PAGE_SQL = "select %s from %s where %s = 0 `order` by `id` limit %s,%s";
+    private static final String PAGE_SQL = "select %s from %s where %s = 0 order by id limit %s,%s";
 
     /**
      * 获取分页更新sql
@@ -105,7 +105,8 @@ public class ChainSqlUtils {
      * @return 字段列表
      */
     public static List<String> getColumnList(ChainSqlConfig sqlConfig) {
-        return Lists.newArrayList(formatColumn(sqlConfig.getChainIdField()),
+        return Lists.newArrayList(formatColumn("id"),
+                formatColumn(sqlConfig.getChainIdField()),
                 formatColumn(sqlConfig.getLanguageField()),
                 formatColumn(sqlConfig.getScriptField()),
                 formatColumn(sqlConfig.getDeletedField()),

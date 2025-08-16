@@ -123,9 +123,13 @@ public class ValidationChain {
             }
             ValidationResult result = validator.execute(script, context);
             if (!result.getSuccess()) {
-                // 如果快速失败则抛出异常
                 if (node.getFastFail()) {
-                    return result;
+                    // 需要判断是否是因为执行异常导致的验证失败
+                    if (result.getException()) {
+                        throw new ValidationFailedException(ValidationErrorEnum.SCRIPT_EXECUTE_ERROR, result.getThrowable());
+                    } else {
+                        return ValidationResult.fail(node.getMessage());
+                    }
                 } else {
                     // 否则打印日志
                     log.info("validation fail but skip");

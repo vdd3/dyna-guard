@@ -3,6 +3,7 @@ package cn.easygd.dynaguard.core.parser.sql;
 import cn.easygd.dynaguard.domain.ValidationNode;
 
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * 流程sqlDO
@@ -78,7 +79,9 @@ public class ChainSqlDO {
         node.setScript(this.getScript());
         node.setOrder(this.getOrder());
         node.setMessage(this.getMessage());
-        node.setFastFail(this.getFastFail());
+        if (Objects.nonNull(this.getFastFail())) {
+            node.setFastFail(this.getFastFail());
+        }
         return node;
     }
 
