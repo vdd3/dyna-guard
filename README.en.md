@@ -445,6 +445,4 @@ Welcome to submit Issues and Pull Requests to improve Dyna-Guard.
 
 ## Contact
 
-[WeChat](doc/wechat.png)
-
-```
+<img src="doc/wechat.png" width="500">

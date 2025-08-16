@@ -437,4 +437,4 @@ com.example.CustomCounterGuard
 
 ## 联系方式
 
-[微信](doc/wechat.png)
+<img src="doc/wechat.png" width="500">
