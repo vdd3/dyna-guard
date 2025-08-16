@@ -2,9 +2,9 @@
 
 Dyna-Guard 是一个基于 Java 的动态校验框架，支持多种脚本语言和规则引擎。它提供了一套灵活的校验链机制，允许开发者通过配置化的方式定义和执行复杂的业务校验逻辑。
 
-## 技术文档
+## 技术文档 [点击进入](https://www.yuque.com/yuqueyonghuqdqyqs/kswtr7/nqb761u5ni0dgqkg)
 
-https://www.yuque.com/yuqueyonghuqdqyqs/kswtr7/nqb761u5ni0dgqkg
+## 示例项目 [示例项目]()
 
 ## 项目结构
 
@@ -13,6 +13,15 @@ dyna-guard/
 ├── dyna-guard-core/           # 核心模块，包含校验引擎、规则解析等核心功能
 └── dyna-guard-spring-boot-starter/  # Spring Boot Starter，提供自动配置和集成支持
 ```
+
+## 技术架构
+
+Dyna-Guard 采用模块化设计，核心模块与 Spring Boot Starter 分离，便于在不同环境中使用：
+
+1. **核心模块** (`dyna-guard-core`) 提供基础的校验能力
+2. **Spring Boot 集成模块** (`dyna-guard-spring-boot-starter`) 提供自动配置和 Spring 集成
+
+框架通过 SPI (Service Provider Interface) 机制实现插件化扩展，支持动态加载不同的校验器、解析器等组件。
 
 ## 功能特性
 
@@ -32,7 +41,7 @@ dyna-guard/
 <dependency>
     <groupId>com.easytu</groupId>
     <artifactId>dyna-guard-spring-boot-starter</artifactId>
-    <version>1.0.0</version>
+    <version>0.0.2</version>
 </dependency>
 ```
 
@@ -42,35 +51,246 @@ dyna-guard/
 
 ```yaml
 validation:
-  # 解析文件解析器
+  # 解析器的配置，获取校验链时若未指定group，将根据解析器优先级获取对应group下的流程
   parser: sql,xml,json
-  # 需要拦截的类，如果想使用方法级别校验，请将此参数设置为需要拦截的类名称
-  validation-method: **Service
-  # 存放校验链文件
-  chain-file-path: classpath:chain/*Chain.xml,classpath:chain/*Chain.json
+
+  # 解析文件路径的解析器名称，一般无需设置，使用框架默认解析器
+  pathParserName: spring
+
+  # 需要拦截的类，若使用方法级别校验，设置为需要拦截的类名称
+  validationMethod: **Service
+
+  # 流程文件的路径，支持多个路径，用英文逗号分隔
+  chainFilePath: classpath:chain/*Chain.xml,classpath:chain/*Chain.json
+
+  # SQL数据存放chain的配置（用于连接数据库及字段映射，默认开启监听）
+  sqlChainDataMap:
+    enableListener: true
+    url: jdbc:mysql://localhost:3306/db
+    driverClassName: com.mysql.cj.jdbc.Driver
+    username: root
+    password: root
+    # 监听器线程池核心线程数（定时任务实现）
+    corePoolSize: 1
+    # 第一次任务的间隔时间（秒）
+    firstListenerInterval: 120
+    # 后续任务的间隔时间（秒）
+    listenerInterval: 300
+    tableName: validation_chain
+    createTimeField: create_time
+    updateTimeField: update_time
+    chainIdField: chain_id
+    deletedField: deleted
+    orderField: order
+    messageField: message
+    fastFailField: fast_fail
+    languageField: language
+    scriptField: script
+    guardExpireField: guard_expire
+    guardThresholdField: guard_threshold
+
+  # XML存放chain的配置（用于xml标签映射及监听器）
+  xmlChainDataMap:
+    enableListener: true
+    # 监听文件的路径
+    listenerFileList: classpath:chain/*Chain.xml
+    # 监听文件的间隔
+    listenerInterval: 5
+    guardExpireField: guardExpire
+    guardThresholdField: guardThreshold
+    chainField: chain
+    chainIdField: id
+    nodeField: node
+    languageField: language
+    orderField: order
+    messageField: message
+    fastFailField: fastFail
+
+  # JSON存放chain的配置（用于json字段映射及监听器）
+  jsonChainDataMap:
+    enableListener: true
+    # 监听文件的路径
+    listenerFileList: classpath:chain/*Chain.json
+    # 监听文件的间隔
+    listenerInterval: 5
+    guardExpireField: guardExpire
+    guardThresholdField: guardThreshold
+    chainIdField: chainId
+    nodeField: node
+    languageField: language
+    orderField: order
+    messageField: message
+    fastFailField: fastFail
+    scriptField: script
+```
+
+在 `application.properties` 中添加配置：
+
+```properties
+# 解析器的配置，获取校验链的时候如果没有指定group会根据解析器的优先级获取对应group下的流程
+validation.parser=sql,xml,json
+# 解析文件路径的解析器名称，一般不用设置，直接根据框架默认的解析器即可
+validation.pathParserName=spring
+# 需要拦截的类，如果想使用方法级别校验，请将此参数设置为需要拦截的类名称
+validation.validationMethod=**Service
+# 流程文件的路径，支持多个路径，多个路径用英文逗号隔开
+validation.chainFilePath=classpath:chain/*Chain.xml,classpath:chain/*Chain.json
+# sql数据存放chain的配置，主要用于连接数据以及对字段的映射，默认开启监听
+validation.sqlChain-data-map[enableListener]=true
+validation.sqlChainDataMap[url]=jdbc:mysql://localhost:3306/db
+validation.sqlChainDataMap[driverClassName]=com.mysql.cj.jdbc.Driver
+validation.sqlChainDataMap[username]=root
+validation.sqlChainDataMap[password]=root
+# 监听器是使用定时任务线程池实现的，这个是线程池的核心线程数
+validation.sqlChainDataMap[corePoolSize]=1
+# 第一次任务的间隔时间（秒）
+validation.sqlChainDataMap[firstListenerInterval]=120
+# 后续任务的间隔时间（秒）
+validation.sqlChainDataMap[listenerInterval]=300
+validation.sqlChainDataMap[tableName]=validation_chain
+validation.sqlChainDataMap[createTimeField]=create_time
+validation.sqlChainDataMap[updateTimeField]=update_time
+validation.sqlChainDataMap[chainIdField]=chain_id
+validation.sqlChainDataMap[deletedField]=deleted
+validation.sqlChainDataMap[orderField]=order
+validation.sqlChainDataMap[messageField]=message
+validation.sqlChainDataMap[fastFailField]=fast_fail
+validation.sqlChainDataMap[languageField]=language
+validation.sqlChainDataMap[scriptField]=script
+validation.sqlChainDataMap[guardExpireField]=guard_expire
+validation.sqlChainDataMap[guardThresholdField]=guard_threshold
+# xml存放chain的配置，主要用于xml标签的映射，以及监听器
+validation.xmlChainDataMap[enableListener]=true
+# 监听文件的路径
+validation.xmlChainDataMap[listenerFileList]=classpath:chain/*Chain.xml
+# 监听文件的间隔
+validation.xmlChainDataMap[listenerInterval]=5
+validation.xmlChainDataMap[guardExpireField]=guardExpire
+validation.xmlChainDataMap[guardThresholdField]=guardThreshold
+validation.xmlChainDataMap[chainField]=chain
+validation.xmlChainDataMap[chainIdField]=id
+validation.xmlChainDataMap[nodeField]=node
+validation.xmlChainDataMap[languageField]=language
+validation.xmlChainDataMap[orderField]=order
+validation.xmlChainDataMap[messageField]=message
+validation.xmlChainDataMap[fastFailField]=fastFail
+# json存放chain的配置，主要用于json字段的映射，以及监听器
+validation.jsonChainDataMap[enableListener]=true
+# 监听文件的路径
+validation.jsonChainDataMap[listenerFileList]=classpath:chain/*Chain.json
+# 监听文件的间隔
+validation.jsonChainDataMap[listenerInterval]=5
+validation.jsonChainDataMap[guardExpireField]=guardExpire
+validation.jsonChainDataMap[guardThresholdField]=guardThreshold
+validation.jsonChainDataMap[chainIdField]=chainId
+validation.jsonChainDataMap[nodeField]=node
+validation.jsonChainDataMap[languageField]=language
+validation.jsonChainDataMap[orderField]=order
+validation.jsonChainDataMap[messageField]=message
+validation.jsonChainDataMap[fastFailField]=fastFail
+validation.jsonChainDataMap[scriptField]=script
 ```
 
 ### 使用示例
 
-1.使用json中的校验本流程进行验证
+在您的springBoot项目启动类上添加 [@EnableValidation]
 
-在需要校验的方法上添加 [@DynamicGuard]
+`加上这个注解springboot启动时会自动加载一整套流程`
+
+在需要校验的方法实现类上添加 [@DynamicGuard]
 注解：
 
 ```java
 
-@Service("userService")
-public class UserService {
+@Service("simpleService")
+public class SimpleServiceImpl implements SimpleService {
 
+    /**
+     * 单个脚本为校验链
+     *
+     * @param param 请求参数
+     */
     @DynamicGuard(group = "json", chainId = "user.create")
-    public User createUser(CreateUserRequest request) {
-        // 方法实现
-        return user;
+    @Override
+    public void oneNode(Param param) {
+        System.out.println("校验通过");
+    }
+
+    /**
+     * 多脚本组合为校验链
+     *
+     * @param param 请求参数
+     */
+    @DynamicGuard(group = "xml", chainId = "user.update")
+    @Override
+    public void moreNode(Param param) {
+        System.out.println("校验通过");
+    }
+
+    /**
+     * 按照优先级匹配校验链分组
+     *
+     * @param param 请求参数
+     */
+    @DynamicGuard(chainId = "user.create")
+    @Override
+    public void sqlNode(Param param) {
+        System.out.println("校验通过");
+    }
+
+    /**
+     * 测试熔断
+     *
+     * @param param 请求参数
+     */
+    @Override
+    @DynamicGuard(chainId = "user.create", enableGuard = true)
+    public void guard(Param param) {
+        System.out.println("校验通过");
+    }
+
+}
+```
+
+业务级验证流程, 在业务逻辑中调用显式的调用流程
+
+```java
+public class BizService {
+    public void guardInBiz(Param param) {
+        // 构建您的验证流程上下文
+        ValidationContext context = new SpringValidationContext();
+
+        // 获取流程，然后自己执行
+        ValidationChain chain = null;
+        chain = ChainExecutorHelper.getChain("您的验证链ID");
+        chain = ChainExecutorHelper.getChain("您想使用的存储流程的分组", "您的验证链ID");
+
+        // 直接抛出异常的执行
+        chain.execute(context);
+
+        // 带返回值的执行
+        ValidationResult result = chain.executeResult(context);
+
+        // 接入熔断并且抛出异常的执行
+        chain.executeGuard(context);
+
+        // 接入熔断并且带返回值的执行
+        result = chain.executeGuardResult(context);
+
+        // 您可以根据返回值中的信息处理
+
+
+        // 工具类帮您执行
+        ChainExecutorHelper.validateHere("您的验证链ID", context);
+        ChainExecutorHelper.validateHere("您想使用的存储流程的分组", "您的验证链ID", context);
+
     }
 }
 ```
 
-2. 定义校验链配置（JSON格式）：
+2. 定义校验链配置：
+
+`json格式`
 
 ```json
 [
@@ -79,16 +299,9 @@ public class UserService {
     "node": [
       {
         "order": 1,
-        "script": "request != null && request.name != null",
-        "language": "spel",
+        "script": "#param != null && #param.name != null",
+        "language": "SpEl",
         "message": "参数不能为空",
-        "fastFail": true
-      },
-      {
-        "order": 2,
-        "script": "request.phone matches '^1[3-9]\\d{9}$'",
-        "language": "spel",
-        "message": "手机号格式不正确",
         "fastFail": true
       }
     ]
@@ -96,11 +309,52 @@ public class UserService {
 ]
 ```
 
+`xml格式`
+
+```xml
+
+<validation>
+    <chain id="user.update">
+        <!-- 角色数据权限校验 -->
+        <node language="Groovy" order="1" message="校验失败">
+            <![CDATA[
+            def workNo = param.workNo;
+            def roleService = beanContext.getBean("roleService");
+            def roleList = roleService.getRoleList(workNo);
+            def flag = false;
+            // 角色权限校验
+            if(roleList != null || roleList.size() > 0) {
+               if("admin" in roleList){
+                // 获取用户数据权限
+                def dataRoleList = roleService.getDataRoleList(workNo);
+                return "update" in dataRoleList;
+               }
+            }
+            return flag;
+            ]]>
+        </node>
+        <!-- 再使用qle对修改的内容进行校验 -->
+        <node language="GuardScript" order="2" message="校验失败">
+            <![CDATA[
+            if (NotNull(param.name) == false) {return false;}
+            if (NotNull(param.age) == false) {return false;}
+            if (NotNull(param.sex) == false) {return false;}
+            if (NotNull(param.address) == false) {return false;}
+            if (InClosedRange(18, 60, param.age) == false) {return false;}
+            roleList = InvokeBeanMethod("roleService", "getDataRoleList", param.workNo);
+            if(roleList.size() == 0) {return false;}
+            return param.address == InvokeBeanMethod("addressService", "getAddress");
+            ]]>
+        </node>
+    </chain>
+</validation>
+```
+
 ## 扩展开发
 
 ### 自定义校验器
 
-实现 [Validator]
+实现 [Validator]或者继承[BaseValidator]
 接口并注册到 SPI：
 
 ```java
@@ -124,14 +378,54 @@ public class CustomValidator extends BaseValidator {
 com.example.CustomValidator
 ```
 
-## 技术架构
+### 自定义计数熔断器，非常建议您书写自己的计数熔断器
 
-Dyna-Guard 采用模块化设计，核心模块与 Spring Boot Starter 分离，便于在不同环境中使用：
+实现[CounterGuard]
 
-1. **核心模块** (`dyna-guard-core`) 提供基础的校验能力
-2. **Spring Boot 集成模块** (`dyna-guard-spring-boot-starter`) 提供自动配置和 Spring 集成
+```java
+public class CustomCounterGuard implements CounterGuard {
 
-框架通过 SPI (Service Provider Interface) 机制实现插件化扩展，支持动态加载不同的校验器、解析器等组件。
+    @Override
+    public List<String> chainId() {
+        // 这个是定义您需要熔断的流程
+        return null;
+    }
+
+    @Override
+    public Boolean isExceedThreshold(String chainId, Long threshold) {
+        // 判断是否超过了阈值，超过阈值会执行降级操作
+        return null;
+    }
+
+    @Override
+    public Long increment(String chainId) {
+        // 自增
+        return null;
+    }
+
+    @Override
+    public Long getCount(String chainId) {
+        // 获取当前失败的次数
+        return;
+    }
+
+    @Override
+    public void clear(String chainId) {
+        // 清除
+    }
+
+    @Override
+    public void rollback(String chainId) {
+        // 在这里实现您的降级逻辑
+    }
+}
+```
+
+在 `META-INF/services/cn.easygd.dynaguard.core.guard.CounterGuard` 文件中添加实现类：
+
+```
+com.example.CustomCounterGuard
+```
 
 ## 贡献指南
 
@@ -139,8 +433,8 @@ Dyna-Guard 采用模块化设计，核心模块与 Spring Boot Starter 分离，
 
 ## 许可证
 
-[待补充具体许可证信息]
+[Apache 2.0]
 
 ## 联系方式
 
-[wd826209152]
+[微信](doc/wechat.png)
