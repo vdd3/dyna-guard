@@ -4,7 +4,7 @@ Dyna-Guard 是一个基于 Java 的动态校验框架，支持多种脚本语言
 
 ## 技术文档 [点击进入](https://www.yuque.com/yuqueyonghuqdqyqs/kswtr7/nqb761u5ni0dgqkg)
 
-## 示例项目 [点击进入]()
+## 示例项目 [点击进入](https://github.com/vdd3/dyna-guard-example)
 
 ## 项目结构
 
