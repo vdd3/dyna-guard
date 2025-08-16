@@ -44,7 +44,7 @@ loading of different validators, parsers and other components.
 ```xml
 
 <dependency>
-    <groupId>com.easytu</groupId>
+    <groupId>cn.easygd</groupId>
     <artifactId>dyna-guard-spring-boot-starter</artifactId>
     <version>0.0.2</version>
 </dependency>

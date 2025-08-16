@@ -39,7 +39,7 @@ Dyna-Guard 采用模块化设计，核心模块与 Spring Boot Starter 分离，
 ```xml
 
 <dependency>
-    <groupId>com.easytu</groupId>
+    <groupId>cn.easygd</groupId>
     <artifactId>dyna-guard-spring-boot-starter</artifactId>
     <version>0.0.2</version>
 </dependency>
