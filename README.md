@@ -25,7 +25,7 @@ Dyna-Guard 采用模块化设计，核心模块与 Spring Boot Starter 分离，
 
 ## 功能特性
 
-- **多规则引擎支持**：支持 Groovy、JavaScript、Python、QLExpress 和 Spring Expression Language (SpEL)
+- **多规则引擎支持**：支持 Groovy、JavaScript、QLExpress 和 Spring Expression Language (SpEL)
 - **灵活的校验链机制**：通过配置定义校验节点，支持多种数据源（JSON、XML、SQL）
 - **Spring Boot 集成**：提供 Starter 模块，开箱即用
 - **动态规则加载**：支持从本地文件、数据库等多种来源加载校验规则

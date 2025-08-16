@@ -29,7 +29,7 @@ loading of different validators, parsers and other components.
 
 ## Features
 
-- **Multi-rule Engine Support**: Supports Groovy, JavaScript, Python, QLExpress and Spring Expression Language (SpEL)
+- **Multi-rule Engine Support**: Supports Groovy, JavaScript, QLExpress and Spring Expression Language (SpEL)
 - **Flexible Validation Chain Mechanism**: Define validation nodes through configuration, supporting multiple data
   sources (JSON, XML, SQL)
 - **Spring Boot Integration**: Provides Starter module, ready to use out of the box
