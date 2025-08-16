@@ -5,7 +5,7 @@
     <parent>
         <artifactId>dyna-guard</artifactId>
         <groupId>cn.easygd</groupId>
-        <version>1.0-SNAPSHOT</version>
+        <version>0.0.2</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -22,7 +22,6 @@
         <license>
             <name>Apache-2.0</name>
             <url>https://www.apache.org/licenses/LICENSE-2.0.html</url>
-            <distribution>repo</distribution>
         </license>
     </licenses>
 

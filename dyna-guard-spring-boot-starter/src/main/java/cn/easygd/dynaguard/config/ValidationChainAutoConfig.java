@@ -19,7 +19,6 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @AutoConfigureAfter({ValidationChainPropertyAutoConfiguration.class})
-@ConditionalOnBean(ValidationChainConfig.class)
 public class ValidationChainAutoConfig {
 
     /**
@@ -62,6 +61,7 @@ public class ValidationChainAutoConfig {
      * @return BeanNameAutoProxyCreator
      */
     @Bean
+    @ConditionalOnBean(name = "validationMethodInterceptor")
     public BeanNameAutoProxyCreator proxyCreator(ValidationChainConfig validationChainConfig) {
         BeanNameAutoProxyCreator creator = new BeanNameAutoProxyCreator();
         creator.setBeanNames(validationChainConfig.getValidationMethodList().toArray(new String[0]));

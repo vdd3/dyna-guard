@@ -75,7 +75,11 @@ public class ValidationMethodInterceptor implements MethodInterceptor {
         }
 
         // 5.执行验证链
-        chain.execute(context);
+        if (dynamicGuard.enableGuard()) {
+            chain.executeGuard(context);
+        } else {
+            chain.execute(context);
+        }
 
         // 6.验证通过
         return invocation.proceed();

@@ -7,7 +7,7 @@
     <groupId>cn.easygd</groupId>
     <artifactId>dyna-guard</artifactId>
     <packaging>pom</packaging>
-    <version>0.0.1</version>
+    <version>0.0.2</version>
     <name>Dyna-Guard</name>
     <description>A dynamic validation framework supporting multiple script engines</description>
     <url>https://github.com/vdd3/dyna-guard</url>
@@ -58,14 +58,14 @@
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
-        <dg.core.version>0.0.1</dg.core.version>
-        <dg.spring.version>0.0.1</dg.spring.version>
+        <dg.core.version>0.0.2</dg.core.version>
+        <dg.spring.version>0.0.2</dg.spring.version>
         <qle.version>3.3.2</qle.version>
         <slf4j.version>1.7.32</slf4j.version>
         <jackson.version>2.11.4</jackson.version>
         <groovy.version>3.0.17</groovy.version>
-        <js.version>22.3.2</js.version>
-        <python.version>24.2.0</python.version>
+        <js.version>20.3.0</js.version>
+        <python.version>20.3.0</python.version>
         <dom4j.version>2.1.4</dom4j.version>
         <common-io.version>2.11.0</common-io.version>
         <springboot.version>2.6.8</springboot.version>
@@ -260,23 +260,10 @@
                 <version>0.4.0</version>
                 <extensions>true</extensions>
                 <configuration>
-                    <!-- 这里的serverId是之前在settings.xml中配置的 -->
                     <publishingServerId>ossrh</publishingServerId>
                     <tokenAuth>true</tokenAuth>
                 </configuration>
             </plugin>
-            <!-- Nexus Staging插件 -->
-            <!--            <plugin>-->
-            <!--                <groupId>org.sonatype.plugins</groupId>-->
-            <!--                <artifactId>nexus-staging-maven-plugin</artifactId>-->
-            <!--                <version>1.6.8</version>-->
-            <!--                <extensions>true</extensions>-->
-            <!--                <configuration>-->
-            <!--                    <serverId>ossrh</serverId>-->
-            <!--                    <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>-->
-            <!--                    <autoReleaseAfterClose>true</autoReleaseAfterClose>-->
-            <!--                </configuration>-->
-            <!--            </plugin>-->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>flatten-maven-plugin</artifactId>

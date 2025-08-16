@@ -25,8 +25,8 @@ public class ValidationBeanSelector extends AdviceModeImportSelector<EnableValid
     @Override
     protected String[] selectImports(AdviceMode adviceMode) {
         return new String[]{
-                "com.dg.config.ValidationChainAutoConfig",
-                "com.dg.config.ValidationChainPropertyAutoConfiguration"
+                "cn.easygd.dynaguard.config.ValidationChainAutoConfig",
+                "cn.easygd.dynaguard.config.ValidationChainPropertyAutoConfiguration"
         };
     }
 }

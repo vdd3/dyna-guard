@@ -11,6 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.List;
 import java.util.function.BiFunction;
+import java.util.stream.Collectors;
 
 /**
  * 流程sql工具类
@@ -28,7 +29,7 @@ public class ChainSqlUtils {
     /**
      * 获取分页sql
      */
-    private static final String PAGE_SQL = "select %s from %s where %s = 0 order by id limit %s,%s";
+    private static final String PAGE_SQL = "select %s from %s where %s = 0 `order` by `id` limit %s,%s";
 
     /**
      * 获取分页更新sql
@@ -47,7 +48,7 @@ public class ChainSqlUtils {
      * @return sql
      */
     public static String genCountSql(ChainSqlConfig sqlConfig) {
-        return String.format(COUNT_SQL, sqlConfig.getTableName(), sqlConfig.getDeletedField());
+        return String.format(COUNT_SQL, sqlConfig.getTableName(), formatColumn(sqlConfig.getDeletedField()));
     }
 
     /**
@@ -62,7 +63,7 @@ public class ChainSqlUtils {
         return String.format(PAGE_SQL,
                 String.join(",", getColumnList(sqlConfig)),
                 sqlConfig.getTableName(),
-                sqlConfig.getDeletedField(),
+                formatColumn(sqlConfig.getDeletedField()),
                 (pageNum - 1) * pageSize,
                 pageSize);
     }
@@ -78,7 +79,7 @@ public class ChainSqlUtils {
         return String.format(SELECT_UPDATE_SQL,
                 String.join(",", getColumnList(sqlConfig)),
                 sqlConfig.getTableName(),
-                sqlConfig.getUpdateTimeField(),
+                formatColumn(sqlConfig.getUpdateTimeField()),
                 updateTime);
     }
 
@@ -93,8 +94,8 @@ public class ChainSqlUtils {
         return String.format(SELECT_BY_CHAIN_ID_SQL,
                 String.join(",", getColumnList(sqlConfig)),
                 sqlConfig.getTableName(),
-                sqlConfig.getChainIdField(),
-                String.join(",", chainIdList));
+                formatColumn(sqlConfig.getChainIdField()),
+                chainIdList.stream().map(source -> String.format("'%s'", source)).collect(Collectors.joining(",")));
     }
 
     /**
@@ -104,17 +105,17 @@ public class ChainSqlUtils {
      * @return 字段列表
      */
     public static List<String> getColumnList(ChainSqlConfig sqlConfig) {
-        return Lists.newArrayList(sqlConfig.getChainIdField(),
-                sqlConfig.getLanguageField(),
-                sqlConfig.getScriptField(),
-                sqlConfig.getDeletedField(),
-                sqlConfig.getCreateTimeField(),
-                sqlConfig.getUpdateTimeField(),
-                sqlConfig.getOrderField(),
-                sqlConfig.getMessageField(),
-                sqlConfig.getFastFailField(),
-                sqlConfig.getGuardExpireField(),
-                sqlConfig.getGuardThresholdField());
+        return Lists.newArrayList(formatColumn(sqlConfig.getChainIdField()),
+                formatColumn(sqlConfig.getLanguageField()),
+                formatColumn(sqlConfig.getScriptField()),
+                formatColumn(sqlConfig.getDeletedField()),
+                formatColumn(sqlConfig.getCreateTimeField()),
+                formatColumn(sqlConfig.getUpdateTimeField()),
+                formatColumn(sqlConfig.getOrderField()),
+                formatColumn(sqlConfig.getMessageField()),
+                formatColumn(sqlConfig.getFastFailField()),
+                formatColumn(sqlConfig.getGuardExpireField()),
+                formatColumn(sqlConfig.getGuardThresholdField()));
     }
 
     /**
@@ -175,5 +176,15 @@ public class ChainSqlUtils {
         } catch (Exception e) {
             throw new ChainSqlExecuteException("count select sql execute converter result exception", e);
         }
+    }
+
+    /**
+     * 格式化字段
+     *
+     * @param column 字段
+     * @return 字段
+     */
+    public static String formatColumn(String column) {
+        return String.format("`%s`", column);
     }
 }

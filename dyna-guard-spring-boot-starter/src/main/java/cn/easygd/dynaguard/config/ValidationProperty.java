@@ -10,7 +10,7 @@ import java.util.Map;
  * @author VD
  * @date 2025/8/15 19:22
  */
-@ConfigurationProperties(prefix = "validation")
+@ConfigurationProperties(prefix = "validation", ignoreUnknownFields = true)
 public class ValidationProperty {
 
     /**

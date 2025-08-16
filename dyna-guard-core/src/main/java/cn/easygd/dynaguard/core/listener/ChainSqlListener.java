@@ -12,6 +12,7 @@ import cn.easygd.dynaguard.domain.enums.ParserTypeEnum;
 import cn.easygd.dynaguard.utils.ChainSqlUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -74,6 +75,7 @@ public class ChainSqlListener implements ValidationChainListener {
                 sqlConfig.getFirstListenerInterval(),
                 sqlConfig.getListenerInterval(),
                 TimeUnit.SECONDS);
+        log.info("chain sql listener start");
 
         // 将定时任务线程放到jvm关闭钩子中
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
@@ -102,17 +104,21 @@ public class ChainSqlListener implements ValidationChainListener {
      * @param sqlConfig sql配置
      */
     private void execute(ChainSqlConfig sqlConfig) {
-        // 获取当前时间的前2秒
+        // 获取当前时间的前几分钟刷新时间
         String updateTime = LocalDateTime.now()
                 .minusSeconds(TimeUnit.SECONDS.toSeconds(sqlConfig.getListenerInterval()))
                 .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        String sql = ChainSqlUtils.genSelectUpdateSql(sqlConfig, updateTime);
+        String sql = ChainSqlUtils.genSelectUpdateSql(sqlConfig, String.format("'%S'", updateTime));
         // 查询所有更新过的chainId
         List<String> chainIdList = ChainSqlUtils.executeSql(sqlConfig, sql, ChainSqlUtils::executeSelectSql)
                 .stream()
                 .map(ChainSqlDO::getChainId)
                 .distinct()
                 .collect(Collectors.toList());
+        if (CollectionUtils.isEmpty(chainIdList)) {
+            log.info("{} after no updated chainId", updateTime);
+            return;
+        }
 
         // 捞取需更新的chainId
         String sql2 = ChainSqlUtils.genSelectByChainIdSql(sqlConfig, chainIdList);

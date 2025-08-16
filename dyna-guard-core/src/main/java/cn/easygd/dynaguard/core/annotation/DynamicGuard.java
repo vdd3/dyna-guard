@@ -26,4 +26,11 @@ public @interface DynamicGuard {
      * @return 验证链ID
      */
     String chainId() default "";
+
+    /**
+     * 是否开启熔断
+     *
+     * @return 是否开启熔断
+     */
+    boolean enableGuard() default false;
 }

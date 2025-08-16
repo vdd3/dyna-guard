@@ -90,21 +90,25 @@ public class ValidationChainManager {
 
             // 初始化内容，一般是对配置的初始化
             try {
+                log.info("parser init start : {}", parserType);
                 parser.init(config);
             } catch (Exception e) {
                 log.error("parser init error type : {} , msg : {}", parserType, e.getMessage(), e);
                 throw new ValidationChainParserException(String.format("parser init error type : %s , msg : %s", parserType, e.getMessage()), e);
             }
+            log.info("parser init end : {}", parserType);
 
             // 解析内容，解析流程时并不会方式脚本的执行器，解析完成后一并放入，如果有新的解析器，
             // 不需要关注怎么获取对应的脚本执行器，只需要实现解析流程即可
             List<ValidationChain> chainList;
             try {
+                log.info("parser parse start : {}", parserType);
                 chainList = parser.parse(config);
             } catch (Exception e) {
                 log.error("parser parse error type : {} , msg : {}", parserType, e.getMessage(), e);
                 throw new ValidationChainParserException(String.format("parser parse error type : %s , msg : %s", parserType, e.getMessage()), e);
             }
+            log.info("parser parse end : {} , this group chain size : {}", parserType, chainList.size());
 
             // 放入对应的脚本解析器中
             if (CollectionUtils.isNotEmpty(chainList)) {
