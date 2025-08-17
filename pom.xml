@@ -7,7 +7,7 @@
     <groupId>cn.easygd</groupId>
     <artifactId>dyna-guard</artifactId>
     <packaging>pom</packaging>
-    <version>0.0.3</version>
+    <version>0.0.4</version>
     <name>Dyna-Guard</name>
     <description>A dynamic validation framework supporting multiple script engines</description>
     <url>https://github.com/vdd3/dyna-guard</url>
@@ -58,8 +58,8 @@
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
-        <dg.core.version>0.0.3</dg.core.version>
-        <dg.spring.version>0.0.3</dg.spring.version>
+        <dg.core.version>0.0.4</dg.core.version>
+        <dg.spring.version>0.0.4</dg.spring.version>
         <qle.version>3.3.4</qle.version>
         <slf4j.version>1.7.32</slf4j.version>
         <jackson.version>2.16.0</jackson.version>
