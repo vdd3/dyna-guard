@@ -45,6 +45,10 @@ Dyna-Guard 采用模块化设计，核心模块与 Spring Boot Starter 分离，
 </dependency>
 ```
 
+### 安全性
+
+[![Security Status](https://www.murphysec.com/platform3/v31/badge/1957069652641730560.svg)](https://www.murphysec.com/console/report/1957058778576965632/1957069652641730560)
+
 ### 基本配置
 
 在 `application.yml` 中添加配置：

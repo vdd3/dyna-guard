@@ -50,6 +50,10 @@ loading of different validators, parsers and other components.
 </dependency>
 ```
 
+### Security
+
+[![Security Status](https://www.murphysec.com/platform3/v31/badge/1957069652641730560.svg)](https://www.murphysec.com/console/report/1957058778576965632/1957069652641730560)
+
 ### Basic Configuration
 
 Add configuration in `application.yml`:
