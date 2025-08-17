@@ -60,7 +60,7 @@
         <maven.compiler.target>8</maven.compiler.target>
         <dg.core.version>0.0.3</dg.core.version>
         <dg.spring.version>0.0.3</dg.spring.version>
-        <qle.version>3.3.3</qle.version>
+        <qle.version>3.3.4</qle.version>
         <slf4j.version>1.7.32</slf4j.version>
         <jackson.version>2.16.0</jackson.version>
         <groovy.version>3.0.17</groovy.version>
