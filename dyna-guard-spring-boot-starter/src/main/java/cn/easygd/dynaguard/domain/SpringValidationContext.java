@@ -28,7 +28,7 @@ public class SpringValidationContext extends ValidationContext {
     public Consumer<Map<String, Object>> buildExecuteContext() {
         return map -> {
             map.putAll(this.parameters);
-            map.put("beanContext", GlobalBeanContextHolder.getContext());
+            map.put(BEAN_CONTEXT, GlobalBeanContextHolder.getContext());
         };
     }
 }

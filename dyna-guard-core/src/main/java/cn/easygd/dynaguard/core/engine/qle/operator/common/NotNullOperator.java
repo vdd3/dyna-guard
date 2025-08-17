@@ -1,8 +1,8 @@
 package cn.easygd.dynaguard.core.engine.qle.operator.common;
 
 import com.ql.util.express.Operator;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Collection;

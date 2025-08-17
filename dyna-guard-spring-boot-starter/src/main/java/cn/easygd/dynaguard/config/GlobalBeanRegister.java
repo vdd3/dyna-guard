@@ -2,8 +2,6 @@ package cn.easygd.dynaguard.config;
 
 import cn.easygd.dynaguard.SpringBeanContext;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.BeanInitializationException;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 

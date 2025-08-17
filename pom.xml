@@ -7,7 +7,7 @@
     <groupId>cn.easygd</groupId>
     <artifactId>dyna-guard</artifactId>
     <packaging>pom</packaging>
-    <version>0.0.2</version>
+    <version>0.0.3</version>
     <name>Dyna-Guard</name>
     <description>A dynamic validation framework supporting multiple script engines</description>
     <url>https://github.com/vdd3/dyna-guard</url>
@@ -58,17 +58,21 @@
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
-        <dg.core.version>0.0.2</dg.core.version>
-        <dg.spring.version>0.0.2</dg.spring.version>
-        <qle.version>3.3.2</qle.version>
+        <dg.core.version>0.0.3</dg.core.version>
+        <dg.spring.version>0.0.3</dg.spring.version>
+        <qle.version>3.3.3</qle.version>
         <slf4j.version>1.7.32</slf4j.version>
-        <jackson.version>2.11.4</jackson.version>
+        <jackson.version>2.16.0</jackson.version>
         <groovy.version>3.0.17</groovy.version>
-        <js.version>20.3.0</js.version>
+        <js.version>20.3.6</js.version>
         <dom4j.version>2.1.4</dom4j.version>
-        <common-io.version>2.11.0</common-io.version>
+        <common-io.version>2.14.0</common-io.version>
         <springboot.version>2.6.8</springboot.version>
+        <springaop.version>2.6.9</springaop.version>
         <spring.version>5.3.20</spring.version>
+        <guava.version>32.0.0-jre</guava.version>
+        <lang3.version>3.12.0</lang3.version>
+        <collections4.version>4.4</collections4.version>
     </properties>
 
     <dependencyManagement>
@@ -77,11 +81,6 @@
                 <groupId>cn.easygd</groupId>
                 <artifactId>dyna-guard-core</artifactId>
                 <version>${dg.core.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>cn.easygd</groupId>
-                <artifactId>dyna-guard-spring-boot-starter</artifactId>
-                <version>${dg.spring.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.alibaba</groupId>
@@ -132,6 +131,21 @@
                 <artifactId>commons-io</artifactId>
                 <version>${common-io.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${guava.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${lang3.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-collections4</artifactId>
+                <version>${collections4.version}</version>
+            </dependency>
 
             <!-- spring -->
             <dependency>
@@ -151,34 +165,20 @@
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-aop</artifactId>
-                <version>${springboot.version}</version>
+                <version>${springaop.version}</version>
                 <exclusions>
                     <exclusion>
                         <artifactId>spring-boot-starter-logging</artifactId>
                         <groupId>org.springframework.boot</groupId>
                     </exclusion>
+                    <exclusion>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-starter</artifactId>
+                    </exclusion>
                 </exclusions>
             </dependency>
         </dependencies>
     </dependencyManagement>
-
-    <dependencies>
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>31.0-jre</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>3.12.0</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-collections</groupId>
-            <artifactId>commons-collections</artifactId>
-            <version>3.2.2</version>
-        </dependency>
-    </dependencies>
 
     <build>
         <plugins>

@@ -9,7 +9,7 @@ import cn.easygd.dynaguard.core.path.ChainFilePathParser;
 import cn.easygd.dynaguard.domain.config.LocalChainDataConfig;
 import cn.easygd.dynaguard.domain.exception.ValidationChainListenerException;
 import cn.easygd.dynaguard.utils.FileUtils;
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.filefilter.SuffixFileFilter;
 import org.apache.commons.io.monitor.FileAlterationListenerAdaptor;
 import org.apache.commons.io.monitor.FileAlterationMonitor;
