@@ -437,4 +437,5 @@ com.example.CustomCounterGuard
 
 ## 联系方式
 
-<img src="doc/wechat.png" width="500">
+<img src="doc/wechat.png" width="350">
+<img src="doc/yangpeng.png" width="350">
