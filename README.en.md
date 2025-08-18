@@ -37,6 +37,10 @@ loading of different validators, parsers and other components.
 - **Circuit Breaker Mechanism**: Built-in counter circuit breaker to prevent system overload
 - **AOP Interception**: Method-level validation interception based on annotations
 
+## Security
+
+[![Security Status](https://www.murphysec.com/platform3/v31/badge/1957074509173805056.svg)](https://www.murphysec.com/console/report/1957067370900410368/1957074509173805056)
+
 ## Installation and Usage
 
 ### Maven Dependency
@@ -49,10 +53,6 @@ loading of different validators, parsers and other components.
     <version>0.0.4</version>
 </dependency>
 ```
-
-### Security
-
-[![Security Status](https://www.murphysec.com/platform3/v31/badge/1957074509173805056.svg)](https://www.murphysec.com/console/report/1957067370900410368/1957074509173805056)
 
 ### Basic Configuration
 

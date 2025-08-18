@@ -32,6 +32,10 @@ Dyna-Guard 采用模块化设计，核心模块与 Spring Boot Starter 分离，
 - **熔断机制**：内置计数器熔断器，防止系统过载
 - **AOP 拦截**：基于注解的方法级校验拦截
 
+## 安全性
+
+[![Security Status](https://www.murphysec.com/platform3/v31/badge/1957074509173805056.svg)](https://www.murphysec.com/console/report/1957067370900410368/1957074509173805056)
+
 ## 安装使用
 
 ### Maven 依赖
@@ -44,10 +48,6 @@ Dyna-Guard 采用模块化设计，核心模块与 Spring Boot Starter 分离，
     <version>0.0.4</version>
 </dependency>
 ```
-
-## 安全性
-
-[![Security Status](https://www.murphysec.com/platform3/v31/badge/1957074509173805056.svg)](https://www.murphysec.com/console/report/1957067370900410368/1957074509173805056)
 
 ### 基本配置
 
