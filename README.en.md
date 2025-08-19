@@ -39,7 +39,7 @@ loading of different validators, parsers and other components.
 
 ## Security
 
-[![Security Status](https://www.murphysec.com/platform3/v31/badge/1957074509173805056.svg)](https://www.murphysec.com/console/report/1957067370900410368/1957074509173805056)
+[![Security Status](https://www.murphysec.com/platform3/v31/badge/1957809854577401856.svg)](https://www.murphysec.com/console/report/1957067370900410368/1957809854577401856)
 
 ## Installation and Usage
 

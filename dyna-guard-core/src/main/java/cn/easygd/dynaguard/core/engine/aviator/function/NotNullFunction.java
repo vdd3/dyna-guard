@@ -21,6 +21,7 @@ public class NotNullFunction extends AbstractFunction {
 
     @Override
     public AviatorObject call(Map<String, Object> env, AviatorObject arg1) {
+        super.call(env, arg1);
         Object object = FunctionUtils.getJavaObject(arg1, env);
         return AviatorBoolean.valueOf(Optional.ofNullable(object)
                 .map(source -> {
