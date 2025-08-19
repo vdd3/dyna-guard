@@ -30,6 +30,11 @@ public enum RuleEngineEnum implements RuleEngineEnumerable<RuleEngineEnum> {
      */
     GUARD_SCRIPT("GuardScript"),
 
+    /**
+     * Aviator
+     */
+    AVIATOR("Aviator"),
+
     ;
 
     /**

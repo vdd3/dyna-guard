@@ -1,7 +1,6 @@
 package cn.easygd.dynaguard.core.chain;
 
 import cn.easygd.dynaguard.core.engine.Validator;
-import cn.easygd.dynaguard.core.engine.qle.GuardScriptExecutor;
 import cn.easygd.dynaguard.core.holder.ChainConfigHolder;
 import cn.easygd.dynaguard.core.holder.ChainFilePathParserHolder;
 import cn.easygd.dynaguard.core.listener.ValidationChainListener;
@@ -78,8 +77,6 @@ public class ValidationChainManager {
         // 初始化文件路径解析器
         ChainFilePathParser filePathParser = PATH_PARSERS.get(config.getPathParserName());
         ChainFilePathParserHolder.init(filePathParser);
-        // 初始化qle执行器
-        GuardScriptExecutor.init();
 
         // 根据配置获取对应解析器
         config.getParserList().forEach(parserType -> {

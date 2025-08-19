@@ -18,6 +18,9 @@ public class LocalValidationContext extends ValidationContext {
      */
     @Override
     public Consumer<Map<String, Object>> buildExecuteContext() {
+        // TODO 构建用户的上下文时，需要将参数设置为安全不可变的
+
+
         return map -> map.putAll(this.getParameters());
     }
 }

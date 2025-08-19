@@ -5,7 +5,6 @@ import cn.easygd.dynaguard.core.holder.GlobalBeanContextHolder;
 import cn.easygd.dynaguard.domain.context.ValidationContext;
 import cn.easygd.dynaguard.domain.enums.RuleEngineEnum;
 import cn.easygd.dynaguard.domain.exception.ResultTypeIllegalException;
-import cn.easygd.dynaguard.domain.exception.ValidationChainEngineException;
 import com.google.common.collect.Maps;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.expression.BeanFactoryResolver;
@@ -25,7 +24,7 @@ import java.util.Map;
 public class SpelValidator extends BaseValidator {
 
     /**
-     * SpEL表达式解析器（线程安全，可全局共享）
+     * SpEL表达式解析器
      */
     private final ExpressionParser parser = new SpelExpressionParser();
 
@@ -37,29 +36,24 @@ public class SpelValidator extends BaseValidator {
      * @return 是否符合规则
      */
     @Override
-    public Boolean validate(String script, ValidationContext context) {
-        Object result;
-        try {
-            StandardEvaluationContext evaluationContext = new StandardEvaluationContext();
+    public Boolean validate(Object script, ValidationContext context) throws Exception {
+        // 构建上下文
+        StandardEvaluationContext evaluationContext = new StandardEvaluationContext();
 
-            Object beanManager = GlobalBeanContextHolder.getContext().getBeanManager();
-            if (beanManager instanceof ApplicationContext) {
-                ApplicationContext applicationContext = (ApplicationContext) beanManager;
-                evaluationContext.setBeanResolver(new BeanFactoryResolver(applicationContext));
-            }
-
-            // 注入上下文
-            Map<String, Object> params = Maps.newHashMap();
-            context.buildExecuteContext().accept(params);
-            params.forEach(evaluationContext::setVariable);
-
-            // 解析并执行SpEL表达式
-            Expression expression = parser.parseExpression(script);
-            result = expression.getValue(evaluationContext);
-        } catch (Exception e) {
-            // 保持与JavaScriptValidator一致的异常类型和错误码
-            throw new ValidationChainEngineException("spel execute exception : " + e.getMessage(), e);
+        Object beanManager = GlobalBeanContextHolder.getContext().getBeanManager();
+        if (beanManager instanceof ApplicationContext) {
+            ApplicationContext applicationContext = (ApplicationContext) beanManager;
+            evaluationContext.setBeanResolver(new BeanFactoryResolver(applicationContext));
         }
+
+        // 注入上下文
+        Map<String, Object> params = Maps.newHashMap();
+        context.buildExecuteContext().accept(params);
+        params.forEach(evaluationContext::setVariable);
+
+        // 解析并执行SpEL表达式
+        Expression expression = (Expression) script;
+        Object result = expression.getValue(evaluationContext);
 
         // 验证结果类型是否为布尔值
         if (!(result instanceof Boolean)) {
@@ -77,5 +71,16 @@ public class SpelValidator extends BaseValidator {
     @Override
     public String getLanguage() {
         return RuleEngineEnum.SPEl.getLanguageName();
+    }
+
+    /**
+     * 编译
+     *
+     * @param script 脚本
+     * @return 编译结果
+     */
+    @Override
+    public Object compile(String script) throws Exception {
+        return parser.parseExpression(script);
     }
 }

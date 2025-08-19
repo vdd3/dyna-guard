@@ -1,3 +1,2 @@
 cn.easygd.dynaguard.core.engine.groovy.GroovyValidator
-cn.easygd.dynaguard.core.engine.js.JavaScriptValidator
 cn.easygd.dynaguard.core.engine.qle.GuardScriptValidator

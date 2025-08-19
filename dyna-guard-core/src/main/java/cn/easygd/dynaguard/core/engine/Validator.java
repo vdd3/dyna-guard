@@ -21,6 +21,14 @@ public interface Validator {
     ValidationResult execute(String script, ValidationContext context);
 
     /**
+     * 安全参数
+     *
+     * @param param 参数
+     * @return 安全参数
+     */
+    Object securityParam(Object param);
+
+    /**
      * 获取语言
      *
      * @return 语言

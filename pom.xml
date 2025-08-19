@@ -53,24 +53,25 @@
     <modules>
         <module>dyna-guard-core</module>
         <module>dyna-guard-spring-boot-starter</module>
+        <module>dyna-guard-engine</module>
     </modules>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
-        <dg.core.version>0.0.4</dg.core.version>
-        <dg.spring.version>0.0.4</dg.spring.version>
+        <all.version>0.0.4</all.version>
         <qle.version>3.3.4</qle.version>
         <slf4j.version>1.7.32</slf4j.version>
         <jackson.version>2.16.0</jackson.version>
         <groovy.version>3.0.17</groovy.version>
-        <js.version>20.3.6</js.version>
+        <js.version>22.3.2</js.version>
         <dom4j.version>2.1.4</dom4j.version>
         <common-io.version>2.14.0</common-io.version>
         <springboot.version>2.6.8</springboot.version>
         <springaop.version>5.3.20</springaop.version>
         <spring.version>5.3.20</spring.version>
         <guava.version>32.0.0-jre</guava.version>
+        <aviator.version>5.4.2</aviator.version>
         <lang3.version>3.12.0</lang3.version>
         <collections4.version>4.4</collections4.version>
         <commons.beanutils.version>1.11.0</commons.beanutils.version>
@@ -81,7 +82,7 @@
             <dependency>
                 <groupId>cn.easygd</groupId>
                 <artifactId>dyna-guard-core</artifactId>
-                <version>${dg.core.version}</version>
+                <version>${all.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.alibaba</groupId>
@@ -92,6 +93,10 @@
                         <groupId>commons-beanutils</groupId>
                         <artifactId>commons-beanutils</artifactId>
                     </exclusion>
+                    <exclusion>
+                        <groupId>commons-lang</groupId>
+                        <artifactId>commons-lang</artifactId>
+                    </exclusion>
                 </exclusions>
             </dependency>
             <dependency>
@@ -99,6 +104,12 @@
                 <artifactId>commons-beanutils</artifactId>
                 <version>${commons.beanutils.version}</version>
             </dependency>
+            <dependency>
+                <groupId>commons-lang</groupId>
+                <artifactId>commons-lang</artifactId>
+                <version>2.6</version>
+            </dependency>
+
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
@@ -121,9 +132,9 @@
                 <version>${js.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.graalvm.js</groupId>
-                <artifactId>js-scriptengine</artifactId>
-                <version>${js.version}</version>
+                <groupId>com.googlecode.aviator</groupId>
+                <artifactId>aviator</artifactId>
+                <version>${aviator.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
@@ -182,7 +193,7 @@
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-beans</artifactId>
-                <version>${springaop.version}</version>
+                <version>${spring.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

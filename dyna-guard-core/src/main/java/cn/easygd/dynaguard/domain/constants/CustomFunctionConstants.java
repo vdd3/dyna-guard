@@ -1,12 +1,12 @@
 package cn.easygd.dynaguard.domain.constants;
 
 /**
- * qle引擎常量
+ * 自定义函数常量
  *
  * @author VD
  * @date 2025/8/10 22:13
  */
-public class QleConstants {
+public class CustomFunctionConstants {
 
     /**
      * not null
