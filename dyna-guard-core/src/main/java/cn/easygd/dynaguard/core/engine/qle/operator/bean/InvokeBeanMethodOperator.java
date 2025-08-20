@@ -1,12 +1,12 @@
 package cn.easygd.dynaguard.core.engine.qle.operator.bean;
 
 import cn.easygd.dynaguard.core.holder.GlobalBeanContextHolder;
-import cn.easygd.dynaguard.domain.exception.ValidationChainEngineException;
 import com.ql.util.express.Operator;
 
 import java.beans.BeanInfo;
 import java.beans.Introspector;
 import java.beans.MethodDescriptor;
+import java.util.Objects;
 
 /**
  * 调用Bean方法
@@ -18,13 +18,16 @@ public class InvokeBeanMethodOperator extends Operator {
     @Override
     public Object executeInner(Object[] list) throws Exception {
         if (list.length < 2) {
-            throw new ValidationChainEngineException("参数不足");
+            throw new IllegalArgumentException("参数不足 , 至少需要两个参数");
         }
         String beanName = (String) list[0];
         String methodName = (String) list[1];
 
         // 获取对应的bean
         Object bean = GlobalBeanContextHolder.getContext().getBean(beanName);
+        if (Objects.isNull(bean)) {
+            throw new IllegalArgumentException("未找到bean : " + beanName);
+        }
 
         // 通过内省获取类信息，兼容cglb代理的bean
         BeanInfo beanInfo = Introspector.getBeanInfo(bean.getClass(), Object.class);

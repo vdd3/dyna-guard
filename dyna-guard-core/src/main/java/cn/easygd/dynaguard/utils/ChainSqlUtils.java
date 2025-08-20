@@ -175,7 +175,7 @@ public class ChainSqlUtils {
             }
             return doList;
         } catch (Exception e) {
-            throw new ChainSqlExecuteException("count select sql execute converter result exception", e);
+            throw new ChainSqlExecuteException("select sql execute converter result exception", e);
         }
     }
 

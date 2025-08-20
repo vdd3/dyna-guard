@@ -3,8 +3,6 @@ package cn.easygd.dynaguard.core.engine.groovy;
 import cn.easygd.dynaguard.core.engine.BaseValidator;
 import cn.easygd.dynaguard.domain.context.ValidationContext;
 import cn.easygd.dynaguard.domain.enums.RuleEngineEnum;
-import cn.easygd.dynaguard.domain.exception.ResultTypeIllegalException;
-import com.google.common.collect.Maps;
 import groovy.lang.Binding;
 import groovy.lang.GroovyClassLoader;
 import groovy.lang.Script;
@@ -29,6 +27,7 @@ public class GroovyValidator extends BaseValidator {
      *
      * @param script 脚本
      * @return 编译结果
+     * @throws Exception 编译异常
      */
     @Override
     public Object compile(String script) throws Exception {
@@ -48,20 +47,15 @@ public class GroovyValidator extends BaseValidator {
         Script finalScript = (Script) script;
 
         // 参数传递
-        Map<String, Object> params = Maps.newHashMap();
-        context.buildExecuteContext().accept(params);
+        Map<String, Object> params = buildParam(context);
         Binding binding = new Binding();
         params.forEach(binding::setVariable);
-        finalScript.setBinding(binding);
 
         // 执行
+        finalScript.setBinding(binding);
         Object result = finalScript.run();
 
-        // 校验返回参数
-        if (!(result instanceof Boolean)) {
-            throw new ResultTypeIllegalException();
-        }
-        return (Boolean) result;
+        return checkResult(result);
     }
 
     /**

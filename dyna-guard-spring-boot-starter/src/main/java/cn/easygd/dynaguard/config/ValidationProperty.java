@@ -10,7 +10,7 @@ import java.util.Map;
  * @author VD
  * @date 2025/8/15 19:22
  */
-@ConfigurationProperties(prefix = "validation", ignoreUnknownFields = true)
+@ConfigurationProperties(prefix = "validation")
 public class ValidationProperty {
 
     /**
@@ -32,6 +32,11 @@ public class ValidationProperty {
      * 验证链文件路径
      */
     private String chainFilePath;
+
+    /**
+     * 是否开启安全策略
+     */
+    private String enableSecurityStrategy;
 
     /**
      * sql验证链数据map
@@ -102,5 +107,13 @@ public class ValidationProperty {
 
     public void setJsonChainDataMap(Map<String, String> jsonChainDataMap) {
         this.jsonChainDataMap = jsonChainDataMap;
+    }
+
+    public String getEnableSecurityStrategy() {
+        return enableSecurityStrategy;
+    }
+
+    public void setEnableSecurityStrategy(String enableSecurityStrategy) {
+        this.enableSecurityStrategy = enableSecurityStrategy;
     }
 }

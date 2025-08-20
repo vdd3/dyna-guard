@@ -3,6 +3,8 @@ package cn.easygd.dynaguard.core.engine;
 import cn.easygd.dynaguard.domain.ValidationResult;
 import cn.easygd.dynaguard.domain.context.ValidationContext;
 
+import java.util.Map;
+
 /**
  * 规则引擎
  *
@@ -21,12 +23,12 @@ public interface Validator {
     ValidationResult execute(String script, ValidationContext context);
 
     /**
-     * 安全参数
+     * 构建参数
      *
-     * @param param 参数
-     * @return 安全参数
+     * @param context 上下文
+     * @return 参数
      */
-    Object securityParam(Object param);
+    Map<String, Object> buildParam(ValidationContext context);
 
     /**
      * 获取语言

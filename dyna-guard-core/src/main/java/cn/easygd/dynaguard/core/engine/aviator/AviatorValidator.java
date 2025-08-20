@@ -1,11 +1,10 @@
 package cn.easygd.dynaguard.core.engine.aviator;
 
 import cn.easygd.dynaguard.core.engine.BaseValidator;
-import cn.easygd.dynaguard.core.engine.aviator.function.NotNullFunction;
+import cn.easygd.dynaguard.core.engine.aviator.function.common.NotNullFunction;
+import cn.easygd.dynaguard.core.engine.aviator.function.range.*;
 import cn.easygd.dynaguard.domain.context.ValidationContext;
 import cn.easygd.dynaguard.domain.enums.RuleEngineEnum;
-import cn.easygd.dynaguard.domain.exception.ResultTypeIllegalException;
-import com.google.common.collect.Maps;
 import com.googlecode.aviator.AviatorEvaluator;
 import com.googlecode.aviator.AviatorEvaluatorInstance;
 import com.googlecode.aviator.Expression;
@@ -30,6 +29,7 @@ public class AviatorValidator extends BaseValidator {
      *
      * @param script 脚本
      * @return 编译结果
+     * @throws Exception 编译异常
      */
     @Override
     public Object compile(String script) throws Exception {
@@ -48,17 +48,12 @@ public class AviatorValidator extends BaseValidator {
         Expression expression = (Expression) script;
 
         // 参数传递
-        Map<String, Object> params = Maps.newHashMap();
-        context.buildExecuteContext().accept(params);
+        Map<String, Object> params = buildParam(context);
 
         // 执行
         Object result = expression.execute(params);
 
-        if (!(result instanceof Boolean)) {
-            throw new ResultTypeIllegalException();
-        }
-
-        return (Boolean) result;
+        return checkResult(result);
     }
 
     /**
@@ -74,5 +69,13 @@ public class AviatorValidator extends BaseValidator {
     public AviatorValidator() {
         // 注册函数
         instance.addFunction(new NotNullFunction());
+        instance.addFunction(new InOpenRangeFunction());
+        instance.addFunction(new InOpenClosedRangeFunction());
+        instance.addFunction(new InClosedRangeFunction());
+        instance.addFunction(new InClosedOpenRangeFunction());
+        instance.addFunction(new InAtLeastRangeFunction());
+        instance.addFunction(new InAtMostRangeFunction());
+        instance.addFunction(new InGreaterThanRangeFunction());
+        instance.addFunction(new InLessThanRangeFunction());
     }
 }

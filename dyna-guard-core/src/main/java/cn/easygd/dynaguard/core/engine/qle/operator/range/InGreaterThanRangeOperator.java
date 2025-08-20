@@ -1,12 +1,16 @@
 package cn.easygd.dynaguard.core.engine.qle.operator.range;
 
-import com.google.common.collect.Range;
+import cn.easygd.dynaguard.core.engine.qle.operator.BaseOperator;
+import cn.easygd.dynaguard.utils.CustomCheckUtils;
 
 /**
+ * 最小值判断
+ *
  * @author VD
  * @date 2025/8/11 21:39
  */
-public class InGreaterThanRangeOperator extends BaseRangeOperator {
+public class InGreaterThanRangeOperator extends BaseOperator {
+
     /**
      * 执行方法
      *
@@ -17,9 +21,6 @@ public class InGreaterThanRangeOperator extends BaseRangeOperator {
     @Override
     protected Boolean execute(Object[] list) throws Exception {
         checkParamsSize(list.length, 2);
-        Comparable<?> up = convertToComparable(list[0]);
-        Comparable<?> target = convertToComparable(list[1]);
-        Range<Comparable<?>> range = Range.greaterThan(up);
-        return range.contains(target);
+        return CustomCheckUtils.greaterThan(list[0], list[1]);
     }
 }

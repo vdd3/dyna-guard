@@ -1,14 +1,15 @@
 package cn.easygd.dynaguard.core.engine.qle.operator.range;
 
-import com.google.common.collect.Range;
+import cn.easygd.dynaguard.core.engine.qle.operator.BaseOperator;
+import cn.easygd.dynaguard.utils.CustomCheckUtils;
 
 /**
- * 在
+ * 最小值判断
  *
  * @author VD
  * @date 2025/8/11 21:30
  */
-public class InAtLeastRangeOperator extends BaseRangeOperator {
+public class InAtLeastRangeOperator extends BaseOperator {
     /**
      * 执行方法
      *
@@ -19,9 +20,6 @@ public class InAtLeastRangeOperator extends BaseRangeOperator {
     @Override
     protected Boolean execute(Object[] list) throws Exception {
         checkParamsSize(list.length, 2);
-        Comparable<?> critical = convertToComparable(list[0]);
-        Comparable<?> target = convertToComparable(list[1]);
-        Range<Comparable<?>> range = Range.atLeast(critical);
-        return range.contains(target);
+        return CustomCheckUtils.atLeast(list[0], list[1]);
     }
 }

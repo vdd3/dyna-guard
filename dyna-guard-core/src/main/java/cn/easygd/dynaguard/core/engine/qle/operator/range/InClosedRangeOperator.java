@@ -1,6 +1,7 @@
 package cn.easygd.dynaguard.core.engine.qle.operator.range;
 
-import com.google.common.collect.Range;
+import cn.easygd.dynaguard.core.engine.qle.operator.BaseOperator;
+import cn.easygd.dynaguard.utils.CustomCheckUtils;
 
 /**
  * 在闭区间范围内
@@ -8,7 +9,7 @@ import com.google.common.collect.Range;
  * @author VD
  * @date 2025/8/11 20:03
  */
-public class InClosedRangeOperator extends BaseRangeOperator {
+public class InClosedRangeOperator extends BaseOperator {
     /**
      * 执行方法
      *
@@ -19,10 +20,6 @@ public class InClosedRangeOperator extends BaseRangeOperator {
     @Override
     protected Boolean execute(Object[] list) throws Exception {
         checkParamsSize(list.length, 3);
-        Comparable<?> lower = convertToComparable(list[0]);
-        Comparable<?> up = convertToComparable(list[1]);
-        Comparable<?> target = convertToComparable(list[2]);
-        Range<Comparable<?>> range = Range.closed(lower, up);
-        return range.contains(target);
+        return CustomCheckUtils.inClosedRange(list[0], list[1], list[2]);
     }
 }

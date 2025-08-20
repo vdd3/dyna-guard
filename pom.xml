@@ -7,7 +7,7 @@
     <groupId>cn.easygd</groupId>
     <artifactId>dyna-guard</artifactId>
     <packaging>pom</packaging>
-    <version>0.0.4</version>
+    <version>${all.version}</version>
     <name>Dyna-Guard</name>
     <description>A dynamic validation framework supporting multiple script engines</description>
     <url>https://github.com/vdd3/dyna-guard</url>
@@ -59,7 +59,7 @@
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
-        <all.version>0.0.4</all.version>
+        <all.version>0.0.5</all.version>
         <qle.version>3.3.4</qle.version>
         <slf4j.version>1.7.32</slf4j.version>
         <jackson.version>2.16.0</jackson.version>
@@ -76,6 +76,7 @@
         <collections4.version>4.4</collections4.version>
         <commons.beanutils.version>1.11.0</commons.beanutils.version>
         <common.language.version>2.6</common.language.version>
+        <cglib.version>3.3.0</cglib.version>
     </properties>
 
     <dependencyManagement>
@@ -143,6 +144,11 @@
                 <version>${spring.version}</version>
                 <scope>provided</scope>
                 <optional>true</optional>
+            </dependency>
+            <dependency>
+                <groupId>cglib</groupId>
+                <artifactId>cglib</artifactId>
+                <version>${cglib.version}</version>
             </dependency>
 
             <dependency>

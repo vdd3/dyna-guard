@@ -3,8 +3,6 @@ package cn.easygd.dynaguard.engine;
 import cn.easygd.dynaguard.core.engine.BaseValidator;
 import cn.easygd.dynaguard.domain.context.ValidationContext;
 import cn.easygd.dynaguard.domain.enums.RuleEngineEnum;
-import cn.easygd.dynaguard.domain.exception.ResultTypeIllegalException;
-import com.google.common.collect.Maps;
 
 import javax.script.*;
 import java.util.Map;
@@ -27,11 +25,11 @@ public class JavaScriptValidator extends BaseValidator {
      *
      * @param script 脚本
      * @return 编译结果
+     * @throws Exception 编译异常
      */
     @Override
     public Object compile(String script) throws Exception {
         // 判断用户是否书写了函数并且执行了函数
-
         return ((Compilable) scriptEngine).compile(script);
     }
 
@@ -47,19 +45,14 @@ public class JavaScriptValidator extends BaseValidator {
         CompiledScript compiledScript = (CompiledScript) script;
 
         // 创建脚本上下文
-        Map<String, Object> params = Maps.newHashMap();
-        context.buildExecuteContext().accept(params);
+        Map<String, Object> params = buildParam(context);
         Bindings bindings = new SimpleBindings();
         params.forEach(bindings::put);
 
         // 执行脚本
         Object result = compiledScript.eval(bindings);
 
-        if (!(result instanceof Boolean)) {
-            throw new ResultTypeIllegalException();
-        }
-
-        return (Boolean) result;
+        return checkResult(result);
     }
 
     /**

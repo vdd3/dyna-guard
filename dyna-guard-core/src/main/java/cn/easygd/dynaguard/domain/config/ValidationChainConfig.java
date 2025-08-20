@@ -35,6 +35,11 @@ public class ValidationChainConfig {
     private List<String> chainFilePath = Lists.newArrayList("classpath:chain/*Chain.xml", "classpath:chain/*Chain.json");
 
     /**
+     * 是否开启安全策略
+     */
+    private Boolean enableSecurityStrategy = false;
+
+    /**
      * sql验证链数据map
      */
     private Map<String, String> sqlChainDataMap;
@@ -103,5 +108,13 @@ public class ValidationChainConfig {
 
     public void setJsonChainDataMap(Map<String, String> jsonChainDataMap) {
         this.jsonChainDataMap = jsonChainDataMap;
+    }
+
+    public Boolean getEnableSecurityStrategy() {
+        return enableSecurityStrategy;
+    }
+
+    public void setEnableSecurityStrategy(Boolean enableSecurityStrategy) {
+        this.enableSecurityStrategy = enableSecurityStrategy;
     }
 }

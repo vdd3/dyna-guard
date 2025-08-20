@@ -78,6 +78,7 @@ public class SpelValidator extends BaseValidator {
      *
      * @param script 脚本
      * @return 编译结果
+     * @throws Exception 编译异常
      */
     @Override
     public Object compile(String script) throws Exception {

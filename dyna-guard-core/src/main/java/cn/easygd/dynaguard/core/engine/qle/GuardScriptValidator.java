@@ -8,8 +8,6 @@ import cn.easygd.dynaguard.core.engine.qle.operator.range.*;
 import cn.easygd.dynaguard.domain.constants.CustomFunctionConstants;
 import cn.easygd.dynaguard.domain.context.ValidationContext;
 import cn.easygd.dynaguard.domain.enums.RuleEngineEnum;
-import cn.easygd.dynaguard.domain.exception.ResultTypeIllegalException;
-import com.google.common.collect.Maps;
 import com.ql.util.express.DefaultContext;
 import com.ql.util.express.ExpressRunner;
 
@@ -32,6 +30,7 @@ public class GuardScriptValidator extends BaseValidator {
      *
      * @param script 脚本
      * @return 编译结果
+     * @throws Exception 编译异常
      */
     @Override
     public Object compile(String script) throws Exception {
@@ -47,21 +46,19 @@ public class GuardScriptValidator extends BaseValidator {
      */
     @Override
     protected Boolean validate(Object script, ValidationContext context) throws Exception {
-        Map<String, Object> params = Maps.newHashMap();
-        context.buildExecuteContext().accept(params);
+        // 参数传递
+        Map<String, Object> params = buildParam(context);
         // 对于qle来说无法推断复杂类型的参数，所以无法直接获取bean使用
         params.remove("beanContext");
+
+        // 创建脚本上下文
         DefaultContext<String, Object> expressContext = new DefaultContext<>();
         expressContext.putAll(params);
 
         // 执行
         Object result = EXPRESS_RUNNER.execute((String) script, expressContext, null, true, true);
 
-        if (!(result instanceof Boolean)) {
-            throw new ResultTypeIllegalException();
-        }
-
-        return (Boolean) result;
+        return checkResult(result);
     }
 
     /**

@@ -5,7 +5,7 @@
     <parent>
         <artifactId>dyna-guard</artifactId>
         <groupId>cn.easygd</groupId>
-        <version>0.0.4</version>
+        <version>${all.version}</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
