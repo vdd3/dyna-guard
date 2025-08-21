@@ -1,11 +1,14 @@
 package cn.easygd.dynaguard.core.engine.groovy;
 
 import cn.easygd.dynaguard.core.engine.BaseValidator;
+import cn.easygd.dynaguard.core.engine.groovy.ast.GroovyTrackingTransformation;
 import cn.easygd.dynaguard.domain.context.ValidationContext;
 import cn.easygd.dynaguard.domain.enums.RuleEngineEnum;
 import groovy.lang.Binding;
 import groovy.lang.GroovyClassLoader;
 import groovy.lang.Script;
+import org.codehaus.groovy.control.CompilerConfiguration;
+import org.codehaus.groovy.control.customizers.ASTTransformationCustomizer;
 
 import java.util.Map;
 
@@ -20,7 +23,7 @@ public class GroovyValidator extends BaseValidator {
     /**
      * 类加载器
      */
-    private final GroovyClassLoader groovyClassLoader = new GroovyClassLoader();
+    private final GroovyClassLoader groovyClassLoader;
 
     /**
      * 编译
@@ -66,5 +69,13 @@ public class GroovyValidator extends BaseValidator {
     @Override
     public String getLanguage() {
         return RuleEngineEnum.GROOVY.getLanguageName();
+    }
+
+    public GroovyValidator() {
+        // 设置编译内容增强收集业务追踪信息
+        ASTTransformationCustomizer customizer = new ASTTransformationCustomizer(new GroovyTrackingTransformation());
+        CompilerConfiguration config = new CompilerConfiguration();
+        config.addCompilationCustomizers(customizer);
+        groovyClassLoader = new GroovyClassLoader(GroovyValidator.class.getClassLoader(), config);
     }
 }

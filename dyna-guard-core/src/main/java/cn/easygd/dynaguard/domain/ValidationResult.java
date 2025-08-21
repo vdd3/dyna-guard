@@ -1,5 +1,7 @@
 package cn.easygd.dynaguard.domain;
 
+import cn.easygd.dynaguard.core.trace.ReturnInfo;
+
 /**
  * 验证结果
  *
@@ -28,6 +30,11 @@ public class ValidationResult {
      */
     private Throwable throwable;
 
+    /**
+     * 业务跟踪信息
+     */
+    private ReturnInfo returnInfo;
+
     private ValidationResult(Boolean success, String message, Boolean exception) {
         this.success = success;
         this.message = message;
@@ -39,6 +46,14 @@ public class ValidationResult {
         this.message = message;
         this.exception = exception;
         this.throwable = throwable;
+    }
+
+    private ValidationResult(Boolean success, String message, Boolean exception, Throwable throwable, ReturnInfo returnInfo) {
+        this.success = success;
+        this.message = message;
+        this.exception = exception;
+        this.throwable = throwable;
+        this.returnInfo = returnInfo;
     }
 
     /**
@@ -80,6 +95,17 @@ public class ValidationResult {
         return new ValidationResult(false, message, false, null);
     }
 
+    /**
+     * 失败
+     *
+     * @param message    错误信息
+     * @param returnInfo 业务跟踪信息
+     * @return 验证结果
+     */
+    public static ValidationResult fail(String message, ReturnInfo returnInfo) {
+        return new ValidationResult(false, message, false, null, returnInfo);
+    }
+
     public Boolean getSuccess() {
         return success;
     }
@@ -94,5 +120,9 @@ public class ValidationResult {
 
     public Throwable getThrowable() {
         return throwable;
+    }
+
+    public ReturnInfo getReturnInfo() {
+        return returnInfo;
     }
 }

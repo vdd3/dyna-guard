@@ -2,6 +2,7 @@ package cn.easygd.dynaguard.core.engine;
 
 import cn.easygd.dynaguard.core.bean.GlobalBeanContext;
 import cn.easygd.dynaguard.core.holder.ChainConfigHolder;
+import cn.easygd.dynaguard.core.trace.BizTracker;
 import cn.easygd.dynaguard.domain.ValidationResult;
 import cn.easygd.dynaguard.domain.context.ValidationContext;
 import cn.easygd.dynaguard.domain.exception.ResultTypeIllegalException;
@@ -46,6 +47,11 @@ public abstract class BaseValidator implements Validator {
     @Override
     public ValidationResult execute(String script, ValidationContext context) {
         try {
+            // 对具体脚本返回值重置
+            BizTracker.reset();
+            // 设置具体的语言
+            BizTracker.language(getLanguage());
+
             // 获取缓存中是否存在脚本
             Object scriptCache = SCRIPT_CACHE.get(script);
             if (Objects.isNull(scriptCache)) {
@@ -139,6 +145,7 @@ public abstract class BaseValidator implements Validator {
      * @param script  执行脚本
      * @param context 上下文
      * @return 是否成功
+     * @throws Exception 执行异常
      */
     protected abstract Boolean validate(Object script, ValidationContext context) throws Exception;
 }

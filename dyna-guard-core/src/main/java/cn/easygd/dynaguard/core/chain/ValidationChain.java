@@ -5,6 +5,8 @@ import cn.easygd.dynaguard.core.guard.CounterGuard;
 import cn.easygd.dynaguard.core.guard.CounterGuardManager;
 import cn.easygd.dynaguard.core.guard.LocalCounterGuard;
 import cn.easygd.dynaguard.core.holder.GlobalBeanContextHolder;
+import cn.easygd.dynaguard.core.trace.BizTracker;
+import cn.easygd.dynaguard.core.trace.ReturnInfo;
 import cn.easygd.dynaguard.domain.ValidationNode;
 import cn.easygd.dynaguard.domain.ValidationResult;
 import cn.easygd.dynaguard.domain.context.ValidationContext;
@@ -61,29 +63,41 @@ public class ValidationChain {
      */
     public void execute(ValidationContext context) {
         log.info("validation chain start : [{}=={}] , context : [{}]", group, chainId, context);
-        for (ValidationNode node : this.nodes) {
-            String script = node.getScript();
-            // 执行验证
-            Validator validator = node.getValidator();
-            if (Objects.isNull(validator)) {
-                log.warn("validator is null , language : {}", node.getLanguage());
-                continue;
-            }
-            ValidationResult result = validator.execute(script, context);
-            if (!result.getSuccess()) {
-                // 如果快速失败则抛出异常
-                if (node.getFastFail()) {
-                    // 需要判断是否是因为执行异常导致的验证失败
-                    if (result.getException()) {
-                        throw new ValidationFailedException(ValidationErrorEnum.SCRIPT_EXECUTE_ERROR, result.getThrowable());
+        try {
+            // 初始化跟踪信息
+            BizTracker.init();
+
+            for (ValidationNode node : this.nodes) {
+                String script = node.getScript();
+                // 执行验证
+                Validator validator = node.getValidator();
+                if (Objects.isNull(validator)) {
+                    log.warn("validator is null , language : {}", node.getLanguage());
+                    continue;
+                }
+                ValidationResult result = validator.execute(script, context);
+                if (!result.getSuccess()) {
+                    // 获取跟踪信息
+                    ReturnInfo returnInfo = BizTracker.get();
+                    log.info("script info : {}", returnInfo);
+
+                    // 如果快速失败则抛出异常
+                    if (node.getFastFail()) {
+                        // 需要判断是否是因为执行异常导致的验证失败
+                        if (result.getException()) {
+                            throw new ValidationFailedException(ValidationErrorEnum.SCRIPT_EXECUTE_ERROR, result.getThrowable());
+                        } else {
+                            throw new ValidationFailedException(ValidationErrorEnum.FAIL.getErrorCode(), node.getMessage(), script);
+                        }
                     } else {
-                        throw new ValidationFailedException(ValidationErrorEnum.FAIL.getErrorCode(), node.getMessage(), script);
+                        // 否则打印日志
+                        log.info("validation fail but skip");
                     }
-                } else {
-                    // 否则打印日志
-                    log.info("validation fail but skip");
                 }
             }
+        } finally {
+            // 清理跟踪信息
+            BizTracker.clear();
         }
     }
 
@@ -113,28 +127,38 @@ public class ValidationChain {
      */
     public ValidationResult executeResult(ValidationContext context) {
         log.info("validation chain start : [{}=={}] , context : [{}]", group, chainId, context);
-        for (ValidationNode node : this.nodes) {
-            String script = node.getScript();
-            // 执行验证
-            Validator validator = node.getValidator();
-            if (Objects.isNull(validator)) {
-                log.warn("validator is null , language : {}", node.getLanguage());
-                continue;
-            }
-            ValidationResult result = validator.execute(script, context);
-            if (!result.getSuccess()) {
-                if (node.getFastFail()) {
-                    // 需要判断是否是因为执行异常导致的验证失败
-                    if (result.getException()) {
-                        throw new ValidationFailedException(ValidationErrorEnum.SCRIPT_EXECUTE_ERROR, result.getThrowable());
+        try {
+            // 初始化跟踪信息
+            BizTracker.init();
+
+            for (ValidationNode node : this.nodes) {
+                String script = node.getScript();
+                // 执行验证
+                Validator validator = node.getValidator();
+                if (Objects.isNull(validator)) {
+                    log.warn("validator is null , language : {}", node.getLanguage());
+                    continue;
+                }
+                ValidationResult result = validator.execute(script, context);
+                if (!result.getSuccess()) {
+                    // 获取跟踪信息
+                    ReturnInfo returnInfo = BizTracker.get();
+
+                    if (node.getFastFail()) {
+                        // 需要判断是否是因为执行异常导致的验证失败
+                        if (result.getException()) {
+                            throw new ValidationFailedException(ValidationErrorEnum.SCRIPT_EXECUTE_ERROR, result.getThrowable());
+                        } else {
+                            return ValidationResult.fail(node.getMessage(), returnInfo);
+                        }
                     } else {
-                        return ValidationResult.fail(node.getMessage());
+                        // 否则打印日志
+                        log.info("validation fail but skip");
                     }
-                } else {
-                    // 否则打印日志
-                    log.info("validation fail but skip");
                 }
             }
+        } finally {
+            BizTracker.clear();
         }
         return ValidationResult.success();
     }
@@ -165,10 +189,6 @@ public class ValidationChain {
         if (!result.getSuccess()) {
             // 自增并且判断是否超过阈值
             guard.increment(chainId);
-            if (guard.isExceedThreshold(this.chainId, this.guardThreshold)) {
-                log.info("guard exceed threshold : [{}=={}]", this.chainId, this.guardThreshold);
-                guard.rollback(this.chainId);
-            }
         }
 
         return result;

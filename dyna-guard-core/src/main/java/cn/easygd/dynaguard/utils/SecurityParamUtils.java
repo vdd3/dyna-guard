@@ -67,6 +67,8 @@ public class SecurityParamUtils {
             return false;
         }
 
+        // TODO 判断是否已经被代理
+
 
         // 检查是否有可访问的构造函数
         try {
