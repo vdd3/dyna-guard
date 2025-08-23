@@ -184,8 +184,6 @@ public class ValidationChain {
      */
     private ValidationResult executeTemplate(ValidationContext context) {
         log.info("validation chain start : [{}=={}] , context : [{}]", group, chainId, context);
-        // 初始化跟踪信息
-        BizTracker.init();
 
         for (ValidationNode node : this.nodes) {
             String script = node.getScript();
@@ -211,6 +209,7 @@ public class ValidationChain {
                 }
             }
         }
+
         return ValidationResult.success();
     }
 
