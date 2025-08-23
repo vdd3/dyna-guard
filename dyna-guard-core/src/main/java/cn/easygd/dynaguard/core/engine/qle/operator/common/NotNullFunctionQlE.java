@@ -1,6 +1,6 @@
 package cn.easygd.dynaguard.core.engine.qle.operator.common;
 
-import cn.easygd.dynaguard.core.engine.qle.operator.BaseOperator;
+import cn.easygd.dynaguard.core.engine.qle.operator.QlEBaseFunction;
 import cn.easygd.dynaguard.utils.CustomCheckUtils;
 
 /**
@@ -9,7 +9,7 @@ import cn.easygd.dynaguard.utils.CustomCheckUtils;
  * @author VD
  * @date 2025/8/10 22:09
  */
-public class NotNullOperator extends BaseOperator {
+public class NotNullFunctionQlE extends QlEBaseFunction {
 
     /**
      * 执行方法

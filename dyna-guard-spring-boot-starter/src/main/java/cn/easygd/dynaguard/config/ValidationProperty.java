@@ -36,7 +36,12 @@ public class ValidationProperty {
     /**
      * 是否开启安全策略
      */
-    private String enableSecurityStrategy;
+    private Boolean enableSecurityStrategy;
+
+    /**
+     * 是否开启业务追踪
+     */
+    private Boolean enableBizTrace;
 
     /**
      * sql验证链数据map
@@ -109,11 +114,19 @@ public class ValidationProperty {
         this.jsonChainDataMap = jsonChainDataMap;
     }
 
-    public String getEnableSecurityStrategy() {
+    public Boolean getEnableSecurityStrategy() {
         return enableSecurityStrategy;
     }
 
-    public void setEnableSecurityStrategy(String enableSecurityStrategy) {
+    public void setEnableSecurityStrategy(Boolean enableSecurityStrategy) {
         this.enableSecurityStrategy = enableSecurityStrategy;
+    }
+
+    public Boolean getEnableBizTrace() {
+        return enableBizTrace;
+    }
+
+    public void setEnableBizTrace(Boolean enableBizTrace) {
+        this.enableBizTrace = enableBizTrace;
     }
 }

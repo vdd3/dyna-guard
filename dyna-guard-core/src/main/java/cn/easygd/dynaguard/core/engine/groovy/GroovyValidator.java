@@ -2,6 +2,8 @@ package cn.easygd.dynaguard.core.engine.groovy;
 
 import cn.easygd.dynaguard.core.engine.BaseValidator;
 import cn.easygd.dynaguard.core.engine.groovy.ast.GroovyTrackingTransformation;
+import cn.easygd.dynaguard.core.holder.ChainConfigHolder;
+import cn.easygd.dynaguard.domain.config.ValidationChainConfig;
 import cn.easygd.dynaguard.domain.context.ValidationContext;
 import cn.easygd.dynaguard.domain.enums.RuleEngineEnum;
 import groovy.lang.Binding;
@@ -71,11 +73,21 @@ public class GroovyValidator extends BaseValidator {
         return RuleEngineEnum.GROOVY.getLanguageName();
     }
 
+    /**
+     * 构造函数
+     */
     public GroovyValidator() {
-        // 设置编译内容增强收集业务追踪信息
-        ASTTransformationCustomizer customizer = new ASTTransformationCustomizer(new GroovyTrackingTransformation());
-        CompilerConfiguration config = new CompilerConfiguration();
-        config.addCompilationCustomizers(customizer);
-        groovyClassLoader = new GroovyClassLoader(GroovyValidator.class.getClassLoader(), config);
+        // 根据配置选择是否开启业务追踪
+        ValidationChainConfig validationChainConfig = ChainConfigHolder.getConfig();
+
+        if (validationChainConfig.getEnableBizTrace()) {
+            // 设置编译内容增强收集业务追踪信息
+            ASTTransformationCustomizer customizer = new ASTTransformationCustomizer(new GroovyTrackingTransformation());
+            CompilerConfiguration config = new CompilerConfiguration();
+            config.addCompilationCustomizers(customizer);
+            groovyClassLoader = new GroovyClassLoader(GroovyValidator.class.getClassLoader(), config);
+        } else {
+            groovyClassLoader = new GroovyClassLoader();
+        }
     }
 }

@@ -45,6 +45,9 @@ public class ValidationChainInit implements ApplicationListener<ContextRefreshed
         ApplicationContext applicationContext = event.getApplicationContext();
         log.info("validation chain load chain start");
 
+        // 初始化
+        validationChainManager.init();
+
         // 加载流程
         validationChainManager.loadChain();
 

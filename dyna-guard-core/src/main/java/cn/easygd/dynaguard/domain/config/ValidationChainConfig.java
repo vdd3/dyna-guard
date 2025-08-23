@@ -40,6 +40,11 @@ public class ValidationChainConfig {
     private Boolean enableSecurityStrategy = false;
 
     /**
+     * 是否开启业务追踪
+     */
+    private Boolean enableBizTrace = false;
+
+    /**
      * sql验证链数据map
      */
     private Map<String, String> sqlChainDataMap;
@@ -116,5 +121,13 @@ public class ValidationChainConfig {
 
     public void setEnableSecurityStrategy(Boolean enableSecurityStrategy) {
         this.enableSecurityStrategy = enableSecurityStrategy;
+    }
+
+    public Boolean getEnableBizTrace() {
+        return enableBizTrace;
+    }
+
+    public void setEnableBizTrace(Boolean enableBizTrace) {
+        this.enableBizTrace = enableBizTrace;
     }
 }

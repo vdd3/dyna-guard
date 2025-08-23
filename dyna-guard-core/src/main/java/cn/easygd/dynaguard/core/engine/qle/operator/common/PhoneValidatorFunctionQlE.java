@@ -1,6 +1,6 @@
 package cn.easygd.dynaguard.core.engine.qle.operator.common;
 
-import cn.easygd.dynaguard.core.engine.qle.operator.BaseOperator;
+import cn.easygd.dynaguard.core.engine.qle.operator.QlEBaseFunction;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
  * @author VD
  * @date 2025/8/11 21:51
  */
-public class PhoneValidatorOperator extends BaseOperator {
+public class PhoneValidatorFunctionQlE extends QlEBaseFunction {
 
     /**
      * 手机号正则表达式

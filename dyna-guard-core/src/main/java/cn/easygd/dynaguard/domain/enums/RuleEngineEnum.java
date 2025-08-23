@@ -26,9 +26,9 @@ public enum RuleEngineEnum implements RuleEngineEnumerable<RuleEngineEnum> {
     SPEl("SpEl"),
 
     /**
-     * 动态验证脚本
+     * QLExpress4
      */
-    GUARD_SCRIPT("GuardScript"),
+    QLEXPRESS4("QLExpress4"),
 
     /**
      * Aviator

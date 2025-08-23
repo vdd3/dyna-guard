@@ -1,7 +1,7 @@
 package cn.easygd.dynaguard.utils;
 
 import com.google.common.collect.Maps;
-import org.apache.commons.collections.MapUtils;
+import org.apache.commons.collections4.MapUtils;
 
 import java.beans.BeanInfo;
 import java.beans.Introspector;
