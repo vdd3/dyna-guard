@@ -16,6 +16,13 @@ import java.util.Objects;
  * @date 2025/8/16 18:14
  */
 public class InvokeBeanMethodFunctionQlE implements QLFunctionalVarargs {
+
+    /**
+     * 执行方法
+     *
+     * @param list 参数列表
+     * @return 执行结果
+     */
     @Override
     public Object call(Object... list) {
         if (list.length < 2) {

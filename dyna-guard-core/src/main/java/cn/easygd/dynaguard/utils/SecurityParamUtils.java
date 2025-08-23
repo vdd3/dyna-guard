@@ -6,6 +6,7 @@ import net.sf.cglib.proxy.MethodInterceptor;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.Proxy;
 import java.util.Map;
 import java.util.Objects;
 
@@ -27,6 +28,12 @@ public class SecurityParamUtils {
      */
     private static final Map<Class<?>, Enhancer> ENHANCER_CACHE = Maps.newConcurrentMap();
 
+    /**
+     * 创建安全代理
+     *
+     * @param param 参数
+     * @return 安全代理
+     */
     public static Enhancer createSecureProxy(Object param) {
         Enhancer enhancer = ENHANCER_CACHE.get(param.getClass());
         if (Objects.isNull(enhancer)) {
@@ -67,7 +74,10 @@ public class SecurityParamUtils {
             return false;
         }
 
-        // TODO 判断是否已经被代理
+        // 判断是否已经被代理
+        if (Enhancer.isEnhanced(clazz) || Proxy.isProxyClass(clazz)) {
+            return false;
+        }
 
 
         // 检查是否有可访问的构造函数
