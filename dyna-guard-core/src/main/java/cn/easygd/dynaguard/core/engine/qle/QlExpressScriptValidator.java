@@ -6,7 +6,6 @@ import cn.easygd.dynaguard.core.engine.qle.function.common.NotNullFunctionQlE;
 import cn.easygd.dynaguard.core.engine.qle.function.common.PhoneValidatorFunctionQlE;
 import cn.easygd.dynaguard.core.engine.qle.function.range.*;
 import cn.easygd.dynaguard.core.holder.ChainConfigHolder;
-import cn.easygd.dynaguard.core.trace.BizTracker;
 import cn.easygd.dynaguard.domain.config.ValidationChainConfig;
 import cn.easygd.dynaguard.domain.constants.CustomFunctionConstants;
 import cn.easygd.dynaguard.domain.context.ValidationContext;
@@ -82,7 +81,7 @@ public class QlExpressScriptValidator extends BaseValidator {
                     .filter(ExpressionTrace::isEvaluated)
                     .findFirst()
                     .ifPresent(trace -> {
-                        BizTracker.recordLineNumber(trace.getLine());
+
                     });
         }
         return result;

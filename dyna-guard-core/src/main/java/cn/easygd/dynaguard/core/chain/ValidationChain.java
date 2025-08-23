@@ -62,42 +62,9 @@ public class ValidationChain {
      * @param context 上下文
      */
     public void execute(ValidationContext context) {
-        log.info("validation chain start : [{}=={}] , context : [{}]", group, chainId, context);
-        try {
-            // 初始化跟踪信息
-            BizTracker.init();
-
-            for (ValidationNode node : this.nodes) {
-                String script = node.getScript();
-                // 执行验证
-                Validator validator = node.getValidator();
-                if (Objects.isNull(validator)) {
-                    log.warn("validator is null , language : {}", node.getLanguage());
-                    continue;
-                }
-                ValidationResult result = validator.execute(script, context);
-                if (!result.getSuccess()) {
-                    // 获取跟踪信息
-                    ReturnInfo returnInfo = BizTracker.get();
-                    log.info("script info : {}", returnInfo);
-
-                    // 如果快速失败则抛出异常
-                    if (node.getFastFail()) {
-                        // 需要判断是否是因为执行异常导致的验证失败
-                        if (result.getException()) {
-                            throw new ValidationFailedException(ValidationErrorEnum.SCRIPT_EXECUTE_ERROR, result.getThrowable());
-                        } else {
-                            throw new ValidationFailedException(ValidationErrorEnum.FAIL.getErrorCode(), node.getMessage(), script);
-                        }
-                    } else {
-                        // 否则打印日志
-                        log.info("validation fail but skip");
-                    }
-                }
-            }
-        } finally {
-            // 清理跟踪信息
-            BizTracker.clear();
+        ValidationResult validationResult = executeResult(context);
+        if (!validationResult.getSuccess()) {
+            throw new ValidationFailedException(ValidationErrorEnum.FAIL.getErrorCode(), validationResult.getMessage());
         }
     }
 
@@ -110,13 +77,8 @@ public class ValidationChain {
         ValidationResult result = executeGuardResult(context);
 
         if (!result.getSuccess()) {
-            if (result.getException()) {
-                throw new ValidationFailedException(ValidationErrorEnum.SCRIPT_EXECUTE_ERROR, result.getThrowable());
-            } else {
-                throw new ValidationFailedException(ValidationErrorEnum.FAIL.getErrorCode(), result.getMessage());
-            }
+            throw new ValidationFailedException(ValidationErrorEnum.FAIL.getErrorCode(), result.getMessage());
         }
-
     }
 
     /**
@@ -149,7 +111,8 @@ public class ValidationChain {
                         if (result.getException()) {
                             throw new ValidationFailedException(ValidationErrorEnum.SCRIPT_EXECUTE_ERROR, result.getThrowable());
                         } else {
-                            return ValidationResult.fail(node.getMessage(), returnInfo);
+                            String nodeName = node.getLanguage() + "@@" + node.getOrder();
+                            return ValidationResult.fail(node.getMessage(), returnInfo, nodeName);
                         }
                     } else {
                         // 否则打印日志
@@ -180,6 +143,7 @@ public class ValidationChain {
             if (guard.isExceedThreshold(this.chainId, this.guardThreshold)) {
                 log.info("guard exceed threshold : [{}=={}]", this.chainId, this.guardThreshold);
                 guard.rollback(this.chainId);
+                // TODO 对
                 return ValidationResult.fail(String.format("%s guard exceed threshold", this.chainId));
             }
         }
@@ -187,12 +151,13 @@ public class ValidationChain {
         ValidationResult result = executeResult(context);
 
         if (!result.getSuccess()) {
-            // 自增并且判断是否超过阈值
+            // 自增
             guard.increment(chainId);
         }
 
         return result;
     }
+
 
     public String getGroup() {
         return group;

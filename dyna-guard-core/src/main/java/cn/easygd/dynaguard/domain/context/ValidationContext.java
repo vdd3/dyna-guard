@@ -67,7 +67,6 @@ public abstract class ValidationContext {
      * @param value 值
      */
     public void put(String key, Object value) {
-        // TODO 需要将对象设置为安全不可变的
         parameters.put(key, value);
     }
 
@@ -78,8 +77,6 @@ public abstract class ValidationContext {
      */
     @Override
     public String toString() {
-        return "ValidationContext{" +
-                "parameters=" + parameters +
-                '}';
+        return String.format("param name : %s", parameters.keySet());
     }
 }

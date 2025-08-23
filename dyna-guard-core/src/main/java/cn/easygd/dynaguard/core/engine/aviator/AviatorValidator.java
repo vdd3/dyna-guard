@@ -3,6 +3,7 @@ package cn.easygd.dynaguard.core.engine.aviator;
 import cn.easygd.dynaguard.core.engine.BaseValidator;
 import cn.easygd.dynaguard.core.engine.aviator.function.common.NotNullFunction;
 import cn.easygd.dynaguard.core.engine.aviator.function.range.*;
+import cn.easygd.dynaguard.core.engine.aviator.function.trace.TraceFunction;
 import cn.easygd.dynaguard.domain.context.ValidationContext;
 import cn.easygd.dynaguard.domain.enums.RuleEngineEnum;
 import com.googlecode.aviator.AviatorEvaluator;
@@ -77,5 +78,6 @@ public class AviatorValidator extends BaseValidator {
         instance.addFunction(new InAtMostRangeFunction());
         instance.addFunction(new InGreaterThanRangeFunction());
         instance.addFunction(new InLessThanRangeFunction());
+        instance.addFunction(new TraceFunction());
     }
 }

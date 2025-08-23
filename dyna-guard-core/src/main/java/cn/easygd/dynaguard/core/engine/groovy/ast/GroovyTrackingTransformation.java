@@ -5,7 +5,6 @@ import com.google.common.collect.Lists;
 import org.codehaus.groovy.ast.ASTNode;
 import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.ast.MethodNode;
-import org.codehaus.groovy.ast.Parameter;
 import org.codehaus.groovy.ast.expr.*;
 import org.codehaus.groovy.ast.stmt.*;
 import org.codehaus.groovy.control.SourceUnit;
@@ -37,19 +36,9 @@ public class GroovyTrackingTransformation implements ASTTransformation {
     private static final String TRIGGER_CONDITION_METHOD = "triggerCondition";
 
     /**
-     * 记录行号方法名
-     */
-    private static final String RECORD_LINE_NUMBER_METHOD = "recordLineNumber";
-
-    /**
      * 记录触发条件方法名
      */
     private static final String RECORD_TRIGGER_CONDITION_METHOD = "recordTriggerCondition";
-
-    /**
-     * 记录变量方法名
-     */
-    private static final String RECORD_VARIABLE_METHOD = "recordVariable";
 
     /**
      * The method is invoked when an AST Transformation is active. For local transformations, it is invoked once
@@ -75,7 +64,6 @@ public class GroovyTrackingTransformation implements ASTTransformation {
         }
     }
 
-
     /**
      * 处理类节点，遍历方法
      *
@@ -90,7 +78,6 @@ public class GroovyTrackingTransformation implements ASTTransformation {
             }
         }
     }
-
 
     /**
      * 处理聚合块
@@ -171,40 +158,21 @@ public class GroovyTrackingTransformation implements ASTTransformation {
      */
     private List<Statement> generateTrackingStatements(ReturnStatement returnStmt, MethodNode method) {
         List<Statement> stmts = Lists.newArrayList();
-        int lineNumber = returnStmt.getLineNumber();
 
         // 使用BizTracker中的方法记录信息
         ClassExpression tracker = new ClassExpression(new ClassNode(BizTracker.class));
-
-        // 记录行号的参数
-        ArgumentListExpression lineParams = new ArgumentListExpression(new ConstantExpression(lineNumber));
-        // 记录行号的方法
-        MethodCallExpression lineMethodCallExpression = new MethodCallExpression(tracker, RECORD_LINE_NUMBER_METHOD, lineParams);
 
         // 记录触发条件的参数
         ArgumentListExpression triggerConditionParams = new ArgumentListExpression(new VariableExpression(TRIGGER_CONDITION_METHOD));
         // 记录触发条件的方法
         MethodCallExpression triggerConditionExpression = new MethodCallExpression(tracker, RECORD_TRIGGER_CONDITION_METHOD, triggerConditionParams);
 
-        // 构建出记录行号的语句
-        ExpressionStatement lineSt = new ExpressionStatement(lineMethodCallExpression);
         // 构建出记录触发条件的语句
         ExpressionStatement triggerConditionSt = new ExpressionStatement(triggerConditionExpression);
 
-        // 添加记录行号的语句
-        stmts.add(lineSt);
         // 添加记录触发return的条件的语句
         stmts.add(triggerConditionSt);
 
-        // 记录关键变量值（获取当前作用域的变量）, 这个地方不收集局部变量
-        List<VariableExpression> variables = getScopeVariables(method);
-        for (VariableExpression var : variables) {
-            ConstantExpression varNameExpression = new ConstantExpression(var.getName());
-            ArgumentListExpression varParams = new ArgumentListExpression(varNameExpression, var);
-            MethodCallExpression recordVariableExpression = new MethodCallExpression(tracker, RECORD_VARIABLE_METHOD, varParams);
-            ExpressionStatement varSt = new ExpressionStatement(recordVariableExpression);
-            stmts.add(varSt);
-        }
         return stmts;
     }
 
@@ -235,21 +203,5 @@ public class GroovyTrackingTransformation implements ASTTransformation {
                 Token.newSymbol(Types.EQUALS, 0, 0),
                 condition);
         return new ExpressionStatement(expression);
-    }
-
-    /**
-     * 获取当前方法作用域中的变量
-     *
-     * @param method 方法
-     * @return 变量列表
-     */
-    private List<VariableExpression> getScopeVariables(MethodNode method) {
-        // 简化实现：获取方法参数和局部变量（实际场景可扩展）
-        List<VariableExpression> vars = new ArrayList<>();
-        // 添加方法参数
-        for (Parameter param : method.getParameters()) {
-            vars.add(new VariableExpression(param.getName()));
-        }
-        return vars;
     }
 }

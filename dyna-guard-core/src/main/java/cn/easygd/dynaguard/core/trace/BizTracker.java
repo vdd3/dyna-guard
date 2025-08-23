@@ -1,5 +1,7 @@
 package cn.easygd.dynaguard.core.trace;
 
+import java.util.Optional;
+
 /**
  * 业务追踪
  *
@@ -33,16 +35,7 @@ public class BizTracker {
      * @param language 语言
      */
     public static void language(String language) {
-        RETURN_INFO_HOLDER.get().setLanguage(language);
-    }
-
-    /**
-     * 记录行号
-     *
-     * @param lineNumber 行号
-     */
-    public static void recordLineNumber(Integer lineNumber) {
-        RETURN_INFO_HOLDER.get().setLineNumber(lineNumber);
+        Optional.ofNullable(get()).ifPresent(source -> source.setLanguage(language));
     }
 
     /**
@@ -51,17 +44,7 @@ public class BizTracker {
      * @param condition 条件
      */
     public static void recordTriggerCondition(String condition) {
-        RETURN_INFO_HOLDER.get().setTriggerCondition(condition);
-    }
-
-    /**
-     * 记录变量
-     *
-     * @param varName 变量名
-     * @param value   值
-     */
-    public static void recordVariable(String varName, Object value) {
-        RETURN_INFO_HOLDER.get().getVariables().put(varName, value);
+        Optional.ofNullable(get()).ifPresent(source -> source.setTriggerCondition(condition));
     }
 
     /**

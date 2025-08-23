@@ -35,25 +35,30 @@ public class ValidationResult {
      */
     private ReturnInfo returnInfo;
 
+    /**
+     * 节点名称，由脚本语言+顺序组成
+     */
+    private String nodeName;
+
     private ValidationResult(Boolean success, String message, Boolean exception) {
-        this.success = success;
-        this.message = message;
-        this.exception = exception;
+        this(success, message, exception, null);
     }
 
     private ValidationResult(Boolean success, String message, Boolean exception, Throwable throwable) {
-        this.success = success;
-        this.message = message;
-        this.exception = exception;
-        this.throwable = throwable;
+        this(success, message, exception, throwable, null);
     }
 
     private ValidationResult(Boolean success, String message, Boolean exception, Throwable throwable, ReturnInfo returnInfo) {
+        this(success, message, exception, throwable, returnInfo, null);
+    }
+
+    private ValidationResult(Boolean success, String message, Boolean exception, Throwable throwable, ReturnInfo returnInfo, String nodeName) {
         this.success = success;
         this.message = message;
         this.exception = exception;
         this.throwable = throwable;
         this.returnInfo = returnInfo;
+        this.nodeName = nodeName;
     }
 
     /**
@@ -102,8 +107,8 @@ public class ValidationResult {
      * @param returnInfo 业务跟踪信息
      * @return 验证结果
      */
-    public static ValidationResult fail(String message, ReturnInfo returnInfo) {
-        return new ValidationResult(false, message, false, null, returnInfo);
+    public static ValidationResult fail(String message, ReturnInfo returnInfo, String nodeName) {
+        return new ValidationResult(false, message, false, null, returnInfo, nodeName);
     }
 
     public Boolean getSuccess() {
@@ -124,5 +129,9 @@ public class ValidationResult {
 
     public ReturnInfo getReturnInfo() {
         return returnInfo;
+    }
+
+    public void setSuccess(Boolean success) {
+        this.success = success;
     }
 }

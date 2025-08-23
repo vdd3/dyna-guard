@@ -2,6 +2,7 @@ package cn.easygd.dynaguard.core.engine.aviator.function.range;
 
 import cn.easygd.dynaguard.domain.constants.CustomFunctionConstants;
 import cn.easygd.dynaguard.utils.CustomCheckUtils;
+import cn.easygd.dynaguard.utils.TypeConvertUtils;
 import com.googlecode.aviator.runtime.function.AbstractFunction;
 import com.googlecode.aviator.runtime.function.FunctionUtils;
 import com.googlecode.aviator.runtime.type.AviatorBoolean;
@@ -27,9 +28,8 @@ public class InLessThanRangeFunction extends AbstractFunction {
      */
     @Override
     public AviatorObject call(Map<String, Object> env, AviatorObject arg1, AviatorObject arg2) {
-        super.call(env, arg1, arg2);
-        Object var1 = FunctionUtils.getJavaObject(arg1, env);
         Object value = FunctionUtils.getJavaObject(arg2, env);
+        Object var1 = TypeConvertUtils.convert(arg1.getValue(env), value.getClass());
         return AviatorBoolean.valueOf(CustomCheckUtils.lessThan(var1, value));
     }
 

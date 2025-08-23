@@ -2,6 +2,7 @@ package cn.easygd.dynaguard.core.engine.aviator.function.range;
 
 import cn.easygd.dynaguard.domain.constants.CustomFunctionConstants;
 import cn.easygd.dynaguard.utils.CustomCheckUtils;
+import cn.easygd.dynaguard.utils.TypeConvertUtils;
 import com.googlecode.aviator.runtime.function.AbstractFunction;
 import com.googlecode.aviator.runtime.function.FunctionUtils;
 import com.googlecode.aviator.runtime.type.AviatorBoolean;
@@ -28,10 +29,9 @@ public class InClosedOpenRangeFunction extends AbstractFunction {
      */
     @Override
     public AviatorObject call(Map<String, Object> env, AviatorObject arg1, AviatorObject arg2, AviatorObject arg3) {
-        super.call(env, arg1, arg2, arg3);
-        Object var1 = FunctionUtils.getJavaObject(arg1, env);
-        Object var2 = FunctionUtils.getJavaObject(arg2, env);
         Object value = FunctionUtils.getJavaObject(arg3, env);
+        Object var1 = TypeConvertUtils.convert(arg1.getValue(env), value.getClass());
+        Object var2 = TypeConvertUtils.convert(arg2.getValue(env), value.getClass());
         return AviatorBoolean.valueOf(CustomCheckUtils.inClosedOpenRange(var1, var2, value));
     }
 
