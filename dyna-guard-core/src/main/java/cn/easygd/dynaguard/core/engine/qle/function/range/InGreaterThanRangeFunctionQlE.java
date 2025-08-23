@@ -1,6 +1,6 @@
-package cn.easygd.dynaguard.core.engine.qle.operator.range;
+package cn.easygd.dynaguard.core.engine.qle.function.range;
 
-import cn.easygd.dynaguard.core.engine.qle.operator.QlEBaseFunction;
+import cn.easygd.dynaguard.core.engine.qle.function.QlEBaseFunction;
 import cn.easygd.dynaguard.utils.CustomCheckUtils;
 
 /**

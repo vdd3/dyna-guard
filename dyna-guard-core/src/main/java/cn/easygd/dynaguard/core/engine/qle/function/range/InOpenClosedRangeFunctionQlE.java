@@ -1,15 +1,15 @@
-package cn.easygd.dynaguard.core.engine.qle.operator.range;
+package cn.easygd.dynaguard.core.engine.qle.function.range;
 
-import cn.easygd.dynaguard.core.engine.qle.operator.QlEBaseFunction;
+import cn.easygd.dynaguard.core.engine.qle.function.QlEBaseFunction;
 import cn.easygd.dynaguard.utils.CustomCheckUtils;
 
 /**
- * 在闭开区间内
+ * 在开闭区间内
  *
  * @author VD
- * @date 2025/8/11 21:28
+ * @date 2025/8/11 21:25
  */
-public class InClosedOpenRangeFunctionQlE extends QlEBaseFunction {
+public class InOpenClosedRangeFunctionQlE extends QlEBaseFunction {
 
     /**
      * 执行方法
@@ -21,6 +21,6 @@ public class InClosedOpenRangeFunctionQlE extends QlEBaseFunction {
     @Override
     protected Boolean execute(Object[] list) throws Exception {
         checkParamsSize(list.length, 3);
-        return CustomCheckUtils.inClosedOpenRange(list[0], list[1], list[2]);
+        return CustomCheckUtils.inOpenClosedRange(list[0], list[1], list[2]);
     }
 }

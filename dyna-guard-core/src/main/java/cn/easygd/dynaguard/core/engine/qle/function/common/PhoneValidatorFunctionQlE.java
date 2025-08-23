@@ -1,6 +1,6 @@
-package cn.easygd.dynaguard.core.engine.qle.operator.common;
+package cn.easygd.dynaguard.core.engine.qle.function.common;
 
-import cn.easygd.dynaguard.core.engine.qle.operator.QlEBaseFunction;
+import cn.easygd.dynaguard.core.engine.qle.function.QlEBaseFunction;
 
 import java.util.HashMap;
 import java.util.Map;

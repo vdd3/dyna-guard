@@ -1,4 +1,4 @@
-package cn.easygd.dynaguard.core.engine.qle.operator.bean;
+package cn.easygd.dynaguard.core.engine.qle.function.bean;
 
 import cn.easygd.dynaguard.core.holder.GlobalBeanContextHolder;
 import cn.easygd.dynaguard.domain.exception.ValidationChainEngineException;

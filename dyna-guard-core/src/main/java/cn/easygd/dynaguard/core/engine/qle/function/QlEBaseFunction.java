@@ -1,4 +1,4 @@
-package cn.easygd.dynaguard.core.engine.qle.operator;
+package cn.easygd.dynaguard.core.engine.qle.function;
 
 import cn.easygd.dynaguard.domain.exception.ValidationChainEngineException;
 import com.alibaba.qlexpress4.api.QLFunctionalVarargs;

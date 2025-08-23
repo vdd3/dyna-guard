@@ -1,15 +1,16 @@
-package cn.easygd.dynaguard.core.engine.qle.operator.range;
+package cn.easygd.dynaguard.core.engine.qle.function.range;
 
-import cn.easygd.dynaguard.core.engine.qle.operator.QlEBaseFunction;
+import cn.easygd.dynaguard.core.engine.qle.function.QlEBaseFunction;
 import cn.easygd.dynaguard.utils.CustomCheckUtils;
 
 /**
- * 最小值判断
+ * 最大值判断
  *
  * @author VD
- * @date 2025/8/11 21:30
+ * @date 2025/8/11 21:38
  */
-public class InAtLeastRangeFunctionQlE extends QlEBaseFunction {
+public class InLessThanRangeFunctionQlE extends QlEBaseFunction {
+
     /**
      * 执行方法
      *
@@ -20,6 +21,6 @@ public class InAtLeastRangeFunctionQlE extends QlEBaseFunction {
     @Override
     protected Boolean execute(Object[] list) throws Exception {
         checkParamsSize(list.length, 2);
-        return CustomCheckUtils.atLeast(list[0], list[1]);
+        return CustomCheckUtils.lessThan(list[0], list[1]);
     }
 }
