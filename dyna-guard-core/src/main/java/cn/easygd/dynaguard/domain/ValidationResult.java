@@ -103,12 +103,11 @@ public class ValidationResult {
     /**
      * 失败
      *
-     * @param message    错误信息
-     * @param returnInfo 业务跟踪信息
+     * @param message 错误信息
      * @return 验证结果
      */
-    public static ValidationResult fail(String message, ReturnInfo returnInfo, String nodeName) {
-        return new ValidationResult(false, message, false, null, returnInfo, nodeName);
+    public static ValidationResult fail(String message, String nodeName) {
+        return new ValidationResult(false, message, false, null, null, nodeName);
     }
 
     public Boolean getSuccess() {
@@ -131,7 +130,11 @@ public class ValidationResult {
         return returnInfo;
     }
 
-    public void setSuccess(Boolean success) {
-        this.success = success;
+    public void setReturnInfo(ReturnInfo returnInfo) {
+        this.returnInfo = returnInfo;
+    }
+
+    public String getNodeName() {
+        return nodeName;
     }
 }

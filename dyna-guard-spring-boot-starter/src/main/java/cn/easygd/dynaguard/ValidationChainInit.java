@@ -3,6 +3,7 @@ package cn.easygd.dynaguard;
 import cn.easygd.dynaguard.core.chain.ValidationChainManager;
 import cn.easygd.dynaguard.core.guard.CounterGuard;
 import cn.easygd.dynaguard.core.guard.CounterGuardManager;
+import cn.easygd.dynaguard.core.metrics.BizValidationStatistics;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
@@ -11,6 +12,7 @@ import org.springframework.context.event.ContextRefreshedEvent;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * 验证流程初始化
@@ -24,6 +26,11 @@ public class ValidationChainInit implements ApplicationListener<ContextRefreshed
      * 日志
      */
     private static final Logger log = LoggerFactory.getLogger(ValidationChainInit.class);
+
+    /**
+     * 默认统计实现名称
+     */
+    private static final String DEFAULT_STATISTICS_BEAN_NAME = "localBizValidationStatistics";
 
     /**
      * 验证链管理器
@@ -57,6 +64,16 @@ public class ValidationChainInit implements ApplicationListener<ContextRefreshed
             List<String> chainIdList = v.chainId();
             chainIdList.forEach(chainId -> counterGuardManager.register(chainId, v));
         });
+
+        // 将业务统计器注册到全局的bean管理中，只能有一个全局业务统计器
+        Set<Map.Entry<String, BizValidationStatistics>> entrySet = applicationContext.getBeansOfType(BizValidationStatistics.class).entrySet();
+        if (entrySet.size() > 1) {
+            entrySet.stream().filter(entry -> !DEFAULT_STATISTICS_BEAN_NAME.equals(entry.getKey()))
+                    .findFirst()
+                    .ifPresent(entry -> SpringBeanContext.setBizValidationStatisticsName(entry.getKey()));
+        } else {
+            SpringBeanContext.setBizValidationStatisticsName(DEFAULT_STATISTICS_BEAN_NAME);
+        }
 
         log.info("validation chain load chain end");
     }

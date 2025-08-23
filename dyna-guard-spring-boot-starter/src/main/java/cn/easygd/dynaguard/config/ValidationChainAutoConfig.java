@@ -4,6 +4,8 @@ import cn.easygd.dynaguard.ValidationChainInit;
 import cn.easygd.dynaguard.ValidationMethodInterceptor;
 import cn.easygd.dynaguard.core.chain.ValidationChainManager;
 import cn.easygd.dynaguard.core.guard.CounterGuardManager;
+import cn.easygd.dynaguard.core.metrics.BizValidationStatistics;
+import cn.easygd.dynaguard.core.metrics.LocalBizValidationStatistics;
 import cn.easygd.dynaguard.domain.config.ValidationChainConfig;
 import org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
@@ -51,6 +53,16 @@ public class ValidationChainAutoConfig {
     @Bean
     public GlobalBeanRegister globalBeanRegister() {
         return new GlobalBeanRegister();
+    }
+
+    /**
+     * 创建全局默认的统计器
+     *
+     * @return BizValidationStatistics
+     */
+    @Bean
+    public BizValidationStatistics bizValidationStatistics() {
+        return LocalBizValidationStatistics.getInstance();
     }
 
     /**

@@ -1,14 +1,18 @@
 package cn.easygd.dynaguard.core.chain;
 
+import cn.easygd.dynaguard.core.bean.GlobalBeanContext;
 import cn.easygd.dynaguard.core.engine.Validator;
 import cn.easygd.dynaguard.core.guard.CounterGuard;
 import cn.easygd.dynaguard.core.guard.CounterGuardManager;
 import cn.easygd.dynaguard.core.guard.LocalCounterGuard;
+import cn.easygd.dynaguard.core.holder.ChainConfigHolder;
 import cn.easygd.dynaguard.core.holder.GlobalBeanContextHolder;
+import cn.easygd.dynaguard.core.metrics.BizValidationStatistics;
 import cn.easygd.dynaguard.core.trace.BizTracker;
 import cn.easygd.dynaguard.core.trace.ReturnInfo;
 import cn.easygd.dynaguard.domain.ValidationNode;
 import cn.easygd.dynaguard.domain.ValidationResult;
+import cn.easygd.dynaguard.domain.config.ValidationChainConfig;
 import cn.easygd.dynaguard.domain.context.ValidationContext;
 import cn.easygd.dynaguard.domain.enums.ValidationErrorEnum;
 import cn.easygd.dynaguard.domain.exception.ValidationFailedException;
@@ -75,7 +79,6 @@ public class ValidationChain {
      */
     public void executeGuard(ValidationContext context) {
         ValidationResult result = executeGuardResult(context);
-
         if (!result.getSuccess()) {
             throw new ValidationFailedException(ValidationErrorEnum.FAIL.getErrorCode(), result.getMessage());
         }
@@ -88,42 +91,7 @@ public class ValidationChain {
      * @return 验证结果
      */
     public ValidationResult executeResult(ValidationContext context) {
-        log.info("validation chain start : [{}=={}] , context : [{}]", group, chainId, context);
-        try {
-            // 初始化跟踪信息
-            BizTracker.init();
-
-            for (ValidationNode node : this.nodes) {
-                String script = node.getScript();
-                // 执行验证
-                Validator validator = node.getValidator();
-                if (Objects.isNull(validator)) {
-                    log.warn("validator is null , language : {}", node.getLanguage());
-                    continue;
-                }
-                ValidationResult result = validator.execute(script, context);
-                if (!result.getSuccess()) {
-                    // 获取跟踪信息
-                    ReturnInfo returnInfo = BizTracker.get();
-
-                    if (node.getFastFail()) {
-                        // 需要判断是否是因为执行异常导致的验证失败
-                        if (result.getException()) {
-                            throw new ValidationFailedException(ValidationErrorEnum.SCRIPT_EXECUTE_ERROR, result.getThrowable());
-                        } else {
-                            String nodeName = node.getLanguage() + "@@" + node.getOrder();
-                            return ValidationResult.fail(node.getMessage(), returnInfo, nodeName);
-                        }
-                    } else {
-                        // 否则打印日志
-                        log.info("validation fail but skip");
-                    }
-                }
-            }
-        } finally {
-            BizTracker.clear();
-        }
-        return ValidationResult.success();
+        return executeTemplate(context, false);
     }
 
     /**
@@ -132,32 +100,119 @@ public class ValidationChain {
      * @param context 上下文
      */
     public ValidationResult executeGuardResult(ValidationContext context) {
-        CounterGuardManager guardManager = GlobalBeanContextHolder.getContext().getCounterGuardManager();
+        return executeTemplate(context, true);
+    }
+
+    public ValidationResult executeTemplate(ValidationContext context,
+                                            Boolean enableGuard) {
+        // 获取配置
+        ValidationChainConfig config = ChainConfigHolder.getConfig();
+        Boolean enableBizTrace = config.getEnableBizTrace();
+
+        // 全局bean管理
+        GlobalBeanContext globalBeanContext = GlobalBeanContextHolder.getContext();
+
+        // 获取业务统计器
+        BizValidationStatistics statistics = globalBeanContext.getBizValidationStatistics();
+
+        // 获取熔断计数器
+        CounterGuardManager guardManager = globalBeanContext.getCounterGuardManager();
         CounterGuard guard = guardManager.getGuard(this.chainId);
-        if (Objects.isNull(guard)) {
-            log.info("guard is null , register local guard : [{}]", this.chainId);
-            guard = new LocalCounterGuard(this.chainId, this.guardExpire);
-            guardManager.register(this.chainId, guard);
-        } else {
-            // 如果触发熔断直接返回失败结果
-            if (guard.isExceedThreshold(this.chainId, this.guardThreshold)) {
-                log.info("guard exceed threshold : [{}=={}]", this.chainId, this.guardThreshold);
-                guard.rollback(this.chainId);
-                // TODO 对
-                return ValidationResult.fail(String.format("%s guard exceed threshold", this.chainId));
+        if (enableGuard) {
+            if (Objects.isNull(guard)) {
+                log.info("guard is null , register local guard : [{}]", this.chainId);
+                guard = new LocalCounterGuard(this.chainId, this.guardExpire);
+                guardManager.register(this.chainId, guard);
+            } else {
+                // 如果触发熔断直接返回失败结果
+                if (guard.isExceedThreshold(this.chainId, this.guardThreshold)) {
+                    log.info("guard exceed threshold : [{}=={}]", this.chainId, this.guardThreshold);
+                    if (enableBizTrace) {
+                        statistics.incrementCount(this.chainId);
+                        statistics.incrementGuardCount(this.chainId);
+                    }
+                    guard.rollback(this.chainId);
+
+                    return ValidationResult.fail(String.format("%s guard exceed threshold", this.chainId));
+                }
             }
         }
 
-        ValidationResult result = executeResult(context);
+        // 执行流程
+        ValidationResult result;
 
-        if (!result.getSuccess()) {
-            // 自增
-            guard.increment(chainId);
+        if (enableBizTrace) {
+            try {
+                // 初始化跟踪信息
+                BizTracker.init();
+                result = executeTemplate(context);
+                if (!result.getSuccess()) {
+                    // 获取跟踪信息
+                    ReturnInfo returnInfo = BizTracker.get();
+                    // 增加未通过次数
+                    statistics.incrementValidationCount(this.chainId, result.getNodeName(), returnInfo.getTriggerCondition());
+                    result.setReturnInfo(returnInfo);
+                } else {
+                    // 增加通过次数
+                    statistics.incrementPassedCount(this.chainId);
+                }
+            } finally {
+                // 增加调用次数
+                statistics.incrementCount(this.chainId);
+                // 清理跟踪信息
+                BizTracker.clear();
+            }
+        } else {
+            result = executeTemplate(context);
+        }
+
+        if (enableGuard) {
+            if (!result.getSuccess()) {
+                // 自增
+                guard.increment(chainId);
+            }
         }
 
         return result;
     }
 
+    /**
+     * 执行模板
+     *
+     * @param context 上下文
+     * @return 执行结果
+     */
+    private ValidationResult executeTemplate(ValidationContext context) {
+        log.info("validation chain start : [{}=={}] , context : [{}]", group, chainId, context);
+        // 初始化跟踪信息
+        BizTracker.init();
+
+        for (ValidationNode node : this.nodes) {
+            String script = node.getScript();
+            // 执行验证
+            Validator validator = node.getValidator();
+            if (Objects.isNull(validator)) {
+                log.warn("validator is null , language : {}", node.getLanguage());
+                continue;
+            }
+            ValidationResult result = validator.execute(script, context);
+            if (!result.getSuccess()) {
+                if (node.getFastFail()) {
+                    // 需要判断是否是因为执行异常导致的验证失败
+                    if (result.getException()) {
+                        throw new ValidationFailedException(ValidationErrorEnum.SCRIPT_EXECUTE_ERROR, result.getThrowable());
+                    } else {
+                        String nodeName = node.getLanguage() + "@@" + node.getOrder();
+                        return ValidationResult.fail(node.getMessage(), nodeName);
+                    }
+                } else {
+                    // 否则打印日志
+                    log.info("validation fail but skip");
+                }
+            }
+        }
+        return ValidationResult.success();
+    }
 
     public String getGroup() {
         return group;
