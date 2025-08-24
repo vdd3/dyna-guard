@@ -4,7 +4,7 @@ package cn.easygd.dynaguard.domain.config;
  * 流程xml配置
  *
  * @author VD
- * @date 2025/8/9 19:35
+ * @version v 0.1 2025/8/9 19:35
  */
 public class ChainXmlConfig extends LocalChainDataConfig {
 

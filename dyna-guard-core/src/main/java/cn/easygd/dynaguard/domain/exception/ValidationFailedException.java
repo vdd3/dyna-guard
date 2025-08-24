@@ -6,7 +6,7 @@ import cn.easygd.dynaguard.domain.enums.ValidationErrorEnum;
  * 验证失败异常
  *
  * @author VD
- * @date 2025/7/28 21:45
+ * @version v 0.1 2025/7/28 21:45
  */
 public class ValidationFailedException extends RuntimeException {
 

@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
  * json文件解析器
  *
  * @author VD
- * @date 2025/8/3 10:59
+ * @version v 0.1 2025/8/3 10:59
  */
 public class ChainJsonParser extends LocalChainFileParser {
 

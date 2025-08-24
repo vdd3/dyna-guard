@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Configuration;
  * 验证流程引擎自动配置
  *
  * @author VD
- * @date 2025/8/3 11:59
+ * @version v 0.1 2025/8/3 11:59
  */
 @Configuration
 @AutoConfigureAfter({ValidationChainPropertyAutoConfiguration.class})
@@ -60,7 +60,7 @@ public class ValidationChainAutoConfig {
      *
      * @return BizValidationStatistics
      */
-    @Bean
+    @Bean("localBizValidationStatistics")
     public BizValidationStatistics bizValidationStatistics() {
         return LocalBizValidationStatistics.getInstance();
     }

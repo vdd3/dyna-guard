@@ -18,7 +18,7 @@ import java.util.Set;
  * 验证流程初始化
  *
  * @author VD
- * @date 2025/8/12 20:05
+ * @version v 0.1 2025/8/12 20:05
  */
 public class ValidationChainInit implements ApplicationListener<ContextRefreshedEvent> {
 

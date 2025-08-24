@@ -9,7 +9,7 @@ import java.lang.annotation.*;
  * 开启验证
  *
  * @author VD
- * @date 2025/8/15 19:17
+ * @version v 0.1 2025/8/15 19:17
  */
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)

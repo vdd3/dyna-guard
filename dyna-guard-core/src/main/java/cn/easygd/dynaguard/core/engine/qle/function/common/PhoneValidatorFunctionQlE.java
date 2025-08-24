@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
  * 手机号验证
  *
  * @author VD
- * @date 2025/8/11 21:51
+ * @version v 0.1 2025/8/11 21:51
  */
 public class PhoneValidatorFunctionQlE extends QlEBaseFunction {
 

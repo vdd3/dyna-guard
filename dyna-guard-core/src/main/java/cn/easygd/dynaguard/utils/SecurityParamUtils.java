@@ -14,7 +14,7 @@ import java.util.Objects;
  * 安全参数工具类
  *
  * @author VD
- * @date 2025/8/20 21:37
+ * @version v 0.1 2025/8/20 21:37
  */
 public class SecurityParamUtils {
 

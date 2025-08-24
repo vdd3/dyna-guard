@@ -16,6 +16,7 @@ import cn.easygd.dynaguard.domain.config.ValidationChainConfig;
 import cn.easygd.dynaguard.domain.context.ValidationContext;
 import cn.easygd.dynaguard.domain.enums.ValidationErrorEnum;
 import cn.easygd.dynaguard.domain.exception.ValidationFailedException;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,7 +27,7 @@ import java.util.Objects;
  * 验证链
  *
  * @author VD
- * @date 2025/7/29 21:38
+ * @version v 0.1 2025/7/29 21:38
  */
 public class ValidationChain {
 
@@ -103,8 +104,15 @@ public class ValidationChain {
         return executeTemplate(context, true);
     }
 
-    public ValidationResult executeTemplate(ValidationContext context,
-                                            Boolean enableGuard) {
+    /**
+     * 执行模板
+     *
+     * @param context     上下文
+     * @param enableGuard 是否开启熔断
+     * @return 验证结果
+     */
+    private ValidationResult executeTemplate(ValidationContext context,
+                                             Boolean enableGuard) {
         // 获取配置
         ValidationChainConfig config = ChainConfigHolder.getConfig();
         Boolean enableBizTrace = config.getEnableBizTrace();
@@ -145,7 +153,10 @@ public class ValidationChain {
             try {
                 // 初始化跟踪信息
                 BizTracker.init();
+
+                // 执行
                 result = executeTemplate(context);
+
                 if (!result.getSuccess()) {
                     // 获取跟踪信息
                     ReturnInfo returnInfo = BizTracker.get();
@@ -193,14 +204,16 @@ public class ValidationChain {
                 log.warn("validator is null , language : {}", node.getLanguage());
                 continue;
             }
+
             ValidationResult result = validator.execute(script, context);
+
             if (!result.getSuccess()) {
                 if (node.getFastFail()) {
                     // 需要判断是否是因为执行异常导致的验证失败
                     if (result.getException()) {
                         throw new ValidationFailedException(ValidationErrorEnum.SCRIPT_EXECUTE_ERROR, result.getThrowable());
                     } else {
-                        String nodeName = node.getLanguage() + "@@" + node.getOrder();
+                        String nodeName = StringUtils.defaultIfBlank(node.getNodeName(), node.getLanguage() + "@@" + node.getOrder());
                         return ValidationResult.fail(node.getMessage(), nodeName);
                     }
                 } else {

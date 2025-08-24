@@ -10,7 +10,7 @@ import org.springframework.context.ApplicationContextAware;
  * 全局bean注册
  *
  * @author VD
- * @date 2025/8/15 20:27
+ * @version v 0.1 2025/8/15 20:27
  */
 public class GlobalBeanRegister implements ApplicationContextAware {
 

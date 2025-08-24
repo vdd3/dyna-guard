@@ -10,7 +10,7 @@ import java.util.ServiceLoader;
  * bean 容器全局容器
  *
  * @author VD
- * @date 2025/8/12 20:53
+ * @version v 0.1 2025/8/12 20:53
  */
 public class GlobalBeanContextHolder {
 

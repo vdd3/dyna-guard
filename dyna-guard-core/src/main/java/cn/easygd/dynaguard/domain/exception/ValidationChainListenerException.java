@@ -4,7 +4,7 @@ package cn.easygd.dynaguard.domain.exception;
  * 验证流程监听器异常
  *
  * @author VD
- * @date 2025/8/12 20:17
+ * @version v 0.1 2025/8/12 20:17
  */
 public class ValidationChainListenerException extends RuntimeException {
 

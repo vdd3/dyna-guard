@@ -18,7 +18,7 @@ import java.util.Map;
  * groovy规则引擎
  *
  * @author VD
- * @date 2025/7/28 20:49
+ * @version v 0.1 2025/7/28 20:49
  */
 public class GroovyValidator extends BaseValidator {
 

@@ -4,7 +4,7 @@ package cn.easygd.dynaguard.domain.config;
  * 流程json配置
  *
  * @author VD
- * @date 2025/8/13 19:28
+ * @version v 0.1 2025/8/13 19:28
  */
 public class ChainJsonConfig extends LocalChainDataConfig {
 

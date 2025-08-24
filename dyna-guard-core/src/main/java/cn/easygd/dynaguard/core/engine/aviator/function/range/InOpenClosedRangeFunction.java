@@ -14,7 +14,7 @@ import java.util.Map;
  * 判断在开闭区间内函数
  *
  * @author VD
- * @date 2025/8/20 20:09
+ * @version v 0.1 2025/8/20 20:09
  */
 public class InOpenClosedRangeFunction extends AbstractFunction {
     /**

@@ -12,7 +12,7 @@ import java.util.function.Function;
 
 /**
  * @author VD
- * @date 2025/8/5 21:13
+ * @version v 0.1 2025/8/5 21:13
  */
 public class BeanMapUtils {
 

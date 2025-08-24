@@ -8,7 +8,7 @@ import java.util.Map;
  * 业务验证统计接口
  *
  * @author VD
- * @version 2025/8/23 22:05 1.0
+ * @version v 0.1 2025/8/23 22:05
  */
 public interface BizValidationStatistics {
 

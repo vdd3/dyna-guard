@@ -6,7 +6,7 @@ import java.util.Optional;
  * 业务追踪
  *
  * @author VD
- * @date 2025/8/21 20:56
+ * @version v 0.1 2025/8/21 20:56
  */
 public class BizTracker {
 
@@ -26,7 +26,7 @@ public class BizTracker {
      * 重置
      */
     public static void reset() {
-        RETURN_INFO_HOLDER.get().reset();
+        Optional.ofNullable(get()).ifPresent(ReturnInfo::reset);
     }
 
     /**

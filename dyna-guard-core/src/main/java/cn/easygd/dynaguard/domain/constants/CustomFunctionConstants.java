@@ -4,7 +4,7 @@ package cn.easygd.dynaguard.domain.constants;
  * 自定义函数常量
  *
  * @author VD
- * @date 2025/8/10 22:13
+ * @version v 0.1 2025/8/10 22:13
  */
 public class CustomFunctionConstants {
 

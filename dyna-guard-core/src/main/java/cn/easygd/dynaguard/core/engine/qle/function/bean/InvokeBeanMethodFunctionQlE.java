@@ -13,7 +13,7 @@ import java.util.Objects;
  * 调用Bean方法
  *
  * @author VD
- * @date 2025/8/16 18:14
+ * @version v 0.1 2025/8/16 18:14
  */
 public class InvokeBeanMethodFunctionQlE implements QLFunctionalVarargs {
 

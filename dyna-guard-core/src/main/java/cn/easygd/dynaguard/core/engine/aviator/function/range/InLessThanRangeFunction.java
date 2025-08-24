@@ -14,7 +14,7 @@ import java.util.Map;
  * 判断最大值函数
  *
  * @author VD
- * @date 2025/8/20 20:07
+ * @version v 0.1 2025/8/20 20:07
  */
 public class InLessThanRangeFunction extends AbstractFunction {
 

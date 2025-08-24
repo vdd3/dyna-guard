@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
  * sql 解析器
  *
  * @author VD
- * @date 2025/8/5 20:10
+ * @version v 0.1 2025/8/5 20:10
  */
 public class ChainSqlParser implements ValidationChainParser {
 

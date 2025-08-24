@@ -4,8 +4,6 @@ import cn.easygd.dynaguard.core.engine.BaseValidator;
 import cn.easygd.dynaguard.core.holder.GlobalBeanContextHolder;
 import cn.easygd.dynaguard.domain.context.ValidationContext;
 import cn.easygd.dynaguard.domain.enums.RuleEngineEnum;
-import cn.easygd.dynaguard.domain.exception.ResultTypeIllegalException;
-import com.google.common.collect.Maps;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.expression.BeanFactoryResolver;
 import org.springframework.expression.Expression;
@@ -19,7 +17,7 @@ import java.util.Map;
  * spel脚本验证
  *
  * @author VD
- * @date 2025/8/12 20:27
+ * @version v 0.1 2025/8/12 20:27
  */
 public class SpelValidator extends BaseValidator {
 
@@ -47,20 +45,14 @@ public class SpelValidator extends BaseValidator {
         }
 
         // 注入上下文
-        Map<String, Object> params = Maps.newHashMap();
-        context.buildExecuteContext().accept(params);
+        Map<String, Object> params = buildParam(context);
         params.forEach(evaluationContext::setVariable);
 
         // 解析并执行SpEL表达式
         Expression expression = (Expression) script;
         Object result = expression.getValue(evaluationContext);
 
-        // 验证结果类型是否为布尔值
-        if (!(result instanceof Boolean)) {
-            throw new ResultTypeIllegalException();
-        }
-
-        return (Boolean) result;
+        return checkResult(result);
     }
 
     /**

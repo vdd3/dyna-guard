@@ -4,7 +4,7 @@ package cn.easygd.dynaguard.core.trace;
  * 返回详情
  *
  * @author VD
- * @date 2025/8/21 20:58
+ * @version v 0.1 2025/8/21 20:58
  */
 public class ReturnInfo {
 

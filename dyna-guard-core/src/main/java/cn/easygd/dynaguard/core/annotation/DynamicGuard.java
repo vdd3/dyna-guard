@@ -6,7 +6,7 @@ import java.lang.annotation.*;
  * 动态验证
  *
  * @author VD
- * @date 2025/7/27 20:50
+ * @version v 0.1 2025/7/27 20:50
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)

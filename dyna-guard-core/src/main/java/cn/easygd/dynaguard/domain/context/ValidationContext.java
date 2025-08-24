@@ -10,7 +10,7 @@ import java.util.function.Consumer;
  * 校验器上下文
  *
  * @author VD
- * @date 2025/7/27 20:52
+ * @version v 0.1 2025/7/27 20:52
  */
 public abstract class ValidationContext {
 

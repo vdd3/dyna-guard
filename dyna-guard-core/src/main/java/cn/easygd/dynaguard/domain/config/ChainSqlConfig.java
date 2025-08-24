@@ -10,7 +10,7 @@ import java.util.function.Function;
  * 流程sql配置
  *
  * @author VD
- * @date 2025/8/5 21:04
+ * @version v 0.1 2025/8/5 21:04
  */
 public class ChainSqlConfig extends ChainDataConfig {
 

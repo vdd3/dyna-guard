@@ -16,7 +16,7 @@ import java.util.Map;
  * Aviator脚本验证器
  *
  * @author VD
- * @date 2025/8/19 21:23
+ * @version v 0.1 2025/8/19 21:23
  */
 public class AviatorValidator extends BaseValidator {
 
@@ -67,6 +67,9 @@ public class AviatorValidator extends BaseValidator {
         return RuleEngineEnum.AVIATOR.getLanguageName();
     }
 
+    /**
+     * 构造方法
+     */
     public AviatorValidator() {
         // 注册函数
         instance.addFunction(new NotNullFunction());

@@ -12,7 +12,7 @@ import java.util.concurrent.atomic.AtomicLong;
  * 本地计数器
  *
  * @author VD
- * @date 2025/8/12 22:21
+ * @version v 0.1 2025/8/12 22:21
  */
 public class LocalCounterGuard implements CounterGuard {
 

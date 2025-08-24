@@ -7,7 +7,7 @@ import org.springframework.context.annotation.AdviceModeImportSelector;
  * 验证bean选择器
  *
  * @author VD
- * @date 2025/8/15 19:15
+ * @version v 0.1 2025/8/15 19:15
  */
 public class ValidationBeanSelector extends AdviceModeImportSelector<EnableValidation> {
 

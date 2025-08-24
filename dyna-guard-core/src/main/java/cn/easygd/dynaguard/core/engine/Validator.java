@@ -9,7 +9,7 @@ import java.util.Map;
  * 规则引擎
  *
  * @author VD
- * @date 2025/7/27 20:12
+ * @version v 0.1 2025/7/27 20:12
  */
 public interface Validator {
 

@@ -10,7 +10,7 @@ import org.springframework.context.ApplicationContext;
  * spring bean 容器
  *
  * @author VD
- * @date 2025/8/12 20:58
+ * @version v 0.1 2025/8/12 20:58
  */
 public class SpringBeanContext implements GlobalBeanContext {
 

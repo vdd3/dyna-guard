@@ -8,7 +8,7 @@ import java.util.Map;
  * 计数熔断器管理器
  *
  * @author VD
- * @date 2025/8/12 22:16
+ * @version v 0.1 2025/8/12 22:16
  */
 public class CounterGuardManager {
 

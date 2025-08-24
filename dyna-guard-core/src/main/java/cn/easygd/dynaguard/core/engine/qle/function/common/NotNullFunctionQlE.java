@@ -7,7 +7,7 @@ import cn.easygd.dynaguard.utils.CustomCheckUtils;
  * 非空判断关键字
  *
  * @author VD
- * @date 2025/8/10 22:09
+ * @version v 0.1 2025/8/10 22:09
  */
 public class NotNullFunctionQlE extends QlEBaseFunction {
 
