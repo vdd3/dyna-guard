@@ -1,11 +1,12 @@
-package cn.easygd.dynaguard.core.engine.groovy;
+package cn.easygd.dynaguard.engine;
+
 
 import cn.easygd.dynaguard.core.engine.BaseValidator;
-import cn.easygd.dynaguard.core.engine.groovy.ast.GroovyTrackingTransformation;
 import cn.easygd.dynaguard.core.holder.ChainConfigHolder;
 import cn.easygd.dynaguard.domain.config.ValidationChainConfig;
 import cn.easygd.dynaguard.domain.context.ValidationContext;
 import cn.easygd.dynaguard.domain.enums.RuleEngineEnum;
+import cn.easygd.dynaguard.engine.ast.GroovyTrackingTransformation;
 import groovy.lang.Binding;
 import groovy.lang.GroovyClassLoader;
 import groovy.lang.Script;

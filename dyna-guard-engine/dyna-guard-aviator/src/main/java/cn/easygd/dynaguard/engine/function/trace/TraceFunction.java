@@ -1,4 +1,4 @@
-package cn.easygd.dynaguard.core.engine.aviator.function.trace;
+package cn.easygd.dynaguard.engine.function.trace;
 
 import cn.easygd.dynaguard.core.trace.BizTracker;
 import com.googlecode.aviator.runtime.function.AbstractFunction;

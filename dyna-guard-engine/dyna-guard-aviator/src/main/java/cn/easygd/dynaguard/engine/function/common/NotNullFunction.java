@@ -1,4 +1,4 @@
-package cn.easygd.dynaguard.core.engine.aviator.function.common;
+package cn.easygd.dynaguard.engine.function.common;
 
 import cn.easygd.dynaguard.domain.constants.CustomFunctionConstants;
 import cn.easygd.dynaguard.utils.CustomCheckUtils;

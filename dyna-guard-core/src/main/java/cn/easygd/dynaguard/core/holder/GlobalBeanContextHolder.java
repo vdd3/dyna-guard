@@ -21,8 +21,6 @@ public class GlobalBeanContextHolder {
 
     /**
      * 初始化
-     *
-     * @param beanContext bean容器
      */
     public static GlobalBeanContext getContext() {
         if (beanContext == null) {

@@ -1,4 +1,4 @@
-package cn.easygd.dynaguard.core.engine.aviator.function.range;
+package cn.easygd.dynaguard.engine.function.range;
 
 import cn.easygd.dynaguard.domain.constants.CustomFunctionConstants;
 import cn.easygd.dynaguard.utils.CustomCheckUtils;
@@ -11,35 +11,37 @@ import com.googlecode.aviator.runtime.type.AviatorObject;
 import java.util.Map;
 
 /**
- * 最小值判断函数
+ * 判断在开区间内函数
  *
  * @author VD
- * @version v 0.1 2025/8/20 20:05
+ * @version v 0.1 2025/8/20 20:11
  */
-public class InGreaterThanRangeFunction extends AbstractFunction {
-
-    /**
-     * 函数
-     *
-     * @param env  环境
-     * @param arg1 参数1
-     * @param arg2 参数2
-     * @return 函数结果
-     */
-    @Override
-    public AviatorObject call(Map<String, Object> env, AviatorObject arg1, AviatorObject arg2) {
-        Object value = FunctionUtils.getJavaObject(arg2, env);
-        Object var1 = TypeConvertUtils.convert(arg1.getValue(env), value.getClass());
-        return AviatorBoolean.valueOf(CustomCheckUtils.greaterThan(var1, value));
-    }
+public class InOpenRangeFunction extends AbstractFunction {
 
     /**
      * 函数名称
      *
-     * @return 函数名称
+     * @param env  运行环境
+     * @param arg1 参数1
+     * @param arg2 参数2
+     * @param arg3 参数3
+     * @return 函数结果
+     */
+    @Override
+    public AviatorObject call(Map<String, Object> env, AviatorObject arg1, AviatorObject arg2, AviatorObject arg3) {
+        Object value = FunctionUtils.getJavaObject(arg3, env);
+        Object var1 = TypeConvertUtils.convert(arg1.getValue(env), value.getClass());
+        Object var2 = TypeConvertUtils.convert(arg2.getValue(env), value.getClass());
+        return AviatorBoolean.valueOf(CustomCheckUtils.inOpenRange(var1, var2, value));
+    }
+
+    /**
+     * 函数名
+     *
+     * @return 函数名
      */
     @Override
     public String getName() {
-        return CustomFunctionConstants.IN_GREATER_THAN_RANGE;
+        return CustomFunctionConstants.IN_OPEN_RANGE;
     }
 }

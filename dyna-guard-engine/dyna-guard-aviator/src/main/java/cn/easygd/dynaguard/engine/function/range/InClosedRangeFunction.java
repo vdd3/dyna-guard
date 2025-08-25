@@ -1,4 +1,4 @@
-package cn.easygd.dynaguard.core.engine.aviator.function.range;
+package cn.easygd.dynaguard.engine.function.range;
 
 import cn.easygd.dynaguard.domain.constants.CustomFunctionConstants;
 import cn.easygd.dynaguard.utils.CustomCheckUtils;
@@ -11,12 +11,13 @@ import com.googlecode.aviator.runtime.type.AviatorObject;
 import java.util.Map;
 
 /**
- * 判断在开闭区间内函数
+ * 判断在闭区间内函数
  *
  * @author VD
- * @version v 0.1 2025/8/20 20:09
+ * @version v 0.1 2025/8/20 20:04
  */
-public class InOpenClosedRangeFunction extends AbstractFunction {
+public class InClosedRangeFunction extends AbstractFunction {
+
     /**
      * 函数名称
      *
@@ -31,16 +32,16 @@ public class InOpenClosedRangeFunction extends AbstractFunction {
         Object value = FunctionUtils.getJavaObject(arg3, env);
         Object var1 = TypeConvertUtils.convert(arg1.getValue(env), value.getClass());
         Object var2 = TypeConvertUtils.convert(arg2.getValue(env), value.getClass());
-        return AviatorBoolean.valueOf(CustomCheckUtils.inOpenClosedRange(var1, var2, value));
+        return AviatorBoolean.valueOf(CustomCheckUtils.inClosedRange(var1, var2, value));
     }
 
     /**
-     * 函数名
+     * 函数名称
      *
-     * @return 函数名
+     * @return 函数名称
      */
     @Override
     public String getName() {
-        return CustomFunctionConstants.IN_OPEN_CLOSED_RANGE;
+        return CustomFunctionConstants.IN_CLOSED_RANGE;
     }
 }

@@ -1,4 +1,4 @@
-package cn.easygd.dynaguard.core.engine.aviator.function.range;
+package cn.easygd.dynaguard.engine.function.range;
 
 import cn.easygd.dynaguard.domain.constants.CustomFunctionConstants;
 import cn.easygd.dynaguard.utils.CustomCheckUtils;
@@ -11,12 +11,12 @@ import com.googlecode.aviator.runtime.type.AviatorObject;
 import java.util.Map;
 
 /**
- * 最大值判断函数
+ * 判断最大值函数
  *
  * @author VD
- * @version v 0.1 2025/8/20 19:58
+ * @version v 0.1 2025/8/20 20:07
  */
-public class InAtMostRangeFunction extends AbstractFunction {
+public class InLessThanRangeFunction extends AbstractFunction {
 
     /**
      * 函数
@@ -30,16 +30,16 @@ public class InAtMostRangeFunction extends AbstractFunction {
     public AviatorObject call(Map<String, Object> env, AviatorObject arg1, AviatorObject arg2) {
         Object value = FunctionUtils.getJavaObject(arg2, env);
         Object var1 = TypeConvertUtils.convert(arg1.getValue(env), value.getClass());
-        return AviatorBoolean.valueOf(CustomCheckUtils.atMost(var1, value));
+        return AviatorBoolean.valueOf(CustomCheckUtils.lessThan(var1, value));
     }
 
     /**
-     * 函数名
+     * 函数名称
      *
-     * @return 函数名
+     * @return 函数名称
      */
     @Override
     public String getName() {
-        return CustomFunctionConstants.IN_AT_MOST_RANGE;
+        return CustomFunctionConstants.IN_LESS_THAN_RANGE;
     }
 }

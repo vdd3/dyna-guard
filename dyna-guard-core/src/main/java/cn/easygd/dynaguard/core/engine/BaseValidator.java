@@ -35,7 +35,7 @@ public abstract class BaseValidator implements Validator {
     /**
      * 脚本缓存
      */
-    protected final Map<String, Object> SCRIPT_CACHE = Maps.newConcurrentMap();
+    protected static final Map<String, Object> SCRIPT_CACHE = Maps.newConcurrentMap();
 
     /**
      * 执行
