@@ -21,11 +21,6 @@ public enum RuleEngineEnum implements RuleEngineEnumerable<RuleEngineEnum> {
     JAVA_SCRIPT("JavaScript"),
 
     /**
-     * SpEl
-     */
-    SPEl("SpEl"),
-
-    /**
      * QLExpress4
      */
     QLEXPRESS4("QLExpress4"),

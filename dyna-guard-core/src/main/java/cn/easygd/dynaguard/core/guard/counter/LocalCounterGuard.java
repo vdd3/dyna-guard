@@ -1,8 +1,12 @@
-package cn.easygd.dynaguard.core.guard;
+package cn.easygd.dynaguard.core.guard.counter;
 
+import cn.easygd.dynaguard.domain.context.ValidationContext;
 import cn.easygd.dynaguard.domain.exception.GuardException;
+import cn.easygd.dynaguard.domain.guard.CounterThreshold;
+import cn.easygd.dynaguard.domain.guard.GuardThreshold;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import com.google.common.collect.Lists;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -21,6 +25,10 @@ public class LocalCounterGuard implements CounterGuard {
      */
     private Cache<String, AtomicLong> counterCache;
 
+    /**
+     * 链路ID
+     */
+    private String chainId;
 
     private LocalCounterGuard() {
     }
@@ -31,6 +39,7 @@ public class LocalCounterGuard implements CounterGuard {
      * @param chainId 链路ID
      */
     public LocalCounterGuard(String chainId, Long guardExpire) {
+        this.chainId = chainId;
         this.counterCache = CacheBuilder.newBuilder()
                 .maximumSize(1)
                 .expireAfterWrite(guardExpire, TimeUnit.SECONDS)
@@ -45,20 +54,34 @@ public class LocalCounterGuard implements CounterGuard {
      */
     @Override
     public List<String> chainId() {
-        // 本地熔断是个空实现，因为他不是单例，每个流程有自己的熔断器
-        return null;
+        return Lists.newArrayList(chainId);
     }
 
     /**
-     * 是否超出阈值
+     * 是否超过阈值
      *
-     * @param chainId   链路ID
-     * @param threshold 阈值
-     * @return 是否超出阈值
+     * @param chainId        流程id
+     * @param guardThreshold 熔断阈值
+     * @return true 超过阈值
      */
     @Override
-    public Boolean isExceedThreshold(String chainId, Long threshold) {
-        return getCount(chainId) >= threshold;
+    public Boolean isExceedThreshold(String chainId, GuardThreshold guardThreshold) {
+        if (guardThreshold instanceof CounterThreshold) {
+            CounterThreshold counterThreshold = (CounterThreshold) guardThreshold;
+            return getCount(chainId) >= counterThreshold.getThreshold();
+        }
+        return true;
+    }
+
+    /**
+     * 降级操作
+     *
+     * @param chainId 链路ID
+     * @param context 上下文
+     */
+    @Override
+    public void fallBack(String chainId, ValidationContext context) {
+        throw new GuardException(String.format("chain : %s trigger fuse", chainId));
     }
 
     /**
@@ -100,15 +123,5 @@ public class LocalCounterGuard implements CounterGuard {
     @Override
     public void clear(String chainId) {
         counterCache.invalidate(chainId);
-    }
-
-    /**
-     * 降级操作
-     *
-     * @param chainId 链路ID
-     */
-    @Override
-    public void rollback(String chainId) {
-        throw new GuardException(String.format("chain : %s trigger fuse", chainId));
     }
 }

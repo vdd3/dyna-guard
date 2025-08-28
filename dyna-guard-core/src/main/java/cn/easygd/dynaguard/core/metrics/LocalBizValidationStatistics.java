@@ -150,6 +150,26 @@ public class LocalBizValidationStatistics extends BaseBizValidationStatistics {
     }
 
     /**
+     * 链拦截率
+     *
+     * @param chainId 链ID
+     * @return 拦截率
+     */
+    @Override
+    public BigDecimal chainValidationRate(String chainId) {
+        Map<String, Map<String, Long>> dataMap = VALIDATION_COUNT.getOrDefault(chainId, Maps.newHashMap());
+        Long count = count(chainId);
+        if (count > 0) {
+            Long chainValidationCount = dataMap.values().stream()
+                    .map(map -> Lists.newArrayList(map.values()))
+                    .flatMap(List::stream)
+                    .reduce(0L, Long::sum);
+            return BigDecimal.valueOf(chainValidationCount).divide(BigDecimal.valueOf(count), 4, BigDecimal.ROUND_HALF_UP);
+        }
+        return BigDecimal.ZERO;
+    }
+
+    /**
      * 链拦截指标
      *
      * @param chainId 链ID

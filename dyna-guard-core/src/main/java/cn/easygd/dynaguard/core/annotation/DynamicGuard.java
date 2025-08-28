@@ -1,5 +1,7 @@
 package cn.easygd.dynaguard.core.annotation;
 
+import cn.easygd.dynaguard.domain.enums.GuardMode;
+
 import java.lang.annotation.*;
 
 /**
@@ -33,4 +35,11 @@ public @interface DynamicGuard {
      * @return 是否开启熔断
      */
     boolean enableGuard() default false;
+
+    /**
+     * 熔断模式
+     *
+     * @return 熔断模式
+     */
+    GuardMode guardMode() default GuardMode.COUNTER;
 }

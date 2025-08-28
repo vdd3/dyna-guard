@@ -20,6 +20,11 @@ public abstract class ValidationContext {
     protected final Map<String, Object> parameters = Maps.newHashMap();
 
     /**
+     * 流程选择
+     */
+    private ChainOptions chainOptions = ChainOptions.DEFAULT;
+
+    /**
      * 构建执行上下文
      *
      * @return 上下文
@@ -68,6 +73,14 @@ public abstract class ValidationContext {
      */
     public void put(String key, Object value) {
         parameters.put(key, value);
+    }
+
+    public ChainOptions getChainOptions() {
+        return chainOptions;
+    }
+
+    public void setChainOptions(ChainOptions chainOptions) {
+        this.chainOptions = chainOptions;
     }
 
     /**

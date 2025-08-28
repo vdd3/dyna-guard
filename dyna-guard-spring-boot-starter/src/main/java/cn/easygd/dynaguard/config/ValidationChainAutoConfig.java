@@ -3,9 +3,7 @@ package cn.easygd.dynaguard.config;
 import cn.easygd.dynaguard.ValidationChainInit;
 import cn.easygd.dynaguard.ValidationMethodInterceptor;
 import cn.easygd.dynaguard.core.chain.ValidationChainManager;
-import cn.easygd.dynaguard.core.guard.CounterGuardManager;
-import cn.easygd.dynaguard.core.metrics.BizValidationStatistics;
-import cn.easygd.dynaguard.core.metrics.LocalBizValidationStatistics;
+import cn.easygd.dynaguard.core.guard.GuardManager;
 import cn.easygd.dynaguard.domain.config.ValidationChainConfig;
 import org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
@@ -40,9 +38,9 @@ public class ValidationChainAutoConfig {
      *
      * @return CounterGuardManager
      */
-    @Bean
-    public CounterGuardManager counterGuardManager() {
-        return CounterGuardManager.getInstance();
+    @Bean("guardManager")
+    public GuardManager guardManager() {
+        return GuardManager.getInstance();
     }
 
     /**
@@ -53,16 +51,6 @@ public class ValidationChainAutoConfig {
     @Bean
     public GlobalBeanRegister globalBeanRegister() {
         return new GlobalBeanRegister();
-    }
-
-    /**
-     * 创建全局默认的统计器
-     *
-     * @return BizValidationStatistics
-     */
-    @Bean("localBizValidationStatistics")
-    public BizValidationStatistics bizValidationStatistics() {
-        return LocalBizValidationStatistics.getInstance();
     }
 
     /**
@@ -98,17 +86,17 @@ public class ValidationChainAutoConfig {
      * 初始化验证流程
      *
      * @param validationChainManager 验证流程管理器
-     * @param counterGuardManager    熔断管理器
+     * @param guardManager           熔断管理器
      * @param globalBeanRegister     全局bean注册器
      * @return ValidationChainInit
      */
     @Bean
     public ValidationChainInit validationChainInit(ValidationChainManager validationChainManager,
-                                                   CounterGuardManager counterGuardManager,
+                                                   GuardManager guardManager,
                                                    GlobalBeanRegister globalBeanRegister) {
         ValidationChainInit init = new ValidationChainInit();
         init.setValidationChainManager(validationChainManager);
-        init.setCounterGuardManager(counterGuardManager);
+        init.setCounterGuardManager(guardManager);
         return init;
     }
 }

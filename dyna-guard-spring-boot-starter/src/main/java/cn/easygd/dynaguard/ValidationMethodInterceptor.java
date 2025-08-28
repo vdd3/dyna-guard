@@ -5,6 +5,7 @@ import cn.easygd.dynaguard.core.annotation.DynamicGuard;
 import cn.easygd.dynaguard.core.chain.ValidationChain;
 import cn.easygd.dynaguard.core.chain.ValidationChainManager;
 import cn.easygd.dynaguard.domain.SpringValidationContext;
+import cn.easygd.dynaguard.domain.context.ChainOptions;
 import cn.easygd.dynaguard.domain.context.ValidationContext;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
@@ -75,11 +76,13 @@ public class ValidationMethodInterceptor implements MethodInterceptor {
         }
 
         // 5.执行验证链
+        ChainOptions.Builder builder = ChainOptions.builder();
         if (dynamicGuard.enableGuard()) {
-            chain.executeGuard(context);
-        } else {
-            chain.execute(context);
+            builder.enableGuard(true)
+                    .guardMode(dynamicGuard.guardMode());
         }
+        context.setChainOptions(builder.build());
+        chain.execute(context);
 
         // 6.验证通过
         return invocation.proceed();

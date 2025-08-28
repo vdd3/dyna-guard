@@ -1,18 +1,25 @@
 package cn.easygd.dynaguard;
 
 import cn.easygd.dynaguard.core.chain.ValidationChainManager;
-import cn.easygd.dynaguard.core.guard.CounterGuard;
-import cn.easygd.dynaguard.core.guard.CounterGuardManager;
+import cn.easygd.dynaguard.core.guard.GuardManager;
+import cn.easygd.dynaguard.core.guard.counter.CounterGuard;
+import cn.easygd.dynaguard.core.guard.interceptrate.InterceptRateGuard;
+import cn.easygd.dynaguard.core.guard.interceptrate.LocalInterceptRateGuard;
 import cn.easygd.dynaguard.core.metrics.BizValidationStatistics;
+import cn.easygd.dynaguard.core.metrics.LocalBizValidationStatistics;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.MapUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.beans.factory.config.RuntimeBeanReference;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
+import org.springframework.beans.factory.support.GenericBeanDefinition;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * 验证流程初始化
@@ -33,6 +40,11 @@ public class ValidationChainInit implements ApplicationListener<ContextRefreshed
     private static final String DEFAULT_STATISTICS_BEAN_NAME = "localBizValidationStatistics";
 
     /**
+     * 默认拦截率熔断器名称
+     */
+    private static final String DEFAULT_INTERCEPT_BEAN_NAME = "localInterceptRateGuard";
+
+    /**
      * 验证链管理器
      */
     private ValidationChainManager validationChainManager;
@@ -40,7 +52,7 @@ public class ValidationChainInit implements ApplicationListener<ContextRefreshed
     /**
      * 熔断器管理器
      */
-    private CounterGuardManager counterGuardManager;
+    private GuardManager guardManager;
 
     /**
      * Handle an application event.
@@ -58,21 +70,31 @@ public class ValidationChainInit implements ApplicationListener<ContextRefreshed
         // 加载流程
         validationChainManager.loadChain();
 
-        // 将计数熔断器注册熔断器管理器中
-        Map<String, CounterGuard> beans = applicationContext.getBeansOfType(CounterGuard.class);
-        beans.forEach((k, v) -> {
-            List<String> chainIdList = v.chainId();
-            chainIdList.forEach(chainId -> counterGuardManager.register(chainId, v));
-        });
+        DefaultListableBeanFactory beanFactory = (DefaultListableBeanFactory) applicationContext.getAutowireCapableBeanFactory();
 
-        // 将业务统计器注册到全局的bean管理中，只能有一个全局业务统计器
-        Set<Map.Entry<String, BizValidationStatistics>> entrySet = applicationContext.getBeansOfType(BizValidationStatistics.class).entrySet();
-        if (entrySet.size() > 1) {
-            entrySet.stream().filter(entry -> !DEFAULT_STATISTICS_BEAN_NAME.equals(entry.getKey()))
-                    .findFirst()
-                    .ifPresent(entry -> SpringBeanContext.setBizValidationStatisticsName(entry.getKey()));
-        } else {
-            SpringBeanContext.setBizValidationStatisticsName(DEFAULT_STATISTICS_BEAN_NAME);
+        // 如果不存在统计实现，则注册默认的
+        Map<String, BizValidationStatistics> statisticsBeans = applicationContext.getBeansOfType(BizValidationStatistics.class);
+        if (MapUtils.isEmpty(statisticsBeans)) {
+            BeanDefinition beanDefinition = new GenericBeanDefinition();
+            beanDefinition.setBeanClassName(LocalBizValidationStatistics.class.getName());
+            beanFactory.setAllowBeanDefinitionOverriding(true);
+            beanFactory.registerBeanDefinition(DEFAULT_STATISTICS_BEAN_NAME, beanDefinition);
+        }
+
+        // 注册计数熔断器
+        Map<String, CounterGuard> counterGuardBeans = applicationContext.getBeansOfType(CounterGuard.class);
+        counterGuardBeans.forEach((k, v) -> guardManager.register(v));
+        // 注册拦截率熔断器
+        Map<String, InterceptRateGuard> interceptRateGuardBeans = applicationContext.getBeansOfType(InterceptRateGuard.class);
+        interceptRateGuardBeans.forEach((k, v) -> guardManager.register(v));
+        // 判断是否存在全局的拦截率熔断器，如果不存在则注册默认的
+        boolean isContainsGlobalInterceptRateGuard = interceptRateGuardBeans.values().stream().anyMatch(v -> CollectionUtils.isEmpty(v.chainId()));
+        if (!isContainsGlobalInterceptRateGuard) {
+            BeanDefinition beanDefinition = new GenericBeanDefinition();
+            beanDefinition.setBeanClassName(LocalInterceptRateGuard.class.getName());
+            beanFactory.setAllowBeanDefinitionOverriding(true);
+            beanDefinition.getPropertyValues().add("bizValidationStatistics", new RuntimeBeanReference(BizValidationStatistics.class));
+            beanFactory.registerBeanDefinition(DEFAULT_INTERCEPT_BEAN_NAME, beanDefinition);
         }
 
         log.info("validation chain load chain end");
@@ -90,9 +112,9 @@ public class ValidationChainInit implements ApplicationListener<ContextRefreshed
     /**
      * 注入熔断器管理器
      *
-     * @param counterGuardManager 熔断器管理器
+     * @param guardManager 熔断器管理器
      */
-    public void setCounterGuardManager(CounterGuardManager counterGuardManager) {
-        this.counterGuardManager = counterGuardManager;
+    public void setCounterGuardManager(GuardManager guardManager) {
+        this.guardManager = guardManager;
     }
 }

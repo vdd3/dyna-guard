@@ -23,7 +23,7 @@ public class AviatorValidator extends BaseValidator {
     /**
      * Aviator实例
      */
-    private static final AviatorEvaluatorInstance instance = AviatorEvaluator.getInstance();
+    private static final AviatorEvaluatorInstance ENGINE = AviatorEvaluator.getInstance();
 
     /**
      * 编译
@@ -34,7 +34,7 @@ public class AviatorValidator extends BaseValidator {
      */
     @Override
     public Object compile(String script) throws Exception {
-        return instance.compile(script);
+        return ENGINE.compile(script);
     }
 
     /**
@@ -72,15 +72,15 @@ public class AviatorValidator extends BaseValidator {
      */
     public AviatorValidator() {
         // 注册函数
-        instance.addFunction(new NotNullFunction());
-        instance.addFunction(new InOpenRangeFunction());
-        instance.addFunction(new InOpenClosedRangeFunction());
-        instance.addFunction(new InClosedRangeFunction());
-        instance.addFunction(new InClosedOpenRangeFunction());
-        instance.addFunction(new InAtLeastRangeFunction());
-        instance.addFunction(new InAtMostRangeFunction());
-        instance.addFunction(new InGreaterThanRangeFunction());
-        instance.addFunction(new InLessThanRangeFunction());
-        instance.addFunction(new TraceFunction());
+        ENGINE.addFunction(new NotNullFunction());
+        ENGINE.addFunction(new InOpenRangeFunction());
+        ENGINE.addFunction(new InOpenClosedRangeFunction());
+        ENGINE.addFunction(new InClosedRangeFunction());
+        ENGINE.addFunction(new InClosedOpenRangeFunction());
+        ENGINE.addFunction(new InAtLeastRangeFunction());
+        ENGINE.addFunction(new InAtMostRangeFunction());
+        ENGINE.addFunction(new InGreaterThanRangeFunction());
+        ENGINE.addFunction(new InLessThanRangeFunction());
+        ENGINE.addFunction(new TraceFunction());
     }
 }

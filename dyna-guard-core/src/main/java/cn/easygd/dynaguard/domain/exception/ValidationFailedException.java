@@ -33,6 +33,15 @@ public class ValidationFailedException extends RuntimeException {
     /**
      * 构造函数
      *
+     * @param errorEnum 错误枚举
+     */
+    public ValidationFailedException(ValidationErrorEnum errorEnum) {
+        this(errorEnum.getErrorCode(), errorEnum.getErrorMessage());
+    }
+
+    /**
+     * 构造函数
+     *
      * @param errorCode    错误码
      * @param errorMessage 错误消息
      */

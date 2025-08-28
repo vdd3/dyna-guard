@@ -86,6 +86,14 @@ public interface BizValidationStatistics {
     Map<String, Long> nodeValidationCount(String chainId, String nodeName);
 
     /**
+     * 链拦截率
+     *
+     * @param chainId 链ID
+     * @return 拦截率
+     */
+    BigDecimal chainValidationRate(String chainId);
+
+    /**
      * 链拦截指标
      *
      * @param chainId 链ID
@@ -126,5 +134,5 @@ public interface BizValidationStatistics {
      * @param nodeName 节点名称
      * @return 节点拦截率
      */
-    Map<String, BigDecimal> nodeValidationRate(String chainId, String nodeName);
+    BigDecimal nodeValidationRate(String chainId, String nodeName);
 }

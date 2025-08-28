@@ -424,7 +424,7 @@ public class CustomCounterGuard implements CounterGuard {
 }
 ```
 
-在 `META-INF/services/cn.easygd.dynaguard.core.guard.CounterGuard` 文件中添加实现类：
+在 `` 文件中添加实现类：
 
 ```
 com.example.CustomCounterGuard

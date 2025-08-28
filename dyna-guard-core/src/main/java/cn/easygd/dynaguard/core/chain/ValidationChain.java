@@ -2,9 +2,11 @@ package cn.easygd.dynaguard.core.chain;
 
 import cn.easygd.dynaguard.core.bean.GlobalBeanContext;
 import cn.easygd.dynaguard.core.engine.Validator;
-import cn.easygd.dynaguard.core.guard.CounterGuard;
-import cn.easygd.dynaguard.core.guard.CounterGuardManager;
-import cn.easygd.dynaguard.core.guard.LocalCounterGuard;
+import cn.easygd.dynaguard.core.guard.GuardManager;
+import cn.easygd.dynaguard.core.guard.ValidationGuard;
+import cn.easygd.dynaguard.core.guard.counter.CounterGuard;
+import cn.easygd.dynaguard.core.guard.counter.LocalCounterGuard;
+import cn.easygd.dynaguard.core.guard.interceptrate.LocalInterceptRateGuard;
 import cn.easygd.dynaguard.core.holder.ChainConfigHolder;
 import cn.easygd.dynaguard.core.holder.GlobalBeanContextHolder;
 import cn.easygd.dynaguard.core.metrics.BizValidationStatistics;
@@ -13,9 +15,13 @@ import cn.easygd.dynaguard.core.trace.ReturnInfo;
 import cn.easygd.dynaguard.domain.ValidationNode;
 import cn.easygd.dynaguard.domain.ValidationResult;
 import cn.easygd.dynaguard.domain.config.ValidationChainConfig;
+import cn.easygd.dynaguard.domain.context.ChainOptions;
 import cn.easygd.dynaguard.domain.context.ValidationContext;
+import cn.easygd.dynaguard.domain.enums.GuardMode;
 import cn.easygd.dynaguard.domain.enums.ValidationErrorEnum;
 import cn.easygd.dynaguard.domain.exception.ValidationFailedException;
+import cn.easygd.dynaguard.domain.guard.CounterThreshold;
+import cn.easygd.dynaguard.domain.guard.GuardThreshold;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,19 +73,7 @@ public class ValidationChain {
      * @param context 上下文
      */
     public void execute(ValidationContext context) {
-        ValidationResult validationResult = executeResult(context);
-        if (!validationResult.getSuccess()) {
-            throw new ValidationFailedException(ValidationErrorEnum.FAIL.getErrorCode(), validationResult.getMessage());
-        }
-    }
-
-    /**
-     * 执行验证链
-     *
-     * @param context 上下文
-     */
-    public void executeGuard(ValidationContext context) {
-        ValidationResult result = executeGuardResult(context);
+        ValidationResult result = executeResult(context);
         if (!result.getSuccess()) {
             throw new ValidationFailedException(ValidationErrorEnum.FAIL.getErrorCode(), result.getMessage());
         }
@@ -92,55 +86,49 @@ public class ValidationChain {
      * @return 验证结果
      */
     public ValidationResult executeResult(ValidationContext context) {
-        return executeTemplate(context, false);
-    }
-
-    /**
-     * 执行验证链
-     *
-     * @param context 上下文
-     */
-    public ValidationResult executeGuardResult(ValidationContext context) {
-        return executeTemplate(context, true);
+        return executeTemplate(context);
     }
 
     /**
      * 执行模板
      *
-     * @param context     上下文
-     * @param enableGuard 是否开启熔断
+     * @param context 上下文
      * @return 验证结果
      */
-    private ValidationResult executeTemplate(ValidationContext context,
-                                             Boolean enableGuard) {
+    private ValidationResult executeTemplate(ValidationContext context) {
+        ChainOptions chainOptions = context.getChainOptions();
+        Boolean enableGuard = chainOptions.getEnableGuard();
+        GuardThreshold guardThreshold = chainOptions.getGuardThreshold();
+        GuardMode guardMode = chainOptions.getGuardMode();
+
         // 获取配置
         ValidationChainConfig config = ChainConfigHolder.getConfig();
         Boolean enableBizTrace = config.getEnableBizTrace();
 
-        // 全局bean管理
         GlobalBeanContext globalBeanContext = GlobalBeanContextHolder.getContext();
 
-        // 获取业务统计器
+        // 业务统计器
         BizValidationStatistics statistics = globalBeanContext.getBizValidationStatistics();
 
-        // 获取熔断计数器
-        CounterGuardManager guardManager = globalBeanContext.getCounterGuardManager();
-        CounterGuard guard = guardManager.getGuard(this.chainId);
+        ValidationGuard guard = getGuard(globalBeanContext, guardMode, guardThreshold);
         if (enableGuard) {
+            // 如果这个地方熔断器还是空，那么一定有问题
             if (Objects.isNull(guard)) {
-                log.info("guard is null , register local guard : [{}]", this.chainId);
-                guard = new LocalCounterGuard(this.chainId, this.guardExpire);
-                guardManager.register(this.chainId, guard);
-            } else {
-                // 如果触发熔断直接返回失败结果
-                if (guard.isExceedThreshold(this.chainId, this.guardThreshold)) {
-                    log.info("guard exceed threshold : [{}=={}]", this.chainId, this.guardThreshold);
-                    if (enableBizTrace) {
-                        statistics.incrementCount(this.chainId);
-                        statistics.incrementGuardCount(this.chainId);
-                    }
-                    guard.rollback(this.chainId);
+                throw new ValidationFailedException(ValidationErrorEnum.GUARD_MISS);
+            }
 
+            // 如果触发熔断直接返回失败结果
+            if (guard.isExceedThreshold(this.chainId, guardThreshold)) {
+                log.info("guard exceed threshold : [{}=={}]", this.chainId, this.guardThreshold);
+                if (enableBizTrace) {
+                    statistics.incrementCount(this.chainId);
+                    statistics.incrementGuardCount(this.chainId);
+                }
+
+                // 降级
+                guard.fallBack(this.chainId, context);
+
+                if (guardThreshold.isFail()) {
                     return ValidationResult.fail(String.format("%s guard exceed threshold", this.chainId));
                 }
             }
@@ -155,13 +143,14 @@ public class ValidationChain {
                 BizTracker.init();
 
                 // 执行
-                result = executeTemplate(context);
+                result = process(context);
 
                 if (!result.getSuccess()) {
                     // 获取跟踪信息
                     ReturnInfo returnInfo = BizTracker.get();
                     // 增加未通过次数
-                    statistics.incrementValidationCount(this.chainId, result.getNodeName(), returnInfo.getTriggerCondition());
+                    String condition = StringUtils.defaultIfBlank(returnInfo.getTriggerCondition(), "unknown");
+                    statistics.incrementValidationCount(this.chainId, result.getNodeName(), condition);
                     result.setReturnInfo(returnInfo);
                 } else {
                     // 增加通过次数
@@ -174,13 +163,13 @@ public class ValidationChain {
                 BizTracker.clear();
             }
         } else {
-            result = executeTemplate(context);
+            result = process(context);
         }
 
-        if (enableGuard) {
-            if (!result.getSuccess()) {
-                // 自增
-                guard.increment(chainId);
+
+        if (!result.getSuccess()) {
+            if (enableGuard && GuardMode.COUNTER == guardMode) {
+                ((CounterGuard) guard).increment(this.chainId);
             }
         }
 
@@ -193,7 +182,7 @@ public class ValidationChain {
      * @param context 上下文
      * @return 执行结果
      */
-    private ValidationResult executeTemplate(ValidationContext context) {
+    private ValidationResult process(ValidationContext context) {
         log.info("validation chain start : [{}=={}] , context : [{}]", group, chainId, context);
 
         for (ValidationNode node : this.nodes) {
@@ -224,6 +213,31 @@ public class ValidationChain {
         }
 
         return ValidationResult.success();
+    }
+
+    /**
+     * 获取熔断器
+     *
+     * @param globalBeanContext 全局bean容器
+     * @param guardMode         熔断模式
+     * @param guardThreshold    熔断阈值
+     * @return 熔断器
+     */
+    private ValidationGuard getGuard(GlobalBeanContext globalBeanContext, GuardMode guardMode, GuardThreshold guardThreshold) {
+        GuardManager guardManager = globalBeanContext.getGuardManager();
+        ValidationGuard guard = guardManager.getGuard(this.chainId, guardMode);
+        if (Objects.isNull(guard)) {
+            if (guardMode == GuardMode.COUNTER) {
+                CounterThreshold counterThreshold = (CounterThreshold) guardThreshold;
+                log.info("counter guard is null , register local guard : [{}]", this.chainId);
+                guard = new LocalCounterGuard(this.chainId, counterThreshold.getPeriod());
+                guardManager.register(guard);
+            } else if (guardMode == GuardMode.RATE) {
+                // 这个地方会尝试从spring的容器中获取
+                guard = (LocalInterceptRateGuard) globalBeanContext.getBean("localInterceptRateGuard");
+            }
+        }
+        return guard;
     }
 
     public String getGroup() {

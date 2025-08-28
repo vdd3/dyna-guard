@@ -31,16 +31,6 @@ public class DefaultGlobalBeanContext implements GlobalBeanContext {
     }
 
     /**
-     * 获取bean容器
-     *
-     * @return bean容器
-     */
-    @Override
-    public Object getBeanManager() {
-        return null;
-    }
-
-    /**
      * 优先级
      */
     @Override

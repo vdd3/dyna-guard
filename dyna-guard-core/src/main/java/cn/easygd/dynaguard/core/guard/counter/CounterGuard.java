@@ -1,6 +1,6 @@
-package cn.easygd.dynaguard.core.guard;
+package cn.easygd.dynaguard.core.guard.counter;
 
-import java.util.List;
+import cn.easygd.dynaguard.core.guard.ValidationGuard;
 
 /**
  * 计数熔断，本地实现的熔断器无法支持多机器部署，所以我们更加建议您自己建立自己的熔断逻辑以及计数逻辑
@@ -8,23 +8,7 @@ import java.util.List;
  * @author VD
  * @version v 0.1 2025/8/12 22:07
  */
-public interface CounterGuard {
-
-    /**
-     * 链路ID
-     *
-     * @return 链路ID
-     */
-    List<String> chainId();
-
-    /**
-     * 是否超出阈值
-     *
-     * @param chainId   链路ID
-     * @param threshold 阈值
-     * @return 是否超出阈值
-     */
-    Boolean isExceedThreshold(String chainId, Long threshold);
+public interface CounterGuard extends ValidationGuard {
 
     /**
      * 计数
@@ -48,11 +32,4 @@ public interface CounterGuard {
      * @param chainId 链路ID
      */
     void clear(String chainId);
-
-    /**
-     * 降级操作
-     *
-     * @param chainId 链路ID
-     */
-    void rollback(String chainId);
 }

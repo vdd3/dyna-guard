@@ -433,7 +433,7 @@ public class CustomCounterGuard implements CounterGuard {
 }
 ```
 
-Add implementation class in `META-INF/services/cn.easygd.dynaguard.core.guard.CounterGuard` file:
+Add implementation class in `` file:
 
 ```
 com.example.CustomCounterGuard

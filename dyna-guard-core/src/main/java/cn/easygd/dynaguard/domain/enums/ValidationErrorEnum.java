@@ -18,6 +18,11 @@ public enum ValidationErrorEnum {
      */
     FAIL("10002", "验证失败", "验证执行"),
 
+    /**
+     * 未获取到熔断器
+     */
+    GUARD_MISS("10003", "未获取到熔断器", "熔断"),
+
     ;
 
     /**

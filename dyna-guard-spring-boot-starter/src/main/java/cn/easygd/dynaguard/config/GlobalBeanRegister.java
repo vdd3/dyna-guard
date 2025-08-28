@@ -14,7 +14,6 @@ import org.springframework.context.ApplicationContextAware;
  */
 public class GlobalBeanRegister implements ApplicationContextAware {
 
-
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         SpringBeanContext.setApplicationContext(applicationContext);

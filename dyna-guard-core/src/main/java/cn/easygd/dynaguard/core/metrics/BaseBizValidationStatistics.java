@@ -1,9 +1,6 @@
 package cn.easygd.dynaguard.core.metrics;
 
-import com.google.common.collect.Maps;
-
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.Map;
 import java.util.Optional;
 
@@ -73,19 +70,16 @@ public abstract class BaseBizValidationStatistics implements BizValidationStatis
      * @return 节点拦截率
      */
     @Override
-    public Map<String, BigDecimal> nodeValidationRate(String chainId, String nodeName) {
+    public BigDecimal nodeValidationRate(String chainId, String nodeName) {
         Map<String, Long> nodeMap = nodeValidationCount(chainId, nodeName);
-        Map<String, BigDecimal> result = Maps.newHashMap();
-        nodeMap.forEach((k, v) -> {
-            Long count = getDefault(count(chainId));
-            BigDecimal conditionRate = BigDecimal.ZERO;
-            if (count > 0) {
-                conditionRate = BigDecimal.valueOf(v).divide(BigDecimal.valueOf(count), 4, RoundingMode.HALF_UP);
-            }
-            result.put(k, conditionRate);
-        });
-        return result;
+        Long count = getDefault(count(chainId));
+        if (count > 0) {
+            Long nodeCount = nodeMap.values().stream().reduce(Long::sum).orElse(0L);
+            return BigDecimal.valueOf(nodeCount).divide(BigDecimal.valueOf(count), 4, BigDecimal.ROUND_HALF_UP);
+        }
+        return BigDecimal.ZERO;
     }
+
 
     /**
      * 获取默认值

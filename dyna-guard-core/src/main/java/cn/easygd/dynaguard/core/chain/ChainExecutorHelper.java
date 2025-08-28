@@ -64,30 +64,6 @@ public class ChainExecutorHelper {
      *
      * @param chainId 链ID
      * @param context 上下文
-     */
-    public static void validateHereGuard(String chainId, ValidationContext context) {
-        validateHereGuard(null, chainId, context);
-    }
-
-    /**
-     * 验证
-     *
-     * @param group   分组
-     * @param chainId 链ID
-     * @param context 上下文
-     */
-    public static void validateHereGuard(String group, String chainId, ValidationContext context) {
-        ValidationChain chain = getChain(group, chainId);
-        if (Objects.nonNull(chain)) {
-            chain.executeGuard(context);
-        }
-    }
-
-    /**
-     * 验证
-     *
-     * @param chainId 链ID
-     * @param context 上下文
      * @return 验证结果
      */
     public static ValidationResult validateHereResult(String chainId, ValidationContext context) {
@@ -106,33 +82,6 @@ public class ChainExecutorHelper {
         ValidationChain chain = getChain(group, chainId);
         if (Objects.nonNull(chain)) {
             return chain.executeResult(context);
-        }
-        return ValidationResult.success();
-    }
-
-    /**
-     * 验证
-     *
-     * @param chainId 链ID
-     * @param context 上下文
-     * @return 验证结果
-     */
-    public static ValidationResult validateHereGuardResult(String chainId, ValidationContext context) {
-        return validateHereGuardResult(null, chainId, context);
-    }
-
-    /**
-     * 验证
-     *
-     * @param group   分组
-     * @param chainId 链ID
-     * @param context 上下文
-     * @return 验证结果
-     */
-    public static ValidationResult validateHereGuardResult(String group, String chainId, ValidationContext context) {
-        ValidationChain chain = getChain(group, chainId);
-        if (Objects.nonNull(chain)) {
-            return chain.executeGuardResult(context);
         }
         return ValidationResult.success();
     }
