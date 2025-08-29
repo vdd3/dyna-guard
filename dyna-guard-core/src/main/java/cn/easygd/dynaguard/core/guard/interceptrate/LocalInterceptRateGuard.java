@@ -48,7 +48,11 @@ public class LocalInterceptRateGuard implements InterceptRateGuard {
         String condition = interceptRateThreshold.getCondition();
         BigDecimal threshold = interceptRateThreshold.getThreshold();
 
-        // TODO 这个地方计算的有问题，如果第一次直接被拦截的话就会被判断判定为熔断
+        // 从开始访问数量开始判断是否熔断
+        Long count = bizValidationStatistics.count(chainId);
+        if (interceptRateThreshold.getStartCount() < count) {
+            return true;
+        }
 
         BigDecimal interceptRate;
         if (StringUtils.isNotBlank(nodeName) && StringUtils.isNotBlank(condition)) {

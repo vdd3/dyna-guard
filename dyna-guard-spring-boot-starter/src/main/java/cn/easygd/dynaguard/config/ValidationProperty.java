@@ -1,7 +1,9 @@
 package cn.easygd.dynaguard.config;
 
+import cn.easygd.dynaguard.domain.enums.GuardMode;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -16,7 +18,7 @@ public class ValidationProperty {
     /**
      * 解析器列表，默认使用xml，json，sql解析器
      */
-    private String parser;
+    private List<String> parser;
 
     /**
      * 路径解析器名称，默认使用spring
@@ -26,7 +28,7 @@ public class ValidationProperty {
     /**
      * 验证方法列表，如果希望自动拦截验证方法，请将将要增强的类名添加到此列表中，支持通配符
      */
-    private String validationMethod;
+    private List<String> validationMethod;
 
     /**
      * 验证链文件路径
@@ -44,6 +46,16 @@ public class ValidationProperty {
     private Boolean enableBizTrace;
 
     /**
+     * 是否开启熔断
+     */
+    private Boolean enableGuard;
+
+    /**
+     * 熔断模式
+     */
+    private GuardMode guardMode;
+
+    /**
      * sql验证链数据map
      */
     private Map<String, String> sqlChainDataMap;
@@ -58,11 +70,11 @@ public class ValidationProperty {
      */
     private Map<String, String> jsonChainDataMap;
 
-    public String getParser() {
+    public List<String> getParser() {
         return parser;
     }
 
-    public void setParser(String parser) {
+    public void setParser(List<String> parser) {
         this.parser = parser;
     }
 
@@ -72,14 +84,6 @@ public class ValidationProperty {
 
     public void setPathParserName(String pathParserName) {
         this.pathParserName = pathParserName;
-    }
-
-    public String getValidationMethod() {
-        return validationMethod;
-    }
-
-    public void setValidationMethod(String validationMethod) {
-        this.validationMethod = validationMethod;
     }
 
     public String getChainFilePath() {
@@ -128,5 +132,29 @@ public class ValidationProperty {
 
     public void setEnableBizTrace(Boolean enableBizTrace) {
         this.enableBizTrace = enableBizTrace;
+    }
+
+    public List<String> getValidationMethod() {
+        return validationMethod;
+    }
+
+    public void setValidationMethod(List<String> validationMethod) {
+        this.validationMethod = validationMethod;
+    }
+
+    public Boolean getEnableGuard() {
+        return enableGuard;
+    }
+
+    public void setEnableGuard(Boolean enableGuard) {
+        this.enableGuard = enableGuard;
+    }
+
+    public GuardMode getGuardMode() {
+        return guardMode;
+    }
+
+    public void setGuardMode(GuardMode guardMode) {
+        this.guardMode = guardMode;
     }
 }

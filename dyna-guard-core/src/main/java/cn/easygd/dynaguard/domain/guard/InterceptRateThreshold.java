@@ -17,6 +17,11 @@ public class InterceptRateThreshold implements GuardThreshold, Serializable {
     private BigDecimal threshold = new BigDecimal("90");
 
     /**
+     * 拦截开始次数
+     */
+    private Long startCount = 100L;
+
+    /**
      * 节点名称
      */
     private String nodeName = null;
@@ -38,8 +43,21 @@ public class InterceptRateThreshold implements GuardThreshold, Serializable {
         this.threshold = threshold;
     }
 
-    public InterceptRateThreshold(BigDecimal threshold, String condition) {
+    public InterceptRateThreshold(BigDecimal threshold, String nodeName) {
         this.threshold = threshold;
+        this.nodeName = nodeName;
+    }
+
+    public InterceptRateThreshold(BigDecimal threshold, String nodeName, String condition) {
+        this.threshold = threshold;
+        this.nodeName = nodeName;
+        this.condition = condition;
+    }
+
+    public InterceptRateThreshold(BigDecimal threshold, Long startCount, String nodeName, String condition) {
+        this.threshold = threshold;
+        this.startCount = startCount;
+        this.nodeName = nodeName;
         this.condition = condition;
     }
 
@@ -75,6 +93,14 @@ public class InterceptRateThreshold implements GuardThreshold, Serializable {
 
     public void setNodeName(String nodeName) {
         this.nodeName = nodeName;
+    }
+
+    public Long getStartCount() {
+        return startCount;
+    }
+
+    public void setStartCount(Long startCount) {
+        this.startCount = startCount;
     }
 
     /**

@@ -8,6 +8,7 @@ import cn.easygd.dynaguard.domain.config.ValidationChainConfig;
 import org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 
 /**
@@ -60,6 +61,7 @@ public class ValidationChainAutoConfig {
      * @return BeanNameAutoProxyCreator
      */
     @Bean
+    @Conditional(ValidationMethodCondition.class)
     public BeanNameAutoProxyCreator proxyCreator(ValidationChainConfig validationChainConfig,
                                                  ValidationMethodInterceptor validationMethodInterceptor) {
         BeanNameAutoProxyCreator creator = new BeanNameAutoProxyCreator();
@@ -87,13 +89,11 @@ public class ValidationChainAutoConfig {
      *
      * @param validationChainManager 验证流程管理器
      * @param guardManager           熔断管理器
-     * @param globalBeanRegister     全局bean注册器
      * @return ValidationChainInit
      */
     @Bean
     public ValidationChainInit validationChainInit(ValidationChainManager validationChainManager,
-                                                   GuardManager guardManager,
-                                                   GlobalBeanRegister globalBeanRegister) {
+                                                   GuardManager guardManager) {
         ValidationChainInit init = new ValidationChainInit();
         init.setValidationChainManager(validationChainManager);
         init.setCounterGuardManager(guardManager);

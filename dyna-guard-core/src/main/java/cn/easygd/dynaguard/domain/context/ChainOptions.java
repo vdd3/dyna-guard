@@ -83,13 +83,23 @@ public class ChainOptions {
             return this;
         }
 
+        public Builder guardThreshold(Long threshold) {
+            this.guardThreshold = new CounterThreshold(threshold);
+            return this;
+        }
+
         public Builder guardThreshold(Long threshold, Long period) {
             this.guardThreshold = new CounterThreshold(threshold, period);
             return this;
         }
 
-        public Builder guardThreshold(BigDecimal threshold, String condition) {
-            this.guardThreshold = new InterceptRateThreshold(threshold, condition);
+        public Builder guardThreshold(BigDecimal threshold, String nodeName) {
+            this.guardThreshold = new InterceptRateThreshold(threshold, nodeName);
+            return this;
+        }
+
+        public Builder guardThreshold(BigDecimal threshold, String nodeName, String condition) {
+            this.guardThreshold = new InterceptRateThreshold(threshold, nodeName, condition);
             return this;
         }
 

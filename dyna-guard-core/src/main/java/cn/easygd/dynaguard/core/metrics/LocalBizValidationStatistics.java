@@ -203,6 +203,9 @@ public class LocalBizValidationStatistics extends BaseBizValidationStatistics {
         return resultList;
     }
 
+    private LocalBizValidationStatistics() {
+    }
+
     /**
      * 获取实例
      */

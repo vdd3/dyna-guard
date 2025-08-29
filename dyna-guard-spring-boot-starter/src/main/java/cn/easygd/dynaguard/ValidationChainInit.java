@@ -11,10 +11,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.beans.factory.config.RuntimeBeanReference;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
-import org.springframework.beans.factory.support.GenericBeanDefinition;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -75,10 +72,7 @@ public class ValidationChainInit implements ApplicationListener<ContextRefreshed
         // 如果不存在统计实现，则注册默认的
         Map<String, BizValidationStatistics> statisticsBeans = applicationContext.getBeansOfType(BizValidationStatistics.class);
         if (MapUtils.isEmpty(statisticsBeans)) {
-            BeanDefinition beanDefinition = new GenericBeanDefinition();
-            beanDefinition.setBeanClassName(LocalBizValidationStatistics.class.getName());
-            beanFactory.setAllowBeanDefinitionOverriding(true);
-            beanFactory.registerBeanDefinition(DEFAULT_STATISTICS_BEAN_NAME, beanDefinition);
+            beanFactory.registerSingleton(DEFAULT_STATISTICS_BEAN_NAME, LocalBizValidationStatistics.getInstance());
         }
 
         // 注册计数熔断器
@@ -90,11 +84,9 @@ public class ValidationChainInit implements ApplicationListener<ContextRefreshed
         // 判断是否存在全局的拦截率熔断器，如果不存在则注册默认的
         boolean isContainsGlobalInterceptRateGuard = interceptRateGuardBeans.values().stream().anyMatch(v -> CollectionUtils.isEmpty(v.chainId()));
         if (!isContainsGlobalInterceptRateGuard) {
-            BeanDefinition beanDefinition = new GenericBeanDefinition();
-            beanDefinition.setBeanClassName(LocalInterceptRateGuard.class.getName());
-            beanFactory.setAllowBeanDefinitionOverriding(true);
-            beanDefinition.getPropertyValues().add("bizValidationStatistics", new RuntimeBeanReference(BizValidationStatistics.class));
-            beanFactory.registerBeanDefinition(DEFAULT_INTERCEPT_BEAN_NAME, beanDefinition);
+            LocalInterceptRateGuard localInterceptRateGuard = new LocalInterceptRateGuard();
+            localInterceptRateGuard.setBizValidationStatistics(applicationContext.getBean(BizValidationStatistics.class));
+            beanFactory.registerSingleton(DEFAULT_INTERCEPT_BEAN_NAME, localInterceptRateGuard);
         }
 
         log.info("validation chain load chain end");

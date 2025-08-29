@@ -42,4 +42,11 @@ public @interface DynamicGuard {
      * @return 熔断模式
      */
     GuardMode guardMode() default GuardMode.COUNTER;
+
+    /**
+     * 熔断阈值
+     *
+     * @return 熔断阈值
+     */
+    String guardThreshold() default "";
 }

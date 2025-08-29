@@ -28,6 +28,10 @@ public class CounterThreshold implements GuardThreshold, Serializable {
     public CounterThreshold() {
     }
 
+    public CounterThreshold(Long threshold) {
+        this.threshold = threshold;
+    }
+
     public CounterThreshold(Long threshold, Long period) {
         this.threshold = threshold;
         this.period = period;
