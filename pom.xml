@@ -8,7 +8,7 @@
     <artifactId>dyna-guard</artifactId>
     <packaging>pom</packaging>
     <version>${all.version}</version>
-    <name>Dyna-Guard</name>
+    <name>dyna-guard</name>
     <description>A dynamic validation framework supporting multiple script engines</description>
     <url>https://github.com/vdd3/dyna-guard</url>
 
