@@ -7,7 +7,6 @@ import java.util.regex.Pattern;
  * 脚本包装类
  *
  * @author VD
- * @version v 0.1 2025/8/26 21:13
  */
 public class ScriptWrapper {
 

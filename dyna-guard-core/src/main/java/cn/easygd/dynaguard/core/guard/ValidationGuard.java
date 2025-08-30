@@ -9,7 +9,6 @@ import java.util.List;
  * 验证熔断
  *
  * @author VD
- * @version v 0.1 2025/8/27 23:07
  */
 public interface ValidationGuard {
 

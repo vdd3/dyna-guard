@@ -9,7 +9,6 @@ import org.springframework.core.type.MethodMetadata;
 
 /**
  * @author VD
- * @version v 0.1 2025/8/28 23:18
  */
 public class ValidationMethodCondition implements Condition {
     /**

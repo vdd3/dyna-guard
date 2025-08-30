@@ -6,7 +6,6 @@ import cn.easygd.dynaguard.domain.constants.ParserTypeEnumerable;
  * 解析器类型枚举
  *
  * @author VD
- * @version v 0.1 2025/8/3 14:06
  */
 public enum ParserTypeEnum implements ParserTypeEnumerable {
 

@@ -16,7 +16,6 @@ import java.util.Map;
  * Aviator脚本验证器
  *
  * @author VD
- * @version v 0.1 2025/8/19 21:23
  */
 public class AviatorValidator extends BaseValidator {
 

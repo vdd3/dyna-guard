@@ -14,7 +14,6 @@ import java.util.List;
  * 本地拦截频率熔断
  *
  * @author VD
- * @version v 0.1 2025/8/28 20:06
  */
 public class LocalInterceptRateGuard implements InterceptRateGuard {
 

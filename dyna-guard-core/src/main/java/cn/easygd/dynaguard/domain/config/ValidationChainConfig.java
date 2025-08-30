@@ -11,7 +11,6 @@ import java.util.Map;
  * 验证链配置
  *
  * @author VD
- * @version v 0.1 2025/8/3 11:43
  */
 public class ValidationChainConfig {
 

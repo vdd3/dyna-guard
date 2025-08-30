@@ -13,7 +13,6 @@ import java.util.Map;
  * JavaScript脚本验证器
  *
  * @author VD
- * @version v 0.1 2025/8/19 20:41
  */
 public class JavaScriptValidator extends BaseValidator {
 

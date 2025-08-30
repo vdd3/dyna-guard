@@ -12,7 +12,7 @@ import java.util.Map;
  * 本地业务验证统计
  *
  * @author VD
- * @version v 0.1 2025/8/24 0:00
+ *
  */
 public class LocalBizValidationStatistics extends BaseBizValidationStatistics {
 

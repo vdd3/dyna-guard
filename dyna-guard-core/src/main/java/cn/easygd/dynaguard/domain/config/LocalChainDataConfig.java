@@ -13,7 +13,6 @@ import java.util.function.Function;
  * 本地流程数据配置
  *
  * @author VD
- * @version v 0.1 2025/8/10 15:34
  */
 public abstract class LocalChainDataConfig extends ChainDataConfig {
 

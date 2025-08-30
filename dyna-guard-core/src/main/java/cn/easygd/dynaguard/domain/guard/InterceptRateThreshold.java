@@ -7,7 +7,6 @@ import java.math.BigDecimal;
  * 拦截率阈值
  *
  * @author VD
- * @version v 0.1 2025/8/27 22:54
  */
 public class InterceptRateThreshold implements GuardThreshold, Serializable {
 

@@ -27,7 +27,6 @@ import java.util.stream.Collectors;
  * xml文件解析器
  *
  * @author VD
- * @version v 0.1 2025/8/3 10:59
  */
 public class ChainXmlParser extends LocalChainFileParser {
 
@@ -71,14 +70,6 @@ public class ChainXmlParser extends LocalChainFileParser {
                     List<Element> nodeElementList = chainElement.elements(config.getNodeField());
                     chain.setChainId(chainId);
                     chain.setGroup(type().getType());
-                    String guardExpire = chainElement.attributeValue(config.getGuardExpireField());
-                    if (StringUtils.isNotBlank(guardExpire)) {
-                        chain.setGuardExpire(Long.parseLong(guardExpire));
-                    }
-                    String guardThreshold = chainElement.attributeValue(config.getGuardThresholdField());
-                    if (StringUtils.isNotBlank(guardThreshold)) {
-                        chain.setGuardThreshold(Long.parseLong(guardThreshold));
-                    }
                     chain.setNodes(nodeElementList.stream().map(nodeElement -> {
                         ValidationNode node = new ValidationNode();
                         node.setLanguage(nodeElement.attributeValue(config.getLanguageField()));

@@ -11,7 +11,6 @@ import java.util.Map;
  * 追踪函数
  *
  * @author VD
- * @version v 0.1 2025/8/23 20:48
  */
 public class TraceFunction extends AbstractFunction {
 

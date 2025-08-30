@@ -7,7 +7,6 @@ import cn.easygd.dynaguard.utils.CustomCheckUtils;
  * 在开区间内
  *
  * @author VD
- * @version v 0.1 2025/8/11 20:07
  */
 public class InOpenRangeFunctionQlE extends QlEBaseFunction {
 

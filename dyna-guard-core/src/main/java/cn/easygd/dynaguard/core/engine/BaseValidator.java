@@ -23,7 +23,6 @@ import java.util.Set;
  * 基础规则引擎
  *
  * @author VD
- * @version v 0.1 2025/7/28 20:45
  */
 public abstract class BaseValidator implements Validator {
 

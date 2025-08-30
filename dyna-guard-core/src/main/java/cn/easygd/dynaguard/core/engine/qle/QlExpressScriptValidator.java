@@ -6,10 +6,12 @@ import cn.easygd.dynaguard.core.engine.qle.function.common.NotNullFunctionQlE;
 import cn.easygd.dynaguard.core.engine.qle.function.common.PhoneValidatorFunctionQlE;
 import cn.easygd.dynaguard.core.engine.qle.function.range.*;
 import cn.easygd.dynaguard.core.holder.ChainConfigHolder;
+import cn.easygd.dynaguard.core.trace.BizTracker;
 import cn.easygd.dynaguard.domain.config.ValidationChainConfig;
 import cn.easygd.dynaguard.domain.constants.CustomFunctionConstants;
 import cn.easygd.dynaguard.domain.context.ValidationContext;
 import cn.easygd.dynaguard.domain.enums.RuleEngineEnum;
+import cn.easygd.dynaguard.utils.QLExpressTraceUtils;
 import com.alibaba.qlexpress4.Express4Runner;
 import com.alibaba.qlexpress4.InitOptions;
 import com.alibaba.qlexpress4.QLOptions;
@@ -25,7 +27,6 @@ import java.util.Map;
  * QlExpress脚本验证器
  *
  * @author VD
- * @version v 0.1 2025/7/30 22:14
  */
 public class QlExpressScriptValidator extends BaseValidator {
 
@@ -61,7 +62,6 @@ public class QlExpressScriptValidator extends BaseValidator {
 
         // 参数传递
         Map<String, Object> params = buildParam(context);
-        // 对于qle来说无法推断复杂类型的参数，所以无法直接获取bean使用
         params.remove("beanContext");
 
         // 设置运行参数,开启脚本缓存
@@ -76,13 +76,8 @@ public class QlExpressScriptValidator extends BaseValidator {
 
         Boolean result = checkResult(qlResult.getResult());
         if (!result && enableBizTrace) {
-            // 设置业务追踪信息
-            expressionTraces.stream().sorted(Comparator.comparing(ExpressionTrace::getPosition).reversed())
-                    .filter(ExpressionTrace::isEvaluated)
-                    .findFirst()
-                    .ifPresent(trace -> {
-
-                    });
+            String condition = buildCondition(expressionTraces);
+            BizTracker.recordTriggerCondition(condition);
         }
         return result;
     }
@@ -124,5 +119,33 @@ public class QlExpressScriptValidator extends BaseValidator {
         EXPRESS_4_RUNNER.addVarArgsFunction(CustomFunctionConstants.IN_LESS_THAN_RANGE, new InLessThanRangeFunctionQlE());
         EXPRESS_4_RUNNER.addVarArgsFunction(CustomFunctionConstants.IS_PHONE, new PhoneValidatorFunctionQlE());
         EXPRESS_4_RUNNER.addVarArgsFunction(CustomFunctionConstants.INVOKE_BEAN_METHOD, new InvokeBeanMethodFunctionQlE());
+    }
+
+    /**
+     * 构建触发条件
+     *
+     * @param expressionTraces 表达式链路
+     * @return 触发条件
+     */
+    private String buildCondition(List<ExpressionTrace> expressionTraces) {
+        ExpressionTrace trace;
+        // 如果都是短路节点代表最后一个节点校验没有通过
+        if (expressionTraces.stream().allMatch(ExpressionTrace::isEvaluated)) {
+            trace = expressionTraces.get(expressionTraces.size() - 1);
+        } else {
+            // 获取执行节点的下一个节点
+            int lastIndex = expressionTraces.stream().sorted(Comparator.comparing(ExpressionTrace::getPosition).reversed())
+                    .filter(ExpressionTrace::isEvaluated)
+                    .findFirst()
+                    .map(expressionTraces::indexOf)
+                    .orElse(0);
+            int index = lastIndex + 1;
+            if (index > expressionTraces.size() - 1) {
+                trace = expressionTraces.get(lastIndex);
+            } else {
+                trace = expressionTraces.get(index);
+            }
+        }
+        return QLExpressTraceUtils.getCondition(trace, new StringBuilder()).toString();
     }
 }

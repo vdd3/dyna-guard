@@ -4,7 +4,6 @@ package cn.easygd.dynaguard.domain.config;
  * 流程json配置
  *
  * @author VD
- * @version v 0.1 2025/8/13 19:28
  */
 public class ChainJsonConfig extends LocalChainDataConfig {
 
@@ -42,16 +41,6 @@ public class ChainJsonConfig extends LocalChainDataConfig {
      * 脚本字段
      */
     private String scriptField = "script";
-
-    /**
-     * 熔断计数器过期时间
-     */
-    private String guardExpireField = "guardExpire";
-
-    /**
-     * 熔断计数器阈值，默认100
-     */
-    private String guardThresholdField = "guardThreshold";
 
     public String getChainIdField() {
         return chainIdField;
@@ -99,22 +88,6 @@ public class ChainJsonConfig extends LocalChainDataConfig {
 
     public void setFastFailField(String fastFailField) {
         this.fastFailField = fastFailField;
-    }
-
-    public String getGuardExpireField() {
-        return guardExpireField;
-    }
-
-    public void setGuardExpireField(String guardExpireField) {
-        this.guardExpireField = guardExpireField;
-    }
-
-    public String getGuardThresholdField() {
-        return guardThresholdField;
-    }
-
-    public void setGuardThresholdField(String guardThresholdField) {
-        this.guardThresholdField = guardThresholdField;
     }
 
     public String getScriptField() {

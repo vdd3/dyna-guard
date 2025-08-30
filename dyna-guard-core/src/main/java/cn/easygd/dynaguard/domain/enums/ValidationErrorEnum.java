@@ -4,7 +4,6 @@ package cn.easygd.dynaguard.domain.enums;
  * 验证错误枚举
  *
  * @author VD
- * @version v 0.1 2025/7/30 22:01
  */
 public enum ValidationErrorEnum {
 

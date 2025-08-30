@@ -60,8 +60,8 @@
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
-        <all.version>0.0.5</all.version>
-        <qle.version>4.0.0</qle.version>
+        <all.version>0.0.5-beta</all.version>
+        <qle.version>4.0.2</qle.version>
         <slf4j.version>1.7.32</slf4j.version>
         <jackson.version>2.16.0</jackson.version>
         <groovy.version>3.0.17</groovy.version>

@@ -22,7 +22,6 @@ import java.util.Map;
  * 验证流程初始化
  *
  * @author VD
- * @version v 0.1 2025/8/12 20:05
  */
 public class ValidationChainInit implements ApplicationListener<ContextRefreshedEvent> {
 

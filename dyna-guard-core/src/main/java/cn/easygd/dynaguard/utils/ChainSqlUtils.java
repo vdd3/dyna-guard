@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
  * 流程sql工具类
  *
  * @author VD
- * @version v 0.1 2025/8/7 18:19
+ *
  */
 public class ChainSqlUtils {
 
@@ -115,9 +115,7 @@ public class ChainSqlUtils {
                 formatColumn(sqlConfig.getUpdateTimeField()),
                 formatColumn(sqlConfig.getOrderField()),
                 formatColumn(sqlConfig.getMessageField()),
-                formatColumn(sqlConfig.getFastFailField()),
-                formatColumn(sqlConfig.getGuardExpireField()),
-                formatColumn(sqlConfig.getGuardThresholdField()));
+                formatColumn(sqlConfig.getFastFailField()));
     }
 
     /**
@@ -170,8 +168,6 @@ public class ChainSqlUtils {
                 chainSqlDO.setOrder(resultSet.getInt(chainSqlConfig.getOrderField()));
                 chainSqlDO.setMessage(resultSet.getString(chainSqlConfig.getMessageField()));
                 chainSqlDO.setFastFail(resultSet.getBoolean(chainSqlConfig.getFastFailField()));
-                chainSqlDO.setGuardExpire(resultSet.getLong(chainSqlConfig.getGuardExpireField()));
-                chainSqlDO.setGuardThreshold(resultSet.getLong(chainSqlConfig.getGuardThresholdField()));
                 doList.add(chainSqlDO);
             }
             return doList;

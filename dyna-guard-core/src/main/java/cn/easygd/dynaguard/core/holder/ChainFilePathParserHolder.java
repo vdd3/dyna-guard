@@ -6,7 +6,6 @@ import cn.easygd.dynaguard.core.path.ChainFilePathParser;
  * 流程文件路径解析器持有器
  *
  * @author VD
- * @version v 0.1 2025/8/9 23:59
  */
 public class ChainFilePathParserHolder {
     /**

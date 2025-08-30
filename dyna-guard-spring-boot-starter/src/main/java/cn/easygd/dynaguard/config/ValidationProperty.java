@@ -10,7 +10,6 @@ import java.util.Map;
  * spring boot 配置
  *
  * @author VD
- * @version v 0.1 2025/8/15 19:22
  */
 @ConfigurationProperties(prefix = "validation")
 public class ValidationProperty {

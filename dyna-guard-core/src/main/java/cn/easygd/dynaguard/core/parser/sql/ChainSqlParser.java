@@ -28,7 +28,6 @@ import java.util.stream.Collectors;
  * sql 解析器
  *
  * @author VD
- * @version v 0.1 2025/8/5 20:10
  */
 public class ChainSqlParser implements ValidationChainParser {
 
@@ -96,10 +95,6 @@ public class ChainSqlParser implements ValidationChainParser {
             ValidationChain chain = new ValidationChain();
             chain.setGroup(type().getType());
             chain.setChainId(chainId);
-            chainSqlDOList.stream().findFirst().ifPresent(source -> {
-                chain.setGuardExpire(source.getGuardExpire());
-                chain.setGuardThreshold(source.getGuardThreshold());
-            });
             chain.setNodes(chainSqlDOList.stream()
                     .sorted(Comparator.comparingInt(ChainSqlDO::getOrder))
                     .map(ChainSqlDO::converter2node)
@@ -138,7 +133,6 @@ public class ChainSqlParser implements ValidationChainParser {
             throw new ChainSqlExecuteException("count sql execute converter result exception", e);
         }
     }
-
 
     /**
      * 类型

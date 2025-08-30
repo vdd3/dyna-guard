@@ -12,7 +12,6 @@ import java.util.Optional;
  * 本地文件路径解析器
  *
  * @author VD
- * @version v 0.1 2025/8/9 16:46
  */
 public class LocalChainFilePathParser implements ChainFilePathParser {
 

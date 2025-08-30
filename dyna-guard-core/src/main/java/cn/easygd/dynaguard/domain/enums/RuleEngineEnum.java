@@ -6,7 +6,6 @@ import cn.easygd.dynaguard.domain.constants.RuleEngineEnumerable;
  * 规则引擎枚举
  *
  * @author VD
- * @version v 0.1 2025/7/28 21:01
  */
 public enum RuleEngineEnum implements RuleEngineEnumerable<RuleEngineEnum> {
 

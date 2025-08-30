@@ -10,7 +10,6 @@ import cn.easygd.dynaguard.domain.enums.ParserTypeEnum;
  * 流程json监听
  *
  * @author VD
- * @version v 0.1 2025/8/13 19:26
  */
 public class ChainJsonListener extends LocalChainListener {
     /**

@@ -6,7 +6,6 @@ import cn.easygd.dynaguard.core.engine.Validator;
  * 验证节点
  *
  * @author VD
- * @version v 0.1 2025/7/29 21:50
  */
 public class ValidationNode {
 

@@ -9,7 +9,6 @@ import cn.easygd.dynaguard.core.metrics.LocalBizValidationStatistics;
  * 单例Bean容器
  *
  * @author VD
- * @version v 0.1 2025/8/12 20:46
  */
 public interface GlobalBeanContext {
 

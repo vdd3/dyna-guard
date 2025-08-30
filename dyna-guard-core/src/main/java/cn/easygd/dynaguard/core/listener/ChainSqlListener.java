@@ -31,7 +31,6 @@ import java.util.stream.Collectors;
  * sql流程监听器
  *
  * @author VD
- * @version v 0.1 2025/8/10 16:38
  */
 public class ChainSqlListener implements ValidationChainListener {
 
@@ -140,10 +139,6 @@ public class ChainSqlListener implements ValidationChainListener {
                 ValidationChain chain = new ValidationChain();
                 chain.setGroup(type().getType());
                 chain.setChainId(chainId);
-                doList.stream().findFirst().ifPresent(source -> {
-                    chain.setGuardExpire(source.getGuardExpire());
-                    chain.setGuardThreshold(source.getGuardThreshold());
-                });
                 List<ValidationNode> nodeList = doList.stream()
                         .filter(source -> !source.getDeleted())
                         .sorted(Comparator.comparingInt(ChainSqlDO::getOrder))

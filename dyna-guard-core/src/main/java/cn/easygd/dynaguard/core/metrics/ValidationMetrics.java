@@ -7,7 +7,6 @@ import java.math.BigDecimal;
  * 校验指标
  *
  * @author VD
- * @version v 0.1 2025/8/23 23:36
  */
 public class ValidationMetrics implements Serializable {
 

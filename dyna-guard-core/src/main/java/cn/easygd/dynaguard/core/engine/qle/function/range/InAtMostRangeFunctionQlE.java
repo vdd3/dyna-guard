@@ -7,7 +7,6 @@ import cn.easygd.dynaguard.utils.CustomCheckUtils;
  * 最大值判断
  *
  * @author VD
- * @version v 0.1 2025/8/11 21:32
  */
 public class InAtMostRangeFunctionQlE extends QlEBaseFunction {
     /**

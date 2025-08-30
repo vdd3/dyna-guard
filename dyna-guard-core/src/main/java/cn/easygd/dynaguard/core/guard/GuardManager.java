@@ -13,7 +13,7 @@ import java.util.Map;
  * 计数熔断器管理器
  *
  * @author VD
- * @version v 0.1 2025/8/12 22:16
+ *
  */
 public class GuardManager {
 
@@ -59,6 +59,7 @@ public class GuardManager {
             if (INTERCEPT_RATE_GUARD_MAP.containsKey(chainId)) {
                 return INTERCEPT_RATE_GUARD_MAP.get(chainId);
             }
+            return globalInterceptRateGuard;
         }
         return COUNTER_GUARD_MAP.get(chainId);
     }
@@ -92,6 +93,7 @@ public class GuardManager {
      */
     public void remove(String chainId) {
         COUNTER_GUARD_MAP.remove(chainId);
+        INTERCEPT_RATE_GUARD_MAP.remove(chainId);
     }
 
     /**
@@ -99,6 +101,7 @@ public class GuardManager {
      */
     public void clear() {
         COUNTER_GUARD_MAP.clear();
+        INTERCEPT_RATE_GUARD_MAP.clear();
     }
 
     private GuardManager() {

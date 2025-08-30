@@ -26,7 +26,6 @@ import java.util.stream.Collectors;
  * json文件解析器
  *
  * @author VD
- * @version v 0.1 2025/8/3 10:59
  */
 public class ChainJsonParser extends LocalChainFileParser {
 
@@ -74,12 +73,6 @@ public class ChainJsonParser extends LocalChainFileParser {
                     ValidationChain chain = new ValidationChain();
                     chain.setChainId(jsonNodeElement.get(config.getChainIdField()).asText());
                     chain.setGroup(type().getType());
-                    if (jsonNode.has(config.getGuardExpireField())) {
-                        chain.setGuardExpire(jsonNodeElement.get(config.getGuardExpireField()).asLong());
-                    }
-                    if (jsonNode.has(config.getGuardThresholdField())) {
-                        chain.setGuardThreshold(jsonNodeElement.get(config.getGuardThresholdField()).asLong());
-                    }
 
                     List<ValidationNode> nodeList = Lists.newArrayList();
                     jsonNodeElement.get(config.getNodeField()).elements().forEachRemaining(element -> {

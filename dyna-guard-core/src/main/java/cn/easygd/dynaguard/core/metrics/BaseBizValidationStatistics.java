@@ -8,7 +8,6 @@ import java.util.Optional;
  * 基础业务验证统计
  *
  * @author VD
- * @version v 0.1 2025/8/23 23:50
  */
 public abstract class BaseBizValidationStatistics implements BizValidationStatistics {
 

@@ -9,7 +9,6 @@ import java.util.Objects;
  * 流程sqlDO
  *
  * @author VD
- * @version v 0.1 2025/8/5 21:35
  */
 public class ChainSqlDO {
 
@@ -57,16 +56,6 @@ public class ChainSqlDO {
      * 脚本
      */
     private String script;
-
-    /**
-     * 熔断计数器过期时间，默认10秒
-     */
-    private Long guardExpire;
-
-    /**
-     * 熔断计数器阈值，默认100
-     */
-    private Long guardThreshold;
 
     /**
      * 转换为流程节点
@@ -155,21 +144,5 @@ public class ChainSqlDO {
 
     public void setFastFail(Boolean fastFail) {
         this.fastFail = fastFail;
-    }
-
-    public Long getGuardExpire() {
-        return guardExpire;
-    }
-
-    public void setGuardExpire(Long guardExpire) {
-        this.guardExpire = guardExpire;
-    }
-
-    public Long getGuardThreshold() {
-        return guardThreshold;
-    }
-
-    public void setGuardThreshold(Long guardThreshold) {
-        this.guardThreshold = guardThreshold;
     }
 }

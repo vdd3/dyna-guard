@@ -24,7 +24,6 @@ import java.util.stream.Collectors;
  * 验证链管理
  *
  * @author VD
- * @version v 0.1 2025/7/29 21:28
  */
 public class ValidationChainManager {
 

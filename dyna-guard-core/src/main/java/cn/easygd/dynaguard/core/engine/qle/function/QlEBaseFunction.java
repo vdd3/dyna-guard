@@ -7,7 +7,6 @@ import com.alibaba.qlexpress4.api.QLFunctionalVarargs;
  * qle基础函数
  *
  * @author VD
- * @version v 0.1 2025/8/11 19:56
  */
 public abstract class QlEBaseFunction implements QLFunctionalVarargs {
 

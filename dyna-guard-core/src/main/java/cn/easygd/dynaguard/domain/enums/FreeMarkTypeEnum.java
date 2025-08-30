@@ -4,7 +4,6 @@ package cn.easygd.dynaguard.domain.enums;
  * 框架类型枚举
  *
  * @author VD
- * @version v 0.1 2025/8/13 20:09
  */
 public enum FreeMarkTypeEnum {
 

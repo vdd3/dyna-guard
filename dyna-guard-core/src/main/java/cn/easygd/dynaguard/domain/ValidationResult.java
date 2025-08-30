@@ -6,7 +6,6 @@ import cn.easygd.dynaguard.core.trace.ReturnInfo;
  * 验证结果
  *
  * @author VD
- * @version v 0.1 2025/7/27 22:16
  */
 public class ValidationResult {
 

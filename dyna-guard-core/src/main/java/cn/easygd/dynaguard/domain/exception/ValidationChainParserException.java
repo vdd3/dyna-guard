@@ -4,7 +4,6 @@ package cn.easygd.dynaguard.domain.exception;
  * 验证流程解析器异常
  *
  * @author VD
- * @version v 0.1 2025/8/12 20:17
  */
 public class ValidationChainParserException extends RuntimeException {
 

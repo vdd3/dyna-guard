@@ -6,7 +6,6 @@ import java.io.Serializable;
  * 计数模式阈值
  *
  * @author VD
- * @version v 0.1 2025/8/27 22:43
  */
 public class CounterThreshold implements GuardThreshold, Serializable {
 

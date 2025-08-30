@@ -11,7 +11,6 @@ import org.springframework.context.annotation.PropertySource;
  * 验证配置自动注册
  *
  * @author VD
- * @version v 0.1 2025/8/3 12:03
  */
 @Configuration
 @EnableConfigurationProperties(ValidationProperty.class)

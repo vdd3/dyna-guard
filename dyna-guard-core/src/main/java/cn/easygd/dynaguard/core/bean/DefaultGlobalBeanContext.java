@@ -4,7 +4,6 @@ package cn.easygd.dynaguard.core.bean;
  * 默认全局 Bean 上下文
  *
  * @author VD
- * @version v 0.1 2025/8/15 20:43
  */
 public class DefaultGlobalBeanContext implements GlobalBeanContext {
 

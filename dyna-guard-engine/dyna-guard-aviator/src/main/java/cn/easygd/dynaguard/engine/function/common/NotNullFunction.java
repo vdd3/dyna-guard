@@ -13,7 +13,6 @@ import java.util.Map;
  * 非空函数
  *
  * @author VD
- * @version v 0.1 2025/8/19 21:44
  */
 public class NotNullFunction extends AbstractFunction {
 

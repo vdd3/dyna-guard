@@ -14,7 +14,6 @@ import java.util.Map;
  * 最小值判断函数
  *
  * @author VD
- * @version v 0.1 2025/8/20 19:56
  */
 public class InAtLeastRangeFunction extends AbstractFunction {
 

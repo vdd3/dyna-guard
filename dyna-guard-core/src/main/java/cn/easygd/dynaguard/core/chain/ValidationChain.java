@@ -33,7 +33,6 @@ import java.util.Objects;
  * 验证链
  *
  * @author VD
- * @version v 0.1 2025/7/29 21:38
  */
 public class ValidationChain {
 
@@ -56,16 +55,6 @@ public class ValidationChain {
      * 节点列表
      */
     private List<ValidationNode> nodes;
-
-    /**
-     * 熔断计数器过期时间，默认10秒
-     */
-    private Long guardExpire = 10L;
-
-    /**
-     * 熔断计数器阈值，默认100
-     */
-    private Long guardThreshold = 100L;
 
     /**
      * 执行验证链
@@ -119,7 +108,7 @@ public class ValidationChain {
 
             // 如果触发熔断直接返回失败结果
             if (guard.isExceedThreshold(this.chainId, guardThreshold)) {
-                log.info("guard exceed threshold : [{}=={}]", this.chainId, this.guardThreshold);
+                log.info("guard exceed threshold : [{}]", this.chainId);
                 if (enableBizTrace) {
                     statistics.incrementCount(this.chainId);
                     statistics.incrementGuardCount(this.chainId);
@@ -234,6 +223,7 @@ public class ValidationChain {
                 guardManager.register(guard);
             } else if (guardMode == GuardMode.RATE) {
                 // 这个地方会尝试从spring的容器中获取
+                log.info("rate guard is null , use local guard : [{}]", this.chainId);
                 guard = (LocalInterceptRateGuard) globalBeanContext.getBean("localInterceptRateGuard");
             }
         }
@@ -262,21 +252,5 @@ public class ValidationChain {
 
     public void setNodes(List<ValidationNode> nodes) {
         this.nodes = nodes;
-    }
-
-    public Long getGuardExpire() {
-        return guardExpire;
-    }
-
-    public void setGuardExpire(Long guardExpire) {
-        this.guardExpire = guardExpire;
-    }
-
-    public Long getGuardThreshold() {
-        return guardThreshold;
-    }
-
-    public void setGuardThreshold(Long guardThreshold) {
-        this.guardThreshold = guardThreshold;
     }
 }

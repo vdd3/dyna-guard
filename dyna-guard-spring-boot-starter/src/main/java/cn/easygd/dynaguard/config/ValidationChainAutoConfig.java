@@ -15,7 +15,6 @@ import org.springframework.context.annotation.Configuration;
  * 验证流程引擎自动配置
  *
  * @author VD
- * @version v 0.1 2025/8/3 11:59
  */
 @Configuration
 @AutoConfigureAfter({ValidationChainPropertyAutoConfiguration.class})
