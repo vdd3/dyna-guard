@@ -9,6 +9,8 @@ import java.io.Serializable;
  */
 public class CounterThreshold implements GuardThreshold, Serializable {
 
+    private static final long serialVersionUID = -124124751407847354L;
+
     /**
      * 阈值
      */
@@ -17,7 +19,7 @@ public class CounterThreshold implements GuardThreshold, Serializable {
     /**
      * 阈值周期(秒)
      */
-    private Long period;
+    private Long period = 10L;
 
     /**
      * 是否失败

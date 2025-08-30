@@ -10,6 +10,8 @@ import java.math.BigDecimal;
  */
 public class InterceptRateThreshold implements GuardThreshold, Serializable {
 
+    private static final long serialVersionUID = 807021346149769386L;
+
     /**
      * 拦截率阈值
      */
