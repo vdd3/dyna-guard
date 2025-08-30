@@ -38,6 +38,6 @@ public class TraceFunction extends AbstractFunction {
      */
     @Override
     public String getName() {
-        return "trace";
+        return "Trace";
     }
 }

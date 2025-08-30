@@ -1,10 +1,9 @@
 package cn.easygd.dynaguard.engine;
 
 import cn.easygd.dynaguard.core.engine.BaseValidator;
+import cn.easygd.dynaguard.core.trace.BizTracker;
 import cn.easygd.dynaguard.domain.context.ValidationContext;
 import cn.easygd.dynaguard.domain.enums.RuleEngineEnum;
-import cn.easygd.dynaguard.domain.exception.ValidationChainEngineException;
-import cn.easygd.dynaguard.engine.wrapper.ScriptWrapper;
 
 import javax.script.*;
 import java.util.Map;
@@ -21,6 +20,9 @@ public class JavaScriptValidator extends BaseValidator {
      */
     private final ScriptEngine scriptEngine;
 
+    /**
+     * 全局绑定
+     */
     private final Bindings globalBindings;
 
     /**
@@ -32,8 +34,6 @@ public class JavaScriptValidator extends BaseValidator {
      */
     @Override
     public Object compile(String script) throws Exception {
-        script = ScriptWrapper.wrapScript(script);
-        // 判断用户是否书写了函数并且执行了函数
         return ((Compilable) scriptEngine).compile(script);
     }
 
@@ -52,22 +52,10 @@ public class JavaScriptValidator extends BaseValidator {
         Map<String, Object> params = buildParam(context);
         Bindings bindings = new SimpleBindings();
         params.forEach(bindings::put);
-
-        bindings.put("__return_site", null);
         bindings.putAll(globalBindings);
-
 
         // 执行脚本
         Object result = compiledScript.eval(bindings);
-
-        Object infoObj = bindings.get("__return_site");
-        if (infoObj instanceof Bindings) {
-            Bindings infoBindings = (Bindings) infoObj;
-
-        } else {
-            // fallback：没有 track 到，说明是最后一个 return 没被替换（比如没有分号）
-
-        }
 
         return checkResult(result);
     }
@@ -85,12 +73,7 @@ public class JavaScriptValidator extends BaseValidator {
     public JavaScriptValidator() {
         scriptEngine = new ScriptEngineManager().getEngineByName(getLanguage());
         globalBindings = new SimpleBindings();
-//        globalBindings.put("__return_site", null);
+        globalBindings.put("Trace", BizTracker.class);
         scriptEngine.setBindings(globalBindings, ScriptContext.GLOBAL_SCOPE);
-        try {
-            scriptEngine.eval(ScriptWrapper.HELPER_FUNCTIONS, globalBindings);
-        } catch (ScriptException e) {
-            throw new ValidationChainEngineException("Failed to inject helper functions", e);
-        }
     }
 }
