@@ -36,9 +36,6 @@ dyna-guard 采用模块化设计，核心模块与 Spring Boot Starter 分离，
 - **插件机制**：支持动态加载不同的校验器、解析器等组件
 - **校验追踪**：支持校验追踪，记录拦截的触发条件，可以让用户对拦截的业务进行感知并且进行分析
 
-## 安全性
-
-[![Security Status](https://www.murphysec.com/platform3/v31/badge/1961731069006446592.svg)](https://www.murphysec.com/console/report/1957067370900410368/1961731069006446592)
 ## 安装使用
 
 ### Maven 依赖
