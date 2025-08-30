@@ -234,7 +234,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <!--                    <executable>E:\Gpg4win\..\GnuPG\bin\gpg.exe</executable>-->
+                    <!--  <executable>E:\Gpg4win\..\GnuPG\bin\gpg.exe</executable>-->
                     <!-- Prevent gpg from using pinentry programs -->
                     <gpgArguments>
                         <arg>--pinentry-mode</arg>
@@ -279,5 +279,26 @@
             </plugin>
         </plugins>
     </build>
+    <profiles>
+        <profile>
+            <id>deploy</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
 </project>
