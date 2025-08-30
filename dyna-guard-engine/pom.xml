@@ -11,6 +11,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>dyna-guard-engine</artifactId>
+    <name>dyna-guard-engine</name>
     <packaging>pom</packaging>
 
     <modules>
