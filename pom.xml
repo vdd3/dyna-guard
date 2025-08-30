@@ -234,12 +234,12 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <executable>E:\Gpg4win\..\GnuPG\bin\gpg.exe</executable>
+                    <!--                    <executable>E:\Gpg4win\..\GnuPG\bin\gpg.exe</executable>-->
                     <!-- Prevent gpg from using pinentry programs -->
-                    <!--                    <gpgArguments>-->
-                    <!--                        <arg>&#45;&#45;pinentry-mode</arg>-->
-                    <!--                        <arg>loopback</arg>-->
-                    <!--                    </gpgArguments>-->
+                    <gpgArguments>
+                        <arg>--pinentry-mode</arg>
+                        <arg>loopback</arg>
+                    </gpgArguments>
                 </configuration>
             </plugin>
             <plugin>
