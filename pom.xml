@@ -69,7 +69,6 @@
         <dom4j.version>2.1.4</dom4j.version>
         <common-io.version>2.14.0</common-io.version>
         <springboot.version>2.6.8</springboot.version>
-        <springaop.version>5.3.20</springaop.version>
         <spring.version>5.3.20</spring.version>
         <guava.version>32.0.0-jre</guava.version>
         <aviator.version>5.4.2</aviator.version>
@@ -169,11 +168,6 @@
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-aop</artifactId>
-                <version>${springaop.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-beans</artifactId>
                 <version>${spring.version}</version>
             </dependency>
         </dependencies>
