@@ -77,6 +77,7 @@ public class ValidationChainAutoConfig {
      * @return validationMethodInterceptor
      */
     @Bean("validationMethodInterceptor")
+    @Conditional(ValidationMethodCondition.class)
     public ValidationMethodInterceptor validationMethodInterceptor(ValidationChainManager validationChainManager) {
         ValidationMethodInterceptor validationMethodInterceptor = new ValidationMethodInterceptor();
         validationMethodInterceptor.setValidationChainManager(validationChainManager);

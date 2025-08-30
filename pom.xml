@@ -221,12 +221,9 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <!-- 关键：指定编码为 UTF-8 -->
                     <encoding>UTF-8</encoding>
                     <docencoding>UTF-8</docencoding>
                     <charset>UTF-8</charset>
-                    <!-- 忽略所有Javadoc语法检查（包括未知标签、格式错误等） -->
-                    <doclint>none</doclint>
                 </configuration>
             </plugin>
             <!-- GPG签名插件 -->
