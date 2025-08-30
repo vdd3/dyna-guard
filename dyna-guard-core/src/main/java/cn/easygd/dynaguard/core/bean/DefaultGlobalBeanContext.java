@@ -4,7 +4,6 @@ package cn.easygd.dynaguard.core.bean;
  * 默认全局 Bean 上下文
  *
  * @author VD
- * @date 2025/8/15 20:43
  */
 public class DefaultGlobalBeanContext implements GlobalBeanContext {
 
@@ -27,16 +26,6 @@ public class DefaultGlobalBeanContext implements GlobalBeanContext {
      */
     @Override
     public Object getBean(Class<?> clazz) {
-        return null;
-    }
-
-    /**
-     * 获取bean容器
-     *
-     * @return bean容器
-     */
-    @Override
-    public Object getBeanManager() {
         return null;
     }
 

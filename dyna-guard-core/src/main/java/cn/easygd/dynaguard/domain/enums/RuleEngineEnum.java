@@ -6,7 +6,6 @@ import cn.easygd.dynaguard.domain.constants.RuleEngineEnumerable;
  * 规则引擎枚举
  *
  * @author VD
- * @date 2025/7/28 21:01
  */
 public enum RuleEngineEnum implements RuleEngineEnumerable<RuleEngineEnum> {
 
@@ -21,14 +20,14 @@ public enum RuleEngineEnum implements RuleEngineEnumerable<RuleEngineEnum> {
     JAVA_SCRIPT("JavaScript"),
 
     /**
-     * SpEl
+     * QLExpress4
      */
-    SPEl("SpEl"),
+    QLEXPRESS4("QLExpress4"),
 
     /**
-     * 动态验证脚本
+     * Aviator
      */
-    GUARD_SCRIPT("GuardScript"),
+    AVIATOR("Aviator"),
 
     ;
 

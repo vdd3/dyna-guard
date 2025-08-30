@@ -4,7 +4,6 @@ package cn.easygd.dynaguard.domain.exception;
  * 返回结果类型非法异常
  *
  * @author VD
- * @date 2025/8/12 19:47
  */
 public class ResultTypeIllegalException extends RuntimeException {
 

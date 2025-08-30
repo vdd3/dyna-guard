@@ -3,18 +3,18 @@ package cn.easygd.dynaguard.config;
 import cn.easygd.dynaguard.ValidationChainInit;
 import cn.easygd.dynaguard.ValidationMethodInterceptor;
 import cn.easygd.dynaguard.core.chain.ValidationChainManager;
-import cn.easygd.dynaguard.core.guard.CounterGuardManager;
+import cn.easygd.dynaguard.core.guard.GuardManager;
 import cn.easygd.dynaguard.domain.config.ValidationChainConfig;
 import org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 
 /**
  * 验证流程引擎自动配置
  *
  * @author VD
- * @date 2025/8/3 11:59
  */
 @Configuration
 @AutoConfigureAfter({ValidationChainPropertyAutoConfiguration.class})
@@ -26,7 +26,7 @@ public class ValidationChainAutoConfig {
      * @param validationChainConfig 验证配置
      * @return ValidationChainManager
      */
-    @Bean
+    @Bean("validationChainManager")
     public ValidationChainManager validationChainManager(ValidationChainConfig validationChainConfig) {
         ValidationChainManager manager = ValidationChainManager.getInstance();
         manager.setConfig(validationChainConfig);
@@ -38,9 +38,9 @@ public class ValidationChainAutoConfig {
      *
      * @return CounterGuardManager
      */
-    @Bean
-    public CounterGuardManager counterGuardManager() {
-        return CounterGuardManager.getInstance();
+    @Bean("guardManager")
+    public GuardManager guardManager() {
+        return GuardManager.getInstance();
     }
 
     /**
@@ -60,6 +60,7 @@ public class ValidationChainAutoConfig {
      * @return BeanNameAutoProxyCreator
      */
     @Bean
+    @Conditional(ValidationMethodCondition.class)
     public BeanNameAutoProxyCreator proxyCreator(ValidationChainConfig validationChainConfig,
                                                  ValidationMethodInterceptor validationMethodInterceptor) {
         BeanNameAutoProxyCreator creator = new BeanNameAutoProxyCreator();
@@ -76,6 +77,7 @@ public class ValidationChainAutoConfig {
      * @return validationMethodInterceptor
      */
     @Bean("validationMethodInterceptor")
+    @Conditional(ValidationMethodCondition.class)
     public ValidationMethodInterceptor validationMethodInterceptor(ValidationChainManager validationChainManager) {
         ValidationMethodInterceptor validationMethodInterceptor = new ValidationMethodInterceptor();
         validationMethodInterceptor.setValidationChainManager(validationChainManager);
@@ -86,17 +88,15 @@ public class ValidationChainAutoConfig {
      * 初始化验证流程
      *
      * @param validationChainManager 验证流程管理器
-     * @param counterGuardManager    熔断管理器
-     * @param globalBeanRegister     全局bean注册器
+     * @param guardManager           熔断管理器
      * @return ValidationChainInit
      */
     @Bean
     public ValidationChainInit validationChainInit(ValidationChainManager validationChainManager,
-                                                   CounterGuardManager counterGuardManager,
-                                                   GlobalBeanRegister globalBeanRegister) {
+                                                   GuardManager guardManager) {
         ValidationChainInit init = new ValidationChainInit();
         init.setValidationChainManager(validationChainManager);
-        init.setCounterGuardManager(counterGuardManager);
+        init.setCounterGuardManager(guardManager);
         return init;
     }
 }

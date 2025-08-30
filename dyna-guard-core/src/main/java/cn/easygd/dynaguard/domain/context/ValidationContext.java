@@ -10,7 +10,6 @@ import java.util.function.Consumer;
  * 校验器上下文
  *
  * @author VD
- * @date 2025/7/27 20:52
  */
 public abstract class ValidationContext {
 
@@ -18,6 +17,11 @@ public abstract class ValidationContext {
      * 参数
      */
     protected final Map<String, Object> parameters = Maps.newHashMap();
+
+    /**
+     * 流程选择
+     */
+    private ChainOptions chainOptions = ChainOptions.DEFAULT;
 
     /**
      * 构建执行上下文
@@ -67,8 +71,15 @@ public abstract class ValidationContext {
      * @param value 值
      */
     public void put(String key, Object value) {
-        // TODO 需要将对象设置为安全不可变的
         parameters.put(key, value);
+    }
+
+    public ChainOptions getChainOptions() {
+        return chainOptions;
+    }
+
+    public void setChainOptions(ChainOptions chainOptions) {
+        this.chainOptions = chainOptions;
     }
 
     /**
@@ -78,8 +89,6 @@ public abstract class ValidationContext {
      */
     @Override
     public String toString() {
-        return "ValidationContext{" +
-                "parameters=" + parameters +
-                '}';
+        return String.format("param name : %s", parameters.keySet());
     }
 }

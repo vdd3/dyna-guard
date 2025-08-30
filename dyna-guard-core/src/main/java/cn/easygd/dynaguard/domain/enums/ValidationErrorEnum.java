@@ -4,7 +4,6 @@ package cn.easygd.dynaguard.domain.enums;
  * 验证错误枚举
  *
  * @author VD
- * @date 2025/7/30 22:01
  */
 public enum ValidationErrorEnum {
 
@@ -17,6 +16,11 @@ public enum ValidationErrorEnum {
      * 验证失败
      */
     FAIL("10002", "验证失败", "验证执行"),
+
+    /**
+     * 未获取到熔断器
+     */
+    GUARD_MISS("10003", "未获取到熔断器", "熔断"),
 
     ;
 

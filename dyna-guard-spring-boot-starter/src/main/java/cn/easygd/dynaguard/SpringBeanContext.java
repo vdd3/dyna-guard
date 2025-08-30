@@ -2,14 +2,15 @@ package cn.easygd.dynaguard;
 
 import cn.easygd.dynaguard.core.bean.GlobalBeanContext;
 import cn.easygd.dynaguard.core.chain.ValidationChainManager;
-import cn.easygd.dynaguard.core.guard.CounterGuardManager;
+import cn.easygd.dynaguard.core.guard.GuardManager;
+import cn.easygd.dynaguard.core.metrics.BizValidationStatistics;
 import org.springframework.context.ApplicationContext;
 
 /**
  * spring bean 容器
  *
  * @author VD
- * @date 2025/8/12 20:58
+ *
  */
 public class SpringBeanContext implements GlobalBeanContext {
 
@@ -41,16 +42,6 @@ public class SpringBeanContext implements GlobalBeanContext {
     }
 
     /**
-     * 获取bean容器
-     *
-     * @return bean容器
-     */
-    @Override
-    public Object getBeanManager() {
-        return applicationContext;
-    }
-
-    /**
      * 获取ValidationChainManager
      *
      * @return ValidationChainManager
@@ -66,8 +57,18 @@ public class SpringBeanContext implements GlobalBeanContext {
      * @return CounterGuardManager
      */
     @Override
-    public CounterGuardManager getCounterGuardManager() {
-        return (CounterGuardManager) applicationContext.getBean("counterGuardManager");
+    public GuardManager getGuardManager() {
+        return (GuardManager) applicationContext.getBean("guardManager");
+    }
+
+    /**
+     * 获取BizValidationStatistics
+     *
+     * @return BizValidationStatistics
+     */
+    @Override
+    public BizValidationStatistics getBizValidationStatistics() {
+        return applicationContext.getBean(BizValidationStatistics.class);
     }
 
     /**
@@ -77,7 +78,6 @@ public class SpringBeanContext implements GlobalBeanContext {
     public Integer priority() {
         return 5;
     }
-
 
     public static void setApplicationContext(ApplicationContext context) {
         applicationContext = context;

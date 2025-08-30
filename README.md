@@ -1,6 +1,6 @@
-# Dyna-Guard - 动态校验框架
+# dyna-guard - 动态校验框架
 
-Dyna-Guard 是一个基于 Java 的动态校验框架，支持多种脚本语言和规则引擎。它提供了一套灵活的校验链机制，允许开发者通过配置化的方式定义和执行复杂的业务校验逻辑。
+dyna-guard 是一个基于 Java 的动态校验框架，支持多种脚本语言和规则引擎。提供了一套灵活的校验链机制，允许开发者通过配置化的方式定义和执行复杂的业务校验逻辑。
 
 ## 技术文档 [点击进入](https://www.yuque.com/yuqueyonghuqdqyqs/kswtr7)
 
@@ -10,31 +10,31 @@ Dyna-Guard 是一个基于 Java 的动态校验框架，支持多种脚本语言
 
 ```
 dyna-guard/
-├── dyna-guard-core/           # 核心模块，包含校验引擎、规则解析等核心功能
+├── dyna-guard-core/                 # 核心模块，包含校验引擎、规则解析等核心功能
+├── dyna-guard-engine/               # 引擎模块，包含不同的规则引擎
 └── dyna-guard-spring-boot-starter/  # Spring Boot Starter，提供自动配置和集成支持
 ```
 
 ## 技术架构
 
-Dyna-Guard 采用模块化设计，核心模块与 Spring Boot Starter 分离，便于在不同环境中使用：
+dyna-guard 采用模块化设计，核心模块与 Spring Boot Starter 分离，便于在不同环境中使用：
 
 1. **核心模块** (`dyna-guard-core`) 提供基础的校验能力
 2. **Spring Boot 集成模块** (`dyna-guard-spring-boot-starter`) 提供自动配置和 Spring 集成
+3. **引擎模块** (`dyna-guard-engine`) 提供不同的规则引擎，如 Groovy、JavaScript和Aviator
 
 框架通过 SPI (Service Provider Interface) 机制实现插件化扩展，支持动态加载不同的校验器、解析器等组件。
 
 ## 功能特性
 
-- **多规则引擎支持**：支持 Groovy、JavaScript、QLExpress 和 Spring Expression Language (SpEL)
+- **多规则引擎支持**：支持 Groovy、JavaScript、QLExpress4 和 Aviator
 - **灵活的校验链机制**：通过配置定义校验节点，支持多种数据源（JSON、XML、SQL）
 - **Spring Boot 集成**：提供 Starter 模块，开箱即用
 - **动态规则加载**：支持从本地文件、数据库等多种来源加载校验规则
 - **熔断机制**：内置计数器熔断器，防止系统过载
-- **AOP 拦截**：基于注解的方法级校验拦截
-
-## 安全性
-
-[![Security Status](https://www.murphysec.com/platform3/v31/badge/1957074509173805056.svg)](https://www.murphysec.com/console/report/1957067370900410368/1957074509173805056)
+- **AOP 拦截**：方法级校验拦截，实现自动执行校验过程
+- **插件机制**：支持动态加载不同的校验器、解析器等组件
+- **校验追踪**：支持校验追踪，记录拦截的触发条件，可以让用户对拦截的业务进行感知并且进行分析
 
 ## 安装使用
 
@@ -45,7 +45,38 @@ Dyna-Guard 采用模块化设计，核心模块与 Spring Boot Starter 分离，
 <dependency>
     <groupId>cn.easygd</groupId>
     <artifactId>dyna-guard-spring-boot-starter</artifactId>
-    <version>0.0.4</version>
+    <version>0.0.5-beta</version>
+</dependency>
+```
+
+#### 额外的语言选择
+
+从0.0.5版本开始框架本身不额外引入其他语言的情况下只支持QLExpress4，如果需要其他的语言，请自行引入对应的依赖
+
+```xml
+
+<dependency>
+    <groupId>cn.easygd</groupId>
+    <artifactId>dyna-guard-groovy</artifactId>
+    <version>0.0.5-beta</version>
+</dependency>
+```
+
+```xml
+
+<dependency>
+    <groupId>cn.easygd</groupId>
+    <artifactId>dyna-guard-aviator</artifactId>
+    <version>0.0.5-beta</version>
+</dependency>
+```
+
+```xml
+
+<dependency>
+    <groupId>cn.easygd</groupId>
+    <artifactId>dyna-guard-javascript</artifactId>
+    <version>0.0.5-beta</version>
 </dependency>
 ```
 
@@ -63,6 +94,17 @@ validation:
 
   # 需要拦截的类，若使用方法级别校验，设置为需要拦截的类名称
   validationMethod: **Service
+
+  # 安全策略
+  enableSecurityStrategy: false
+
+  # 链路追踪
+  enableBizTrace: false
+
+  # 熔断配置
+  enableGuard: false
+  # 熔断模式
+  guardMode: COUNTER
 
   # 流程文件的路径，支持多个路径，用英文逗号分隔
   chainFilePath: classpath:chain/*Chain.xml,classpath:chain/*Chain.json
@@ -90,8 +132,6 @@ validation:
     fastFailField: fast_fail
     languageField: language
     scriptField: script
-    guardExpireField: guard_expire
-    guardThresholdField: guard_threshold
 
   # XML存放chain的配置（用于xml标签映射及监听器）
   xmlChainDataMap:
@@ -139,6 +179,14 @@ validation.pathParserName=spring
 validation.validationMethod=**Service
 # 流程文件的路径，支持多个路径，多个路径用英文逗号隔开
 validation.chainFilePath=classpath:chain/*Chain.xml,classpath:chain/*Chain.json
+# 安全策略，如果开启，脚本中无法对参数内容进行修改
+validation.enableSecurityStrategy=false
+# 链路追踪
+validation.enableBizTrace=false
+# 熔断配置
+validation.enableGuard=false
+# 熔断模式
+validation.guardMode=COUNTER
 # sql数据存放chain的配置，主要用于连接数据以及对字段的映射，默认开启监听
 validation.sqlChain-data-map[enableListener]=true
 validation.sqlChainDataMap[url]=jdbc:mysql://localhost:3306/db
@@ -161,8 +209,6 @@ validation.sqlChainDataMap[messageField]=message
 validation.sqlChainDataMap[fastFailField]=fast_fail
 validation.sqlChainDataMap[languageField]=language
 validation.sqlChainDataMap[scriptField]=script
-validation.sqlChainDataMap[guardExpireField]=guard_expire
-validation.sqlChainDataMap[guardThresholdField]=guard_threshold
 # xml存放chain的配置，主要用于xml标签的映射，以及监听器
 validation.xmlChainDataMap[enableListener]=true
 # 监听文件的路径
@@ -197,12 +243,13 @@ validation.jsonChainDataMap[scriptField]=script
 
 ### 使用示例
 
-在您的springBoot项目启动类上添加 [@EnableValidation]
+在springBoot项目启动类上添加 [@EnableValidation] `加上这个注解springboot启动时会自动加载一整套流程`
 
-`加上这个注解springboot启动时会自动加载一整套流程`
+#### 自动执行校验流程
 
-在需要校验的方法实现类上添加 [@DynamicGuard]
-注解：
+在配置文件中配置 `validation.validationMethod` 定义需要拦截的类，可以使用通配符
+
+在需要校验的方法实现类上添加 [@DynamicGuard]注解
 
 ```java
 
@@ -243,12 +290,19 @@ public class SimpleServiceImpl implements SimpleService {
     }
 
     /**
-     * 测试熔断
+     * 熔断
      *
      * @param param 请求参数
      */
     @Override
-    @DynamicGuard(chainId = "user.create", enableGuard = true)
+    @DynamicGuard(chainId = "user.create",
+            // 启用熔断
+            enableGuard = true,
+            // 熔断模式，可选：COUNTER,RATE
+            guardMode = GuardMode.COUNTER,
+            // 熔断阈值的json格式
+            guardThreshold = "{\"threshold\":100,\"period\":10,\"fail\":true}"
+    )
     public void guard(Param param) {
         System.out.println("校验通过");
     }
@@ -256,15 +310,27 @@ public class SimpleServiceImpl implements SimpleService {
 }
 ```
 
+#### 自行执行校验流程
+
 业务级验证流程, 在业务逻辑中调用显式的调用流程
 
 ```java
 public class BizService {
     public void guardInBiz(Param param) {
-        // 构建您的验证流程上下文
+        // 1.构建校验流程上下文
         ValidationContext context = new SpringValidationContext();
+        // 如果需要熔断可以设置对应的参数，优先级按照每个流程的设置来，全局的熔断配置不影响流程单独配置的熔断参数
+        ChainOptions chainOptions = ChainOptions.builder()
+                // 启用熔断
+                .enableGuard(true)
+                // 熔断模式，可选：COUNTER,RATE
+                .guardMode(GuardMode.RATE)
+                // 熔断阈值
+                .guardThreshold(new InterceptRateThreshold())
+                .build();
+        context.setChainOptions(chainOptions);
 
-        // 获取流程，然后自己执行
+        // 2.获取验证链再执行
         ValidationChain chain = null;
         chain = ChainExecutorHelper.getChain("您的验证链ID");
         chain = ChainExecutorHelper.getChain("您想使用的存储流程的分组", "您的验证链ID");
@@ -275,19 +341,11 @@ public class BizService {
         // 带返回值的执行
         ValidationResult result = chain.executeResult(context);
 
-        // 接入熔断并且抛出异常的执行
-        chain.executeGuard(context);
+        // 根据返回值中的信息处理
 
-        // 接入熔断并且带返回值的执行
-        result = chain.executeGuardResult(context);
-
-        // 您可以根据返回值中的信息处理
-
-
-        // 工具类帮您执行
+        // 工具类直接执行
         ChainExecutorHelper.validateHere("您的验证链ID", context);
         ChainExecutorHelper.validateHere("您想使用的存储流程的分组", "您的验证链ID", context);
-
     }
 }
 ```
@@ -303,8 +361,8 @@ public class BizService {
     "node": [
       {
         "order": 1,
-        "script": "#param != null && #param.name != null",
-        "language": "SpEl",
+        "script": "",
+        "language": "",
         "message": "参数不能为空",
         "fastFail": true
       }
@@ -338,7 +396,7 @@ public class BizService {
             ]]>
         </node>
         <!-- 再使用qle对修改的内容进行校验 -->
-        <node language="GuardScript" order="2" message="校验失败">
+        <node language="QLExpress4" order="2" message="校验失败">
             <![CDATA[
             if (NotNull(param.name) == false) {return false;}
             if (NotNull(param.age) == false) {return false;}
@@ -358,11 +416,16 @@ public class BizService {
 
 ### 自定义校验器
 
-实现 [Validator]或者继承[BaseValidator]
-接口并注册到 SPI：
+实现 [Validator]或者继承[BaseValidator]接口并注册到 SPI：
 
 ```java
 public class CustomValidator extends BaseValidator {
+    @Override
+    public Object compile(String script) throws Exception {
+        // 编译逻辑，实现这个逻辑后可对脚本进行编译缓存
+        return null;
+    }
+
     @Override
     public Boolean validate(String script, ValidationContext context) {
         // 实现校验逻辑
@@ -382,21 +445,158 @@ public class CustomValidator extends BaseValidator {
 com.example.CustomValidator
 ```
 
-### 自定义计数熔断器，非常建议您书写自己的计数熔断器
+### 自定义业务校验统计器
+
+`业务校验统计器的意义在于让您对自己的业务进行分析，比如某块业务因为什么条件导致一直被拦截`
+
+实现[BizValidationStatistics]或者继承[BaseBizValidationStatistics]并且注册到spring中，如果不自定义，会使用框架默认的统计器，但是无法做到数据持久化以及分布式系统统计
+
+```java
+public class CustomBizValidationStatistics extends BaseBizValidationStatistics {
+    /**
+     * 调用次数加1
+     *
+     * @param chainId 链ID
+     */
+    @Override
+    public void incrementCount(String chainId) {
+
+    }
+
+    /**
+     * 调用成功次数加1
+     *
+     * @param chainId 链ID
+     */
+    @Override
+    public void incrementPassedCount(String chainId) {
+
+    }
+
+    /**
+     * 熔断次数加1
+     *
+     * @param chainId 链ID
+     */
+    @Override
+    public void incrementGuardCount(String chainId) {
+
+    }
+
+    /**
+     * 拦截次数加1
+     *
+     * @param chainId   链ID
+     * @param nodeName  节点名称
+     * @param condition 拦截条件
+     */
+    @Override
+    public void incrementValidationCount(String chainId, String nodeName, String condition) {
+
+    }
+
+    /**
+     * 获取调用次数
+     *
+     * @param chainId 链ID
+     * @return 调用次数
+     */
+    @Override
+    public Long count(String chainId) {
+
+    }
+
+    /**
+     * 获取通过次数
+     *
+     * @param chainId 链ID
+     * @return 通过次数
+     */
+    @Override
+    public Long passedCount(String chainId) {
+
+    }
+
+    /**
+     * 获取熔断次数
+     *
+     * @param chainId 链ID
+     * @return 拦截次数
+     */
+    @Override
+    public Long guardCount(String chainId) {
+
+    }
+
+    /**
+     * 获取拦截次数
+     *
+     * @param chainId   链ID
+     * @param nodeName  节点名称
+     * @param condition 拦截条件
+     * @return 拦截次数
+     */
+    @Override
+    public Long validationCount(String chainId, String nodeName, String condition) {
+
+    }
+
+    /**
+     * 节点拦截次数
+     *
+     * @param chainId  链ID
+     * @param nodeName 节点名称
+     * @return key 拦截条件 value 拦截次数
+     */
+    @Override
+    public Map<String, Long> nodeValidationCount(String chainId, String nodeName) {
+
+    }
+
+    /**
+     * 链拦截率
+     *
+     * @param chainId 链ID
+     * @return 拦截率
+     */
+    @Override
+    public BigDecimal chainValidationRate(String chainId) {
+
+    }
+
+    /**
+     * 链拦截指标
+     *
+     * @param chainId 链ID
+     * @return 拦截指标
+     */
+    @Override
+    public List<ValidationMetrics> validationMetrics(String chainId) {
+
+    }
+}
+```
+
+### 自定义熔断器
+
+#### 计数熔断器
 
 实现[CounterGuard]
 
 ```java
+
+@Commpent
 public class CustomCounterGuard implements CounterGuard {
 
     @Override
     public List<String> chainId() {
-        // 这个是定义您需要熔断的流程
+        // 如果返回为空则代表全局的计数熔断都会使用这个熔断器
         return null;
     }
 
     @Override
-    public Boolean isExceedThreshold(String chainId, Long threshold) {
+    public Boolean isExceedThreshold(String chainId, GuardThreshold guardThreshold) {
+        CounterThreshold counterThreshold = (CounterThreshold) guardThreshold;
         // 判断是否超过了阈值，超过阈值会执行降级操作
         return null;
     }
@@ -419,21 +619,66 @@ public class CustomCounterGuard implements CounterGuard {
     }
 
     @Override
-    public void rollback(String chainId) {
-        // 在这里实现您的降级逻辑
+    public void fallBack(String chainId, ValidationContext context) {
+        // 在这里实现降级逻辑
     }
 }
 ```
 
-在 `META-INF/services/cn.easygd.dynaguard.core.guard.CounterGuard` 文件中添加实现类：
+#### 拦截率熔断器
+
+`拦截率熔断器的应该是要配合业务校验统计器使用的，目的就是为了在达到一定阈值时进行降级操作`
+
+实现[InterceptRateGuard]
+
+```java
+public class CustomInterceptRateGuard implements InterceptRateGuard {
+
+    /**
+     * 链路ID
+     *
+     * @return 链路ID
+     */
+    @Override
+    public List<String> chainId() {
+        // 如果返回为空则代表全局的计数熔断都会使用这个熔断器
+        return null;
+    }
+
+    /**
+     * 是否超过阈值
+     *
+     * @param chainId        流程id
+     * @param guardThreshold 熔断阈值
+     * @return true 超过阈值
+     */
+    @Override
+    public Boolean isExceedThreshold(String chainId, GuardThreshold guardThreshold) {
+        InterceptRateThreshold interceptRateThreshold = (InterceptRateThreshold) guardThreshold;
+        // 这里实现判断阈值的逻辑
+        return true;
+    }
+
+    /**
+     * 降级操作
+     *
+     * @param chainId 链路ID
+     * @param context 上下文
+     */
+    @Override
+    public void fallBack(String chainId, ValidationContext context) {
+        // 在这里实现降级逻辑
+    }
+}
+```
 
 ```
-com.example.CustomCounterGuard
+自己定义的熔断器都需要注册到spring中
 ```
 
 ## 贡献指南
 
-欢迎提交 Issue 和 Pull Request 来改进 Dyna-Guard。
+欢迎提交 Issue 和 Pull Request 来改进 dyna-guard。
 
 ## 许可证
 

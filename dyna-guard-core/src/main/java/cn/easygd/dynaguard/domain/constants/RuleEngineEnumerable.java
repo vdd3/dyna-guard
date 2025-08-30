@@ -4,7 +4,7 @@ package cn.easygd.dynaguard.domain.constants;
  * 规则引擎枚举能力接口
  *
  * @author VD
- * @date 2025/7/28 20:53
+ *
  */
 public interface RuleEngineEnumerable<E extends Enum<E>> {
 

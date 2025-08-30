@@ -11,7 +11,6 @@ import org.springframework.context.annotation.PropertySource;
  * 验证配置自动注册
  *
  * @author VD
- * @date 2025/8/3 12:03
  */
 @Configuration
 @EnableConfigurationProperties(ValidationProperty.class)
@@ -27,10 +26,14 @@ public class ValidationChainPropertyAutoConfiguration {
     @Bean
     public ValidationChainConfig validationChainConfig(ValidationProperty property) {
         ValidationChainConfig config = new ValidationChainConfig();
-        config.setParserList(Lists.newArrayList(property.getParser().split(",")));
+        config.setParserList(property.getParser());
         config.setPathParserName(property.getPathParserName());
-        config.setValidationMethodList(Lists.newArrayList(property.getValidationMethod().split(",")));
+        config.setValidationMethodList(property.getValidationMethod());
         config.setChainFilePath(Lists.newArrayList(property.getChainFilePath().split(",")));
+        config.setEnableSecurityStrategy(property.getEnableSecurityStrategy());
+        config.setEnableBizTrace(property.getEnableBizTrace());
+        config.setEnableGuard(property.getEnableGuard());
+        config.setGuardMode(property.getGuardMode());
         config.setSqlChainDataMap(property.getSqlChainDataMap());
         config.setXmlChainDataMap(property.getXmlChainDataMap());
         config.setJsonChainDataMap(property.getJsonChainDataMap());

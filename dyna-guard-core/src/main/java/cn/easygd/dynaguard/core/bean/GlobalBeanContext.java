@@ -1,13 +1,14 @@
 package cn.easygd.dynaguard.core.bean;
 
 import cn.easygd.dynaguard.core.chain.ValidationChainManager;
-import cn.easygd.dynaguard.core.guard.CounterGuardManager;
+import cn.easygd.dynaguard.core.guard.GuardManager;
+import cn.easygd.dynaguard.core.metrics.BizValidationStatistics;
+import cn.easygd.dynaguard.core.metrics.LocalBizValidationStatistics;
 
 /**
  * 单例Bean容器
  *
  * @author VD
- * @date 2025/8/12 20:46
  */
 public interface GlobalBeanContext {
 
@@ -28,13 +29,6 @@ public interface GlobalBeanContext {
     Object getBean(Class<?> clazz);
 
     /**
-     * 获取bean容器
-     *
-     * @return bean容器
-     */
-    Object getBeanManager();
-
-    /**
      * 获取ValidationChainManager
      *
      * @return ValidationChainManager
@@ -48,8 +42,17 @@ public interface GlobalBeanContext {
      *
      * @return CounterGuardManager
      */
-    default CounterGuardManager getCounterGuardManager() {
-        return CounterGuardManager.getInstance();
+    default GuardManager getGuardManager() {
+        return GuardManager.getInstance();
+    }
+
+    /**
+     * 获取BizValidationStatistics
+     *
+     * @return BizValidationStatistics
+     */
+    default BizValidationStatistics getBizValidationStatistics() {
+        return LocalBizValidationStatistics.getInstance();
     }
 
     /**

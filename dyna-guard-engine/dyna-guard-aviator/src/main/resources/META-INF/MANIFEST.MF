@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+Implementation-Title: dyna-guard-aviator
+Implementation-Version: 0.0.5
+Build-Jdk-Spec: 1.8
+Created-By: Maven JAR Plugin 3.1.2

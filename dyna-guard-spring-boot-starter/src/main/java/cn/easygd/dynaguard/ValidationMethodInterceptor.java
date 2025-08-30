@@ -5,7 +5,12 @@ import cn.easygd.dynaguard.core.annotation.DynamicGuard;
 import cn.easygd.dynaguard.core.chain.ValidationChain;
 import cn.easygd.dynaguard.core.chain.ValidationChainManager;
 import cn.easygd.dynaguard.domain.SpringValidationContext;
+import cn.easygd.dynaguard.domain.context.ChainOptions;
 import cn.easygd.dynaguard.domain.context.ValidationContext;
+import cn.easygd.dynaguard.domain.enums.GuardMode;
+import cn.easygd.dynaguard.domain.guard.CounterThreshold;
+import cn.easygd.dynaguard.domain.guard.InterceptRateThreshold;
+import cn.easygd.dynaguard.utils.JsonUtils;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.apache.commons.lang3.StringUtils;
@@ -21,7 +26,6 @@ import java.lang.reflect.Parameter;
  * 验证方法拦截器
  *
  * @author VD
- * @date 2025/8/3 12:33
  */
 public class ValidationMethodInterceptor implements MethodInterceptor {
 
@@ -75,11 +79,21 @@ public class ValidationMethodInterceptor implements MethodInterceptor {
         }
 
         // 5.执行验证链
+        ChainOptions.Builder builder = ChainOptions.builder();
         if (dynamicGuard.enableGuard()) {
-            chain.executeGuard(context);
-        } else {
-            chain.execute(context);
+            builder.enableGuard(true)
+                    .guardMode(dynamicGuard.guardMode());
+            String guardThreshold = dynamicGuard.guardThreshold();
+            if (StringUtils.isNotBlank(guardThreshold)) {
+                if (GuardMode.COUNTER == dynamicGuard.guardMode()) {
+                    builder.guardThreshold(JsonUtils.parse(guardThreshold, CounterThreshold.class));
+                } else if (GuardMode.RATE == dynamicGuard.guardMode()) {
+                    builder.guardThreshold(JsonUtils.parse(guardThreshold, InterceptRateThreshold.class));
+                }
+            }
         }
+        context.setChainOptions(builder.build());
+        chain.execute(context);
 
         // 6.验证通过
         return invocation.proceed();

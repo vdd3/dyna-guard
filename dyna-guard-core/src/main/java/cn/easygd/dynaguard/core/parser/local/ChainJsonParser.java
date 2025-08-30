@@ -10,15 +10,17 @@ import cn.easygd.dynaguard.domain.config.ValidationChainConfig;
 import cn.easygd.dynaguard.domain.enums.ParserTypeEnum;
 import cn.easygd.dynaguard.domain.exception.ValidationChainParserException;
 import cn.easygd.dynaguard.utils.BeanMapUtils;
-import com.fasterxml.jackson.databind.DeserializationFeature;
+import cn.easygd.dynaguard.utils.JsonUtils;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -26,19 +28,13 @@ import java.util.stream.Collectors;
  * json文件解析器
  *
  * @author VD
- * @date 2025/8/3 10:59
  */
 public class ChainJsonParser extends LocalChainFileParser {
 
     /**
-     * objectMapper
+     * 日志
      */
-    private final static ObjectMapper OBJECT_MAPPER = new ObjectMapper();
-
-    static {
-        // 忽略重复key
-        OBJECT_MAPPER.enable(DeserializationFeature.FAIL_ON_READING_DUP_TREE_KEY);
-    }
+    private static final Logger log = LoggerFactory.getLogger(ChainJsonParser.class);
 
     /**
      * 初始化
@@ -69,17 +65,15 @@ public class ChainJsonParser extends LocalChainFileParser {
         List<ValidationChain> resultList = Lists.newArrayList();
         try {
             for (String fileInfo : fileInfoList) {
-                JsonNode jsonNode = OBJECT_MAPPER.readTree(fileInfo);
+                JsonNode jsonNode = JsonUtils.parse(fileInfo);
+                if (Objects.isNull(jsonNode)) {
+                    log.error("json file parse error");
+                    return Lists.newArrayList();
+                }
                 jsonNode.elements().forEachRemaining(jsonNodeElement -> {
                     ValidationChain chain = new ValidationChain();
                     chain.setChainId(jsonNodeElement.get(config.getChainIdField()).asText());
                     chain.setGroup(type().getType());
-                    if (jsonNode.has(config.getGuardExpireField())) {
-                        chain.setGuardExpire(jsonNodeElement.get(config.getGuardExpireField()).asLong());
-                    }
-                    if (jsonNode.has(config.getGuardThresholdField())) {
-                        chain.setGuardThreshold(jsonNodeElement.get(config.getGuardThresholdField()).asLong());
-                    }
 
                     List<ValidationNode> nodeList = Lists.newArrayList();
                     jsonNodeElement.get(config.getNodeField()).elements().forEachRemaining(element -> {

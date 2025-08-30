@@ -1,10 +1,11 @@
 package cn.easygd.dynaguard.domain;
 
+import cn.easygd.dynaguard.core.trace.ReturnInfo;
+
 /**
  * 验证结果
  *
  * @author VD
- * @date 2025/7/27 22:16
  */
 public class ValidationResult {
 
@@ -28,17 +29,35 @@ public class ValidationResult {
      */
     private Throwable throwable;
 
+    /**
+     * 业务跟踪信息
+     */
+    private ReturnInfo returnInfo;
+
+    /**
+     * 节点名称，由脚本语言+顺序组成
+     */
+    private String nodeName;
+
     private ValidationResult(Boolean success, String message, Boolean exception) {
-        this.success = success;
-        this.message = message;
-        this.exception = exception;
+        this(success, message, exception, null);
     }
 
     private ValidationResult(Boolean success, String message, Boolean exception, Throwable throwable) {
+        this(success, message, exception, throwable, null);
+    }
+
+    private ValidationResult(Boolean success, String message, Boolean exception, Throwable throwable, ReturnInfo returnInfo) {
+        this(success, message, exception, throwable, returnInfo, null);
+    }
+
+    private ValidationResult(Boolean success, String message, Boolean exception, Throwable throwable, ReturnInfo returnInfo, String nodeName) {
         this.success = success;
         this.message = message;
         this.exception = exception;
         this.throwable = throwable;
+        this.returnInfo = returnInfo;
+        this.nodeName = nodeName;
     }
 
     /**
@@ -80,6 +99,16 @@ public class ValidationResult {
         return new ValidationResult(false, message, false, null);
     }
 
+    /**
+     * 失败
+     *
+     * @param message 错误信息
+     * @return 验证结果
+     */
+    public static ValidationResult fail(String message, String nodeName) {
+        return new ValidationResult(false, message, false, null, null, nodeName);
+    }
+
     public Boolean getSuccess() {
         return success;
     }
@@ -94,5 +123,17 @@ public class ValidationResult {
 
     public Throwable getThrowable() {
         return throwable;
+    }
+
+    public ReturnInfo getReturnInfo() {
+        return returnInfo;
+    }
+
+    public void setReturnInfo(ReturnInfo returnInfo) {
+        this.returnInfo = returnInfo;
+    }
+
+    public String getNodeName() {
+        return nodeName;
     }
 }

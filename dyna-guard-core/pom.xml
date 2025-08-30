@@ -5,7 +5,7 @@
     <parent>
         <artifactId>dyna-guard</artifactId>
         <groupId>cn.easygd</groupId>
-        <version>0.0.4</version>
+        <version>${all.version}</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -28,23 +28,7 @@
     <dependencies>
         <dependency>
             <groupId>com.alibaba</groupId>
-            <artifactId>QLExpress</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>commons-beanutils</groupId>
-            <artifactId>commons-beanutils</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.codehaus.groovy</groupId>
-            <artifactId>groovy</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.graalvm.js</groupId>
-            <artifactId>js</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.graalvm.js</groupId>
-            <artifactId>js-scriptengine</artifactId>
+            <artifactId>qlexpress4</artifactId>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -73,6 +57,10 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-collections4</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>cglib</groupId>
+            <artifactId>cglib</artifactId>
         </dependency>
     </dependencies>
 

@@ -6,9 +6,13 @@ import cn.easygd.dynaguard.core.engine.Validator;
  * 验证节点
  *
  * @author VD
- * @date 2025/7/29 21:50
  */
 public class ValidationNode {
+
+    /**
+     * 节点名称
+     */
+    private String nodeName;
 
     /**
      * 执行脚本
@@ -40,6 +44,13 @@ public class ValidationNode {
      */
     private Boolean fastFail = true;
 
+    public String getNodeName() {
+        return nodeName;
+    }
+
+    public void setNodeName(String nodeName) {
+        this.nodeName = nodeName;
+    }
 
     public String getScript() {
         return script;

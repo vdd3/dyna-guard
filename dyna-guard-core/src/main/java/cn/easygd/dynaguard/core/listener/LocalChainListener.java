@@ -28,7 +28,6 @@ import java.util.stream.Collectors;
  * 本地流程监听器
  *
  * @author VD
- * @date 2025/8/10 14:50
  */
 public abstract class LocalChainListener implements ValidationChainListener {
 

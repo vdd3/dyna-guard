@@ -10,7 +10,7 @@ import java.util.function.Function;
  * 流程sql配置
  *
  * @author VD
- * @date 2025/8/5 21:04
+ *
  */
 public class ChainSqlConfig extends ChainDataConfig {
 
@@ -98,16 +98,6 @@ public class ChainSqlConfig extends ChainDataConfig {
      * 脚本字段
      */
     private String scriptField = "script";
-
-    /**
-     * 熔断计数器过期时间
-     */
-    private String guardExpireField = "guard_expire";
-
-    /**
-     * 熔断计数器阈值，默认100
-     */
-    private String guardThresholdField = "guard_threshold";
 
     /**
      * 字段转换器
@@ -271,21 +261,5 @@ public class ChainSqlConfig extends ChainDataConfig {
 
     public void setListenerInterval(Long listenerInterval) {
         this.listenerInterval = listenerInterval;
-    }
-
-    public String getGuardExpireField() {
-        return guardExpireField;
-    }
-
-    public void setGuardExpireField(String guardExpireField) {
-        this.guardExpireField = guardExpireField;
-    }
-
-    public String getGuardThresholdField() {
-        return guardThresholdField;
-    }
-
-    public void setGuardThresholdField(String guardThresholdField) {
-        this.guardThresholdField = guardThresholdField;
     }
 }

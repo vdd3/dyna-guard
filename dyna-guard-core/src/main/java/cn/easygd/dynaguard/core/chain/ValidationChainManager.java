@@ -1,7 +1,6 @@
 package cn.easygd.dynaguard.core.chain;
 
 import cn.easygd.dynaguard.core.engine.Validator;
-import cn.easygd.dynaguard.core.engine.qle.GuardScriptExecutor;
 import cn.easygd.dynaguard.core.holder.ChainConfigHolder;
 import cn.easygd.dynaguard.core.holder.ChainFilePathParserHolder;
 import cn.easygd.dynaguard.core.listener.ValidationChainListener;
@@ -11,8 +10,8 @@ import cn.easygd.dynaguard.domain.config.ValidationChainConfig;
 import cn.easygd.dynaguard.domain.exception.ValidationChainListenerException;
 import cn.easygd.dynaguard.domain.exception.ValidationChainParserException;
 import com.google.common.collect.Maps;
-import org.apache.commons.collections.MapUtils;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +24,6 @@ import java.util.stream.Collectors;
  * 验证链管理
  *
  * @author VD
- * @date 2025/7/29 21:28
  */
 public class ValidationChainManager {
 
@@ -70,17 +68,38 @@ public class ValidationChainManager {
     private final Map<String, ValidationChainListener> LISTENERS = Maps.newConcurrentMap();
 
     /**
-     * 加载验证链
+     * 初始化
      */
-    public void loadChain() {
+    public void init() {
+        if (Objects.isNull(config)) {
+            throw new IllegalArgumentException("validationChainConfig is null , please set config");
+        }
+
         // 初始化配置
         ChainConfigHolder.init(config);
+
+        // 加载规则引擎
+        ServiceLoader<Validator> enginesLoader = ServiceLoader.load(Validator.class);
+        enginesLoader.forEach(engine -> ENGINES.put(engine.getLanguage(), engine));
+        // 加载解析器
+        ServiceLoader<ValidationChainParser> parserLoader = ServiceLoader.load(ValidationChainParser.class);
+        parserLoader.forEach(parser -> PARSERS.put(parser.type().getType(), parser));
+        // 路径解析器
+        ServiceLoader<ChainFilePathParser> pathParserLoader = ServiceLoader.load(ChainFilePathParser.class);
+        pathParserLoader.forEach(parser -> PATH_PARSERS.put(parser.getParserName(), parser));
+        // 监听器
+        ServiceLoader<ValidationChainListener> listenerLoader = ServiceLoader.load(ValidationChainListener.class);
+        listenerLoader.forEach(listener -> LISTENERS.put(listener.type().getType(), listener));
+
         // 初始化文件路径解析器
         ChainFilePathParser filePathParser = PATH_PARSERS.get(config.getPathParserName());
         ChainFilePathParserHolder.init(filePathParser);
-        // 初始化qle执行器
-        GuardScriptExecutor.init();
+    }
 
+    /**
+     * 加载验证链
+     */
+    public void loadChain() {
         // 根据配置获取对应解析器
         config.getParserList().forEach(parserType -> {
             ValidationChainParser parser = PARSERS.get(parserType);
@@ -269,17 +288,5 @@ public class ValidationChainManager {
     }
 
     private ValidationChainManager() {
-        // 加载规则引擎
-        ServiceLoader<Validator> enginesLoader = ServiceLoader.load(Validator.class);
-        enginesLoader.forEach(engine -> ENGINES.put(engine.getLanguage(), engine));
-        // 加载解析器
-        ServiceLoader<ValidationChainParser> parserLoader = ServiceLoader.load(ValidationChainParser.class);
-        parserLoader.forEach(parser -> PARSERS.put(parser.type().getType(), parser));
-        // 路径解析器
-        ServiceLoader<ChainFilePathParser> pathParserLoader = ServiceLoader.load(ChainFilePathParser.class);
-        pathParserLoader.forEach(parser -> PATH_PARSERS.put(parser.getParserName(), parser));
-        // 监听器
-        ServiceLoader<ValidationChainListener> listenerLoader = ServiceLoader.load(ValidationChainListener.class);
-        listenerLoader.forEach(listener -> LISTENERS.put(listener.type().getType(), listener));
     }
 }

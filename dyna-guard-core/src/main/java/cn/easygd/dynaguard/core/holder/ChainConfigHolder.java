@@ -10,7 +10,6 @@ import java.util.Map;
  * 流程配置全局持有器
  *
  * @author VD
- * @date 2025/8/7 17:15
  */
 public class ChainConfigHolder {
 

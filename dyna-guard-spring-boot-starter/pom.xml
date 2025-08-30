@@ -5,8 +5,9 @@
     <parent>
         <artifactId>dyna-guard</artifactId>
         <groupId>cn.easygd</groupId>
-        <version>0.0.4</version>
+        <version>${all.version}</version>
     </parent>
+
     <modelVersion>4.0.0</modelVersion>
 
     <name>dyna-guard-spring-boot-starter</name>
@@ -35,10 +36,6 @@
             <artifactId>slf4j-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-expression</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-autoconfigure</artifactId>
         </dependency>
@@ -51,16 +48,12 @@
             <artifactId>spring-aop</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-beans</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
+            <artifactId>commons-collections4</artifactId>
         </dependency>
     </dependencies>
 

@@ -7,8 +7,8 @@
     <groupId>cn.easygd</groupId>
     <artifactId>dyna-guard</artifactId>
     <packaging>pom</packaging>
-    <version>0.0.4</version>
-    <name>Dyna-Guard</name>
+    <version>${all.version}</version>
+    <name>dyna-guard</name>
     <description>A dynamic validation framework supporting multiple script engines</description>
     <url>https://github.com/vdd3/dyna-guard</url>
 
@@ -16,6 +16,7 @@
         <license>
             <name>The Apache Software License, Version 2.0</name>
             <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
         </license>
     </licenses>
 
@@ -53,27 +54,29 @@
     <modules>
         <module>dyna-guard-core</module>
         <module>dyna-guard-spring-boot-starter</module>
+        <module>dyna-guard-engine</module>
     </modules>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
-        <dg.core.version>0.0.4</dg.core.version>
-        <dg.spring.version>0.0.4</dg.spring.version>
-        <qle.version>3.3.4</qle.version>
+        <all.version>0.0.5-beta</all.version>
+        <qle.version>4.0.2</qle.version>
         <slf4j.version>1.7.32</slf4j.version>
         <jackson.version>2.16.0</jackson.version>
         <groovy.version>3.0.17</groovy.version>
-        <js.version>20.3.6</js.version>
+        <js.version>22.3.2</js.version>
         <dom4j.version>2.1.4</dom4j.version>
         <common-io.version>2.14.0</common-io.version>
         <springboot.version>2.6.8</springboot.version>
-        <springaop.version>5.3.20</springaop.version>
         <spring.version>5.3.20</spring.version>
         <guava.version>32.0.0-jre</guava.version>
+        <aviator.version>5.4.2</aviator.version>
         <lang3.version>3.12.0</lang3.version>
         <collections4.version>4.4</collections4.version>
         <commons.beanutils.version>1.11.0</commons.beanutils.version>
+        <common.language.version>2.6</common.language.version>
+        <cglib.version>3.3.0</cglib.version>
     </properties>
 
     <dependencyManagement>
@@ -81,24 +84,14 @@
             <dependency>
                 <groupId>cn.easygd</groupId>
                 <artifactId>dyna-guard-core</artifactId>
-                <version>${dg.core.version}</version>
+                <version>${all.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.alibaba</groupId>
-                <artifactId>QLExpress</artifactId>
+                <artifactId>qlexpress4</artifactId>
                 <version>${qle.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>commons-beanutils</groupId>
-                        <artifactId>commons-beanutils</artifactId>
-                    </exclusion>
-                </exclusions>
             </dependency>
-            <dependency>
-                <groupId>commons-beanutils</groupId>
-                <artifactId>commons-beanutils</artifactId>
-                <version>${commons.beanutils.version}</version>
-            </dependency>
+
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
@@ -121,16 +114,14 @@
                 <version>${js.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.graalvm.js</groupId>
-                <artifactId>js-scriptengine</artifactId>
-                <version>${js.version}</version>
+                <groupId>com.googlecode.aviator</groupId>
+                <artifactId>aviator</artifactId>
+                <version>${aviator.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-expression</artifactId>
-                <version>${spring.version}</version>
-                <scope>provided</scope>
-                <optional>true</optional>
+                <groupId>cglib</groupId>
+                <artifactId>cglib</artifactId>
+                <version>${cglib.version}</version>
             </dependency>
 
             <dependency>
@@ -177,12 +168,7 @@
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-aop</artifactId>
-                <version>${springaop.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-beans</artifactId>
-                <version>${springaop.version}</version>
+                <version>${spring.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -229,30 +215,32 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <!-- 关键：指定编码为 UTF-8 -->
                     <encoding>UTF-8</encoding>
                     <docencoding>UTF-8</docencoding>
                     <charset>UTF-8</charset>
-                    <!-- 忽略所有Javadoc语法检查（包括未知标签、格式错误等） -->
-                    <doclint>none</doclint>
                 </configuration>
             </plugin>
             <!-- GPG签名插件 -->
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-gpg-plugin</artifactId>
                 <version>1.6</version>
-                <configuration>
-                    <executable>E:\Gpg4win\..\GnuPG\bin\gpg.exe</executable>
-                </configuration>
                 <executions>
                     <execution>
-                        <id>sign-artifacts</id>
                         <phase>verify</phase>
                         <goals>
                             <goal>sign</goal>
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <executable>E:\Gpg4win\..\GnuPG\bin\gpg.exe</executable>
+                    <!-- Prevent gpg from using pinentry programs -->
+                    <!--                    <gpgArguments>-->
+                    <!--                        <arg>&#45;&#45;pinentry-mode</arg>-->
+                    <!--                        <arg>loopback</arg>-->
+                    <!--                    </gpgArguments>-->
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.sonatype.central</groupId>

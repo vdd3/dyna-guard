@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
  * 流程sql工具类
  *
  * @author VD
- * @date 2025/8/7 18:19
+ *
  */
 public class ChainSqlUtils {
 
@@ -32,14 +32,14 @@ public class ChainSqlUtils {
     private static final String PAGE_SQL = "select %s from %s where %s = 0 order by id limit %s,%s";
 
     /**
-     * 获取分页更新sql
+     * 获取更新sql
      */
     private static final String SELECT_UPDATE_SQL = "select %s from %s where %s >= %s";
 
     /**
      * 获取流程列表sql
      */
-    private static final String SELECT_BY_CHAIN_ID_SQL = "select %s from %s where %s in (%s)";
+    private static final String SELECT_BY_CHAIN_ID_SQL = "select %s from %s where %s in (%s) and %s = 0";
 
     /**
      * 生成流程数量sql
@@ -95,7 +95,8 @@ public class ChainSqlUtils {
                 String.join(",", getColumnList(sqlConfig)),
                 sqlConfig.getTableName(),
                 formatColumn(sqlConfig.getChainIdField()),
-                chainIdList.stream().map(source -> String.format("'%s'", source)).collect(Collectors.joining(",")));
+                chainIdList.stream().map(source -> String.format("'%s'", source)).collect(Collectors.joining(",")),
+                sqlConfig.getDeletedField());
     }
 
     /**
@@ -114,9 +115,7 @@ public class ChainSqlUtils {
                 formatColumn(sqlConfig.getUpdateTimeField()),
                 formatColumn(sqlConfig.getOrderField()),
                 formatColumn(sqlConfig.getMessageField()),
-                formatColumn(sqlConfig.getFastFailField()),
-                formatColumn(sqlConfig.getGuardExpireField()),
-                formatColumn(sqlConfig.getGuardThresholdField()));
+                formatColumn(sqlConfig.getFastFailField()));
     }
 
     /**
@@ -169,13 +168,11 @@ public class ChainSqlUtils {
                 chainSqlDO.setOrder(resultSet.getInt(chainSqlConfig.getOrderField()));
                 chainSqlDO.setMessage(resultSet.getString(chainSqlConfig.getMessageField()));
                 chainSqlDO.setFastFail(resultSet.getBoolean(chainSqlConfig.getFastFailField()));
-                chainSqlDO.setGuardExpire(resultSet.getLong(chainSqlConfig.getGuardExpireField()));
-                chainSqlDO.setGuardThreshold(resultSet.getLong(chainSqlConfig.getGuardThresholdField()));
                 doList.add(chainSqlDO);
             }
             return doList;
         } catch (Exception e) {
-            throw new ChainSqlExecuteException("count select sql execute converter result exception", e);
+            throw new ChainSqlExecuteException("select sql execute converter result exception", e);
         }
     }
 

@@ -10,7 +10,6 @@ import java.util.function.Function;
  * 流程数据配置
  *
  * @author VD
- * @date 2025/8/6 21:17
  */
 public abstract class ChainDataConfig {
 

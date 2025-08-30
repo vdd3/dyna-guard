@@ -1,5 +1,6 @@
 package cn.easygd.dynaguard.domain.config;
 
+import cn.easygd.dynaguard.domain.enums.GuardMode;
 import cn.easygd.dynaguard.domain.enums.ParserTypeEnum;
 import com.google.common.collect.Lists;
 
@@ -10,7 +11,6 @@ import java.util.Map;
  * 验证链配置
  *
  * @author VD
- * @date 2025/8/3 11:43
  */
 public class ValidationChainConfig {
 
@@ -33,6 +33,26 @@ public class ValidationChainConfig {
      * 验证链文件路径
      */
     private List<String> chainFilePath = Lists.newArrayList("classpath:chain/*Chain.xml", "classpath:chain/*Chain.json");
+
+    /**
+     * 是否开启安全策略
+     */
+    private Boolean enableSecurityStrategy = false;
+
+    /**
+     * 是否开启业务追踪
+     */
+    private Boolean enableBizTrace = false;
+
+    /**
+     * 是否开启熔断
+     */
+    private Boolean enableGuard = false;
+
+    /**
+     * 熔断模式
+     */
+    private GuardMode guardMode = GuardMode.COUNTER;
 
     /**
      * sql验证链数据map
@@ -103,5 +123,37 @@ public class ValidationChainConfig {
 
     public void setJsonChainDataMap(Map<String, String> jsonChainDataMap) {
         this.jsonChainDataMap = jsonChainDataMap;
+    }
+
+    public Boolean getEnableSecurityStrategy() {
+        return enableSecurityStrategy;
+    }
+
+    public void setEnableSecurityStrategy(Boolean enableSecurityStrategy) {
+        this.enableSecurityStrategy = enableSecurityStrategy;
+    }
+
+    public Boolean getEnableBizTrace() {
+        return enableBizTrace;
+    }
+
+    public void setEnableBizTrace(Boolean enableBizTrace) {
+        this.enableBizTrace = enableBizTrace;
+    }
+
+    public Boolean getEnableGuard() {
+        return enableGuard;
+    }
+
+    public void setEnableGuard(Boolean enableGuard) {
+        this.enableGuard = enableGuard;
+    }
+
+    public GuardMode getGuardMode() {
+        return guardMode;
+    }
+
+    public void setGuardMode(GuardMode guardMode) {
+        this.guardMode = guardMode;
     }
 }
