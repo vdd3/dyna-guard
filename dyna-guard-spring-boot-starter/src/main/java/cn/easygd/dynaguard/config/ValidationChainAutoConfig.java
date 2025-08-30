@@ -26,7 +26,7 @@ public class ValidationChainAutoConfig {
      * @param validationChainConfig 验证配置
      * @return ValidationChainManager
      */
-    @Bean
+    @Bean("validationChainManager")
     public ValidationChainManager validationChainManager(ValidationChainConfig validationChainConfig) {
         ValidationChainManager manager = ValidationChainManager.getInstance();
         manager.setConfig(validationChainConfig);

@@ -23,7 +23,6 @@ public class ValidationMethodCondition implements Condition {
     @Override
     public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
         Environment environment = context.getEnvironment();
-        // 根据实际配置属性名调整，例如假设配置前缀为 dyna.guard.validation
         String[] beanNames = environment.getProperty("validation.validationMethod", String[].class, new String[0]);
         return beanNames.length > 0;
     }

@@ -7,6 +7,10 @@ import cn.easygd.dynaguard.core.chain.ValidationChainManager;
 import cn.easygd.dynaguard.domain.SpringValidationContext;
 import cn.easygd.dynaguard.domain.context.ChainOptions;
 import cn.easygd.dynaguard.domain.context.ValidationContext;
+import cn.easygd.dynaguard.domain.enums.GuardMode;
+import cn.easygd.dynaguard.domain.guard.CounterThreshold;
+import cn.easygd.dynaguard.domain.guard.InterceptRateThreshold;
+import cn.easygd.dynaguard.utils.JsonUtils;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.apache.commons.lang3.StringUtils;
@@ -79,6 +83,11 @@ public class ValidationMethodInterceptor implements MethodInterceptor {
         if (dynamicGuard.enableGuard()) {
             builder.enableGuard(true)
                     .guardMode(dynamicGuard.guardMode());
+            if (GuardMode.COUNTER == dynamicGuard.guardMode()) {
+                builder.guardThreshold(JsonUtils.parse(dynamicGuard.guardThreshold(), CounterThreshold.class));
+            } else if (GuardMode.RATE == dynamicGuard.guardMode()) {
+                builder.guardThreshold(JsonUtils.parse(dynamicGuard.guardThreshold(), InterceptRateThreshold.class));
+            }
         }
         context.setChainOptions(builder.build());
         chain.execute(context);
