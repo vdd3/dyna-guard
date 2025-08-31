@@ -139,7 +139,7 @@ public class QlExpressScriptValidator extends BaseValidator {
                     .findFirst()
                     .map(expressionTraces::indexOf)
                     .orElse(0);
-            int index = lastIndex + 1;
+            int index = lastIndex == 0 ? lastIndex : lastIndex + 1;
             if (index > expressionTraces.size() - 1) {
                 trace = expressionTraces.get(lastIndex);
             } else {

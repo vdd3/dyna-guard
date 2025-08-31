@@ -63,6 +63,8 @@ public abstract class BaseValidator implements Validator {
             return flag ? ValidationResult.success() : ValidationResult.fail();
         } catch (ResultTypeIllegalException e) {
             throw e;
+        } catch (UnsupportedOperationException e) {
+            return ValidationResult.fail("安全策略已开启，无法对上下文参数进行修改", e);
         } catch (Exception e) {
             log.warn("validate catch exception , script : [{}] , context : [{}]", script, context, e);
             return ValidationResult.fail(e.getMessage(), e);
