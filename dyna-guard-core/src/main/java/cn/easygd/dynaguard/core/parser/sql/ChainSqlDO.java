@@ -28,6 +28,11 @@ public class ChainSqlDO {
     private String chainId;
 
     /**
+     * 节点名称
+     */
+    private String nodeName;
+
+    /**
      * 删除状态
      */
     private Boolean deleted;
@@ -68,6 +73,7 @@ public class ChainSqlDO {
         node.setScript(this.getScript());
         node.setOrder(this.getOrder());
         node.setMessage(this.getMessage());
+        node.setNodeName(this.getNodeName());
         if (Objects.nonNull(this.getFastFail())) {
             node.setFastFail(this.getFastFail());
         }
@@ -144,5 +150,13 @@ public class ChainSqlDO {
 
     public void setFastFail(Boolean fastFail) {
         this.fastFail = fastFail;
+    }
+
+    public String getNodeName() {
+        return nodeName;
+    }
+
+    public void setNodeName(String nodeName) {
+        this.nodeName = nodeName;
     }
 }

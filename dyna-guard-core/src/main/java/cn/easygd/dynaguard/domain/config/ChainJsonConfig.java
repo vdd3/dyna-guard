@@ -18,6 +18,11 @@ public class ChainJsonConfig extends LocalChainDataConfig {
     private String nodeField = "node";
 
     /**
+     * 节点名称字段
+     */
+    private String nodeNameField = "name";
+
+    /**
      * 语言字段
      */
     private String languageField = "language";
@@ -96,5 +101,13 @@ public class ChainJsonConfig extends LocalChainDataConfig {
 
     public void setScriptField(String scriptField) {
         this.scriptField = scriptField;
+    }
+
+    public String getNodeNameField() {
+        return nodeNameField;
+    }
+
+    public void setNodeNameField(String nodeNameField) {
+        this.nodeNameField = nodeNameField;
     }
 }

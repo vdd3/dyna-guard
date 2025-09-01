@@ -108,6 +108,7 @@ public class ChainSqlUtils {
     public static List<String> getColumnList(ChainSqlConfig sqlConfig) {
         return Lists.newArrayList(formatColumn("id"),
                 formatColumn(sqlConfig.getChainIdField()),
+                formatColumn(sqlConfig.getNodeNameField()),
                 formatColumn(sqlConfig.getLanguageField()),
                 formatColumn(sqlConfig.getScriptField()),
                 formatColumn(sqlConfig.getDeletedField()),
@@ -160,6 +161,7 @@ public class ChainSqlUtils {
             while (resultSet.next()) {
                 ChainSqlDO chainSqlDO = new ChainSqlDO();
                 chainSqlDO.setChainId(resultSet.getString(chainSqlConfig.getChainIdField()));
+                chainSqlDO.setNodeName(resultSet.getString(chainSqlConfig.getNodeNameField()));
                 chainSqlDO.setLanguage(resultSet.getString(chainSqlConfig.getLanguageField()));
                 chainSqlDO.setScript(resultSet.getString(chainSqlConfig.getScriptField()));
                 chainSqlDO.setDeleted(resultSet.getBoolean(chainSqlConfig.getDeletedField()));

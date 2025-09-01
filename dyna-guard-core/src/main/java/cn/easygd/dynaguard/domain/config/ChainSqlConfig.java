@@ -70,6 +70,11 @@ public class ChainSqlConfig extends ChainDataConfig {
     private String chainIdField = "chain_id";
 
     /**
+     * 节点名称字段
+     */
+    private String nodeNameField = "node_name";
+
+    /**
      * 删除状态字段
      */
     private String deletedField = "deleted";
@@ -261,5 +266,13 @@ public class ChainSqlConfig extends ChainDataConfig {
 
     public void setListenerInterval(Long listenerInterval) {
         this.listenerInterval = listenerInterval;
+    }
+
+    public String getNodeNameField() {
+        return nodeNameField;
+    }
+
+    public void setNodeNameField(String nodeNameField) {
+        this.nodeNameField = nodeNameField;
     }
 }

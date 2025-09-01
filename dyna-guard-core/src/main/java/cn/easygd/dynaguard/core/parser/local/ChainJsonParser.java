@@ -78,6 +78,10 @@ public class ChainJsonParser extends LocalChainFileParser {
                     List<ValidationNode> nodeList = Lists.newArrayList();
                     jsonNodeElement.get(config.getNodeField()).elements().forEachRemaining(element -> {
                         ValidationNode node = new ValidationNode();
+                        String nodeNameField = config.getNodeNameField();
+                        if (element.has(nodeNameField)) {
+                            node.setNodeName(element.get(nodeNameField).asText());
+                        }
                         node.setScript(element.get(config.getScriptField()).asText());
                         node.setLanguage(element.get(config.getLanguageField()).asText());
                         node.setOrder(element.get(config.getOrderField()).asInt());

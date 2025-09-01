@@ -98,6 +98,9 @@ public class ValidationChain {
 
         // 业务统计器
         BizValidationStatistics statistics = globalBeanContext.getBizValidationStatistics();
+        if (enableBizTrace) {
+            statistics.incrementCount(this.chainId);
+        }
 
         ValidationGuard guard = getGuard(globalBeanContext, guardMode, guardThreshold);
         if (enableGuard) {
@@ -110,7 +113,6 @@ public class ValidationChain {
             if (guard.isExceedThreshold(this.chainId, guardThreshold)) {
                 log.info("guard exceed threshold : [{}]", this.chainId);
                 if (enableBizTrace) {
-                    statistics.incrementCount(this.chainId);
                     statistics.incrementGuardCount(this.chainId);
                 }
 
@@ -146,8 +148,6 @@ public class ValidationChain {
                     statistics.incrementPassedCount(this.chainId);
                 }
             } finally {
-                // 增加调用次数
-                statistics.incrementCount(this.chainId);
                 // 清理跟踪信息
                 BizTracker.clear();
             }
@@ -195,7 +195,6 @@ public class ValidationChain {
                         return ValidationResult.fail(node.getMessage(), nodeName);
                     }
                 } else {
-                    // 否则打印日志
                     log.info("validation fail but skip");
                 }
             }

@@ -72,6 +72,7 @@ public class ChainXmlParser extends LocalChainFileParser {
                     chain.setGroup(type().getType());
                     chain.setNodes(nodeElementList.stream().map(nodeElement -> {
                         ValidationNode node = new ValidationNode();
+                        node.setNodeName(nodeElement.attributeValue(config.getNodeNameField()));
                         node.setLanguage(nodeElement.attributeValue(config.getLanguageField()));
                         node.setScript(nodeElement.getText());
                         node.setOrder(Integer.parseInt(nodeElement.attributeValue(config.getOrderField())));

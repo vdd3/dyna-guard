@@ -18,6 +18,11 @@ public class ChainXmlConfig extends LocalChainDataConfig {
     private String chainIdField = "id";
 
     /**
+     * 节点名称字段
+     */
+    private String nodeNameField = "name";
+
+    /**
      * 节点字段
      */
     private String nodeField = "node";
@@ -96,5 +101,13 @@ public class ChainXmlConfig extends LocalChainDataConfig {
 
     public void setFastFailField(String fastFailField) {
         this.fastFailField = fastFailField;
+    }
+
+    public String getNodeNameField() {
+        return nodeNameField;
+    }
+
+    public void setNodeNameField(String nodeNameField) {
+        this.nodeNameField = nodeNameField;
     }
 }
