@@ -1,6 +1,5 @@
 package cn.easygd.dynaguard.core.engine;
 
-import cn.easygd.dynaguard.domain.ValidationResult;
 import cn.easygd.dynaguard.domain.context.ValidationContext;
 
 import java.util.Map;
@@ -18,8 +17,9 @@ public interface Validator {
      * @param script  执行脚本
      * @param context 上下文
      * @return 验证结果
+     * @throws Exception 验证异常
      */
-    ValidationResult execute(String script, ValidationContext context);
+    Object execute(String script, ValidationContext context) throws Exception;
 
     /**
      * 构建参数

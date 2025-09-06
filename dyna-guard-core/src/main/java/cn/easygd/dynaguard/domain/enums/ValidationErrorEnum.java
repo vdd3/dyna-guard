@@ -22,6 +22,10 @@ public enum ValidationErrorEnum {
      */
     GUARD_MISS("10003", "未获取到熔断器", "熔断"),
 
+    /**
+     * 安全错误
+     */
+    SECURITY_ERROR("10004", "安全策略已开启，无法对上下文参数进行修改", "安全策略"),
     ;
 
     /**

@@ -3,9 +3,7 @@ package cn.easygd.dynaguard.core.engine;
 import cn.easygd.dynaguard.core.bean.GlobalBeanContext;
 import cn.easygd.dynaguard.core.holder.ChainConfigHolder;
 import cn.easygd.dynaguard.core.trace.BizTracker;
-import cn.easygd.dynaguard.domain.ValidationResult;
 import cn.easygd.dynaguard.domain.context.ValidationContext;
-import cn.easygd.dynaguard.domain.exception.ResultTypeIllegalException;
 import cn.easygd.dynaguard.utils.SecurityParamUtils;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -42,46 +40,24 @@ public abstract class BaseValidator implements Validator {
      * @param script  执行脚本
      * @param context 上下文
      * @return 验证结果
+     * @throws Exception 验证异常
      */
     @Override
-    public ValidationResult execute(String script, ValidationContext context) {
-        try {
-            // 对具体脚本返回值重置
-            BizTracker.reset();
-            // 设置具体的语言
-            BizTracker.language(getLanguage());
+    public Object execute(String script, ValidationContext context) throws Exception {
+        // 对具体脚本返回值重置
+        BizTracker.reset();
+        // 设置具体的语言
+        BizTracker.language(getLanguage());
 
-            // 获取缓存中是否存在脚本
-            Object scriptCache = SCRIPT_CACHE.get(script);
-            if (Objects.isNull(scriptCache)) {
-                // 编译脚本
-                scriptCache = compile(script);
-                SCRIPT_CACHE.put(script, scriptCache);
-            }
-
-            Boolean flag = validate(scriptCache, context);
-            return flag ? ValidationResult.success() : ValidationResult.fail();
-        } catch (ResultTypeIllegalException e) {
-            throw e;
-        } catch (UnsupportedOperationException e) {
-            return ValidationResult.fail("安全策略已开启，无法对上下文参数进行修改", e);
-        } catch (Exception e) {
-            log.warn("validate catch exception , script : [{}] , context : [{}]", script, context, e);
-            return ValidationResult.fail(e.getMessage(), e);
+        // 获取缓存中是否存在脚本
+        Object scriptCache = SCRIPT_CACHE.get(script);
+        if (Objects.isNull(scriptCache)) {
+            // 编译脚本
+            scriptCache = compile(script);
+            SCRIPT_CACHE.put(script, scriptCache);
         }
-    }
 
-    /**
-     * 检查结果类型
-     *
-     * @param result 结果
-     * @return 是否成功
-     */
-    protected Boolean checkResult(Object result) {
-        if (!(result instanceof Boolean)) {
-            throw new ResultTypeIllegalException();
-        }
-        return (Boolean) result;
+        return validate(scriptCache, context);
     }
 
     /**
@@ -145,8 +121,8 @@ public abstract class BaseValidator implements Validator {
      *
      * @param script  执行脚本
      * @param context 上下文
-     * @return 是否成功
+     * @return 验证返回值
      * @throws Exception 执行异常
      */
-    protected abstract Boolean validate(Object script, ValidationContext context) throws Exception;
+    protected abstract Object validate(Object script, ValidationContext context) throws Exception;
 }

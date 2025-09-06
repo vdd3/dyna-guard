@@ -38,6 +38,7 @@ public class SecurityParamUtils {
         if (Objects.isNull(enhancer)) {
             enhancer = new Enhancer();
             enhancer.setSuperclass(param.getClass());
+            ENHANCER_CACHE.put(param.getClass(), enhancer);
         }
         // 使用CGLIB代理具体类,这里只在每次创建代理对象时设置回调
         enhancer.setCallback((MethodInterceptor) (obj, method, args, proxy) -> {
@@ -47,7 +48,6 @@ public class SecurityParamUtils {
             }
             return method.invoke(param, args);
         });
-        ENHANCER_CACHE.put(param.getClass(), enhancer);
         return enhancer;
     }
 
@@ -77,7 +77,6 @@ public class SecurityParamUtils {
         if (Enhancer.isEnhanced(clazz) || Proxy.isProxyClass(clazz)) {
             return false;
         }
-
 
         // 检查是否有可访问的构造函数
         try {

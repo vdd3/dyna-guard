@@ -44,16 +44,13 @@ public class AviatorValidator extends BaseValidator {
      * @return 是否成功
      */
     @Override
-    protected Boolean validate(Object script, ValidationContext context) throws Exception {
+    protected Object validate(Object script, ValidationContext context) throws Exception {
         Expression expression = (Expression) script;
 
         // 参数传递
         Map<String, Object> params = buildParam(context);
 
-        // 执行
-        Object result = expression.execute(params);
-
-        return checkResult(result);
+        return expression.execute(params);
     }
 
     /**
