@@ -1,6 +1,5 @@
 package cn.easygd.dynaguard.config;
 
-import cn.easygd.dynaguard.domain.enums.GuardMode;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import java.util.List;
@@ -43,16 +42,6 @@ public class ValidationProperty {
      * 是否开启业务追踪
      */
     private Boolean enableBizTrace;
-
-    /**
-     * 是否开启熔断
-     */
-    private Boolean enableGuard;
-
-    /**
-     * 熔断模式
-     */
-    private GuardMode guardMode;
 
     /**
      * sql验证链数据map
@@ -139,21 +128,5 @@ public class ValidationProperty {
 
     public void setValidationMethod(List<String> validationMethod) {
         this.validationMethod = validationMethod;
-    }
-
-    public Boolean getEnableGuard() {
-        return enableGuard;
-    }
-
-    public void setEnableGuard(Boolean enableGuard) {
-        this.enableGuard = enableGuard;
-    }
-
-    public GuardMode getGuardMode() {
-        return guardMode;
-    }
-
-    public void setGuardMode(GuardMode guardMode) {
-        this.guardMode = guardMode;
     }
 }

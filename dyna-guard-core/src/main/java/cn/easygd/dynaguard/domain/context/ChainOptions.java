@@ -1,7 +1,5 @@
 package cn.easygd.dynaguard.domain.context;
 
-import cn.easygd.dynaguard.core.holder.ChainConfigHolder;
-import cn.easygd.dynaguard.domain.config.ValidationChainConfig;
 import cn.easygd.dynaguard.domain.enums.GuardMode;
 import cn.easygd.dynaguard.domain.guard.CounterThreshold;
 import cn.easygd.dynaguard.domain.guard.GuardThreshold;
@@ -63,9 +61,9 @@ public class ChainOptions {
      * Builder
      */
     public static class Builder {
-        private Boolean enableGuard;
-        private GuardMode guardMode;
-        private GuardThreshold guardThreshold;
+        private Boolean enableGuard = false;
+        private GuardMode guardMode = GuardMode.COUNTER;
+        private GuardThreshold guardThreshold = new CounterThreshold();
 
         public Builder enableGuard(Boolean enableGuard) {
             this.enableGuard = enableGuard;
@@ -108,10 +106,7 @@ public class ChainOptions {
         }
 
         public ChainOptions build() {
-            ValidationChainConfig config = ChainConfigHolder.getConfig();
-            enableGuard = Optional.ofNullable(enableGuard).orElse(config.getEnableGuard());
             if (enableGuard) {
-                guardMode = Optional.ofNullable(guardMode).orElse(config.getGuardMode());
                 switch (guardMode) {
                     case COUNTER:
                         // 代表在一个时间区间内，超过阈值则熔断

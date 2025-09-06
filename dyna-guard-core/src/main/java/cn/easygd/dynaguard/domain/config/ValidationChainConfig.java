@@ -1,6 +1,5 @@
 package cn.easygd.dynaguard.domain.config;
 
-import cn.easygd.dynaguard.domain.enums.GuardMode;
 import cn.easygd.dynaguard.domain.enums.ParserTypeEnum;
 import com.google.common.collect.Lists;
 
@@ -43,16 +42,6 @@ public class ValidationChainConfig {
      * 是否开启业务追踪
      */
     private Boolean enableBizTrace = false;
-
-    /**
-     * 是否开启熔断
-     */
-    private Boolean enableGuard = false;
-
-    /**
-     * 熔断模式
-     */
-    private GuardMode guardMode = GuardMode.COUNTER;
 
     /**
      * sql验证链数据map
@@ -139,21 +128,5 @@ public class ValidationChainConfig {
 
     public void setEnableBizTrace(Boolean enableBizTrace) {
         this.enableBizTrace = enableBizTrace;
-    }
-
-    public Boolean getEnableGuard() {
-        return enableGuard;
-    }
-
-    public void setEnableGuard(Boolean enableGuard) {
-        this.enableGuard = enableGuard;
-    }
-
-    public GuardMode getGuardMode() {
-        return guardMode;
-    }
-
-    public void setGuardMode(GuardMode guardMode) {
-        this.guardMode = guardMode;
     }
 }

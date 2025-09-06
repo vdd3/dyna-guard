@@ -32,8 +32,6 @@ public class ValidationChainPropertyAutoConfiguration {
         config.setChainFilePath(Lists.newArrayList(property.getChainFilePath().split(",")));
         config.setEnableSecurityStrategy(property.getEnableSecurityStrategy());
         config.setEnableBizTrace(property.getEnableBizTrace());
-        config.setEnableGuard(property.getEnableGuard());
-        config.setGuardMode(property.getGuardMode());
         config.setSqlChainDataMap(property.getSqlChainDataMap());
         config.setXmlChainDataMap(property.getXmlChainDataMap());
         config.setJsonChainDataMap(property.getJsonChainDataMap());
