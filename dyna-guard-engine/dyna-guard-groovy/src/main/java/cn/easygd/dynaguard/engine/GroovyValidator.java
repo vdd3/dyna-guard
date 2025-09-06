@@ -48,7 +48,7 @@ public class GroovyValidator extends BaseValidator {
      * @return 是否符合规则
      */
     @Override
-    public Boolean validate(Object script, ValidationContext context) {
+    public Object validate(Object script, ValidationContext context) {
         Script finalScript = (Script) script;
 
         // 参数传递
@@ -58,9 +58,8 @@ public class GroovyValidator extends BaseValidator {
 
         // 执行
         finalScript.setBinding(binding);
-        Object result = finalScript.run();
 
-        return checkResult(result);
+        return finalScript.run();
     }
 
     /**

@@ -80,6 +80,7 @@ public class ValidationMethodInterceptor implements MethodInterceptor {
 
         // 5.执行验证链
         ChainOptions.Builder builder = ChainOptions.builder();
+        builder.chainRuleMode(dynamicGuard.chainRuleMode());
         if (dynamicGuard.enableGuard()) {
             builder.enableGuard(true)
                     .guardMode(dynamicGuard.guardMode());

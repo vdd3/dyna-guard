@@ -17,8 +17,10 @@ import cn.easygd.dynaguard.domain.ValidationResult;
 import cn.easygd.dynaguard.domain.config.ValidationChainConfig;
 import cn.easygd.dynaguard.domain.context.ChainOptions;
 import cn.easygd.dynaguard.domain.context.ValidationContext;
+import cn.easygd.dynaguard.domain.enums.ChainRuleMode;
 import cn.easygd.dynaguard.domain.enums.GuardMode;
 import cn.easygd.dynaguard.domain.enums.ValidationErrorEnum;
+import cn.easygd.dynaguard.domain.exception.ResultTypeIllegalException;
 import cn.easygd.dynaguard.domain.exception.ValidationFailedException;
 import cn.easygd.dynaguard.domain.guard.CounterThreshold;
 import cn.easygd.dynaguard.domain.guard.GuardThreshold;
@@ -120,7 +122,7 @@ public class ValidationChain {
                 guard.fallBack(this.chainId, context);
 
                 if (guardThreshold.isFail()) {
-                    return ValidationResult.fail(String.format("%s guard exceed threshold", this.chainId));
+                    return ValidationResult.fail(null, String.format("%s guard exceed threshold", this.chainId));
                 }
             }
         }
@@ -174,7 +176,15 @@ public class ValidationChain {
     private ValidationResult process(ValidationContext context) {
         log.info("validation chain start : [{}=={}] , context : [{}]", group, chainId, context);
 
+        // 获取执行模式
+        ChainOptions chainOptions = context.getChainOptions();
+        ChainRuleMode chainRuleMode = chainOptions.getChainRuleMode();
+
+        Object validatorResult = null;
+        String nodeName = null;
         for (ValidationNode node : this.nodes) {
+            nodeName = StringUtils.defaultIfBlank(node.getNodeName(), node.getLanguage() + "@@" + node.getOrder());
+
             String script = node.getScript();
             // 执行验证
             Validator validator = node.getValidator();
@@ -183,16 +193,23 @@ public class ValidationChain {
                 continue;
             }
 
-            ValidationResult result = validator.execute(script, context);
+            try {
+                validatorResult = validator.execute(script, context);
+            } catch (UnsupportedOperationException e) {
+                throw new ValidationFailedException(ValidationErrorEnum.SECURITY_ERROR, e);
+            } catch (Exception e) {
+                throw new ValidationFailedException(ValidationErrorEnum.SCRIPT_EXECUTE_ERROR, e);
+            }
 
-            if (!result.getSuccess()) {
+            // 根据执行模式进行判断
+            if (ChainRuleMode.VALIDATION == chainRuleMode) {
+                if (!(validatorResult instanceof Boolean)) {
+                    throw new ResultTypeIllegalException();
+                }
+
                 if (node.getFastFail()) {
-                    // 需要判断是否是因为执行异常导致的验证失败
-                    if (result.getException()) {
-                        throw new ValidationFailedException(ValidationErrorEnum.SCRIPT_EXECUTE_ERROR, result.getThrowable());
-                    } else {
-                        String nodeName = StringUtils.defaultIfBlank(node.getNodeName(), node.getLanguage() + "@@" + node.getOrder());
-                        return ValidationResult.fail(node.getMessage(), nodeName);
+                    if (!(Boolean) validatorResult) {
+                        return ValidationResult.fail(validatorResult, node.getMessage(), nodeName);
                     }
                 } else {
                     log.info("validation fail but skip");
@@ -200,7 +217,7 @@ public class ValidationChain {
             }
         }
 
-        return ValidationResult.success();
+        return ValidationResult.success(validatorResult, nodeName);
     }
 
     /**
