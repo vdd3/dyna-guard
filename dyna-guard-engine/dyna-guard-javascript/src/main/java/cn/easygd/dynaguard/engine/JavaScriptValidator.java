@@ -45,7 +45,7 @@ public class JavaScriptValidator extends BaseValidator {
      * @return 是否成功
      */
     @Override
-    protected Boolean validate(Object script, ValidationContext context) throws Exception {
+    protected Object validate(Object script, ValidationContext context) throws Exception {
         CompiledScript compiledScript = (CompiledScript) script;
 
         // 创建脚本上下文
@@ -54,10 +54,7 @@ public class JavaScriptValidator extends BaseValidator {
         params.forEach(bindings::put);
         bindings.putAll(globalBindings);
 
-        // 执行脚本
-        Object result = compiledScript.eval(bindings);
-
-        return checkResult(result);
+        return compiledScript.eval(bindings);
     }
 
     /**

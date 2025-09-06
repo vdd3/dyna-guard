@@ -82,6 +82,6 @@ public class ChainExecutorHelper {
         if (Objects.nonNull(chain)) {
             return chain.executeResult(context);
         }
-        return ValidationResult.success();
+        return ValidationResult.success(null, null);
     }
 }

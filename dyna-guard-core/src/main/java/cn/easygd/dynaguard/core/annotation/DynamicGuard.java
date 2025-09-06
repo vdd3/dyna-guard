@@ -1,5 +1,6 @@
 package cn.easygd.dynaguard.core.annotation;
 
+import cn.easygd.dynaguard.domain.enums.ChainRuleMode;
 import cn.easygd.dynaguard.domain.enums.GuardMode;
 
 import java.lang.annotation.*;
@@ -48,4 +49,11 @@ public @interface DynamicGuard {
      * @return 熔断阈值
      */
     String guardThreshold() default "";
+
+    /**
+     * 链路规则模式
+     *
+     * @return 链路规则模式
+     */
+    ChainRuleMode chainRuleMode() default ChainRuleMode.VALIDATION;
 }

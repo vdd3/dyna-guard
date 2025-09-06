@@ -20,14 +20,9 @@ public class ValidationResult {
     private String message;
 
     /**
-     * 是否异常
+     * 返回内容
      */
-    private Boolean exception = false;
-
-    /**
-     * 异常
-     */
-    private Throwable throwable;
+    private Object data;
 
     /**
      * 业务跟踪信息
@@ -39,23 +34,10 @@ public class ValidationResult {
      */
     private String nodeName;
 
-    private ValidationResult(Boolean success, String message, Boolean exception) {
-        this(success, message, exception, null);
-    }
-
-    private ValidationResult(Boolean success, String message, Boolean exception, Throwable throwable) {
-        this(success, message, exception, throwable, null);
-    }
-
-    private ValidationResult(Boolean success, String message, Boolean exception, Throwable throwable, ReturnInfo returnInfo) {
-        this(success, message, exception, throwable, returnInfo, null);
-    }
-
-    private ValidationResult(Boolean success, String message, Boolean exception, Throwable throwable, ReturnInfo returnInfo, String nodeName) {
+    public ValidationResult(Boolean success, String message, Object data, ReturnInfo returnInfo, String nodeName) {
         this.success = success;
         this.message = message;
-        this.exception = exception;
-        this.throwable = throwable;
+        this.data = data;
         this.returnInfo = returnInfo;
         this.nodeName = nodeName;
     }
@@ -63,50 +45,35 @@ public class ValidationResult {
     /**
      * 成功
      *
+     * @param data     数据
+     * @param nodeName 节点名称
      * @return 验证结果
      */
-    public static ValidationResult success() {
-        return new ValidationResult(true, null, false);
+    public static ValidationResult success(Object data, String nodeName) {
+        return new ValidationResult(true, null, data, null, nodeName);
     }
 
     /**
      * 失败
      *
-     * @return 验证结果
-     */
-    public static ValidationResult fail() {
-        return new ValidationResult(false, null, false);
-    }
-
-    /**
-     * 失败
-     *
-     * @param message   错误信息
-     * @param throwable 异常
-     * @return 验证结果
-     */
-    public static ValidationResult fail(String message, Throwable throwable) {
-        return new ValidationResult(false, message, true, throwable);
-    }
-
-    /**
-     * 失败
-     *
+     * @param data    数据
      * @param message 错误信息
      * @return 验证结果
      */
-    public static ValidationResult fail(String message) {
-        return new ValidationResult(false, message, false, null);
+    public static ValidationResult fail(Object data, String message) {
+        return new ValidationResult(false, message, data, null, null);
     }
 
     /**
      * 失败
      *
-     * @param message 错误信息
+     * @param data     数据
+     * @param message  错误信息
+     * @param nodeName 节点名称
      * @return 验证结果
      */
-    public static ValidationResult fail(String message, String nodeName) {
-        return new ValidationResult(false, message, false, null, null, nodeName);
+    public static ValidationResult fail(Object data, String message, String nodeName) {
+        return new ValidationResult(false, message, data, null, nodeName);
     }
 
     public Boolean getSuccess() {
@@ -115,14 +82,6 @@ public class ValidationResult {
 
     public String getMessage() {
         return message;
-    }
-
-    public Boolean getException() {
-        return exception;
-    }
-
-    public Throwable getThrowable() {
-        return throwable;
     }
 
     public ReturnInfo getReturnInfo() {
@@ -135,5 +94,9 @@ public class ValidationResult {
 
     public String getNodeName() {
         return nodeName;
+    }
+
+    public Object getData() {
+        return data;
     }
 }

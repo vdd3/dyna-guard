@@ -55,7 +55,7 @@ public class QlExpressScriptValidator extends BaseValidator {
      * @return 是否成功
      */
     @Override
-    protected Boolean validate(Object script, ValidationContext context) throws Exception {
+    protected Object validate(Object script, ValidationContext context) throws Exception {
         // 根据配置选择是否开启业务追踪
         ValidationChainConfig config = ChainConfigHolder.getConfig();
         Boolean enableBizTrace = config.getEnableBizTrace();
@@ -74,12 +74,11 @@ public class QlExpressScriptValidator extends BaseValidator {
 
         List<ExpressionTrace> expressionTraces = qlResult.getExpressionTraces();
 
-        Boolean result = checkResult(qlResult.getResult());
-        if (!result && enableBizTrace) {
+        if (enableBizTrace) {
             String condition = buildCondition(expressionTraces);
             BizTracker.recordTriggerCondition(condition);
         }
-        return result;
+        return qlResult.getResult();
     }
 
     /**

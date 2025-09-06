@@ -1,5 +1,6 @@
 package cn.easygd.dynaguard.domain.context;
 
+import cn.easygd.dynaguard.domain.enums.ChainRuleMode;
 import cn.easygd.dynaguard.domain.enums.GuardMode;
 import cn.easygd.dynaguard.domain.guard.CounterThreshold;
 import cn.easygd.dynaguard.domain.guard.GuardThreshold;
@@ -31,6 +32,11 @@ public class ChainOptions {
     private final GuardMode guardMode;
 
     /**
+     * 链路规则模式
+     */
+    private final ChainRuleMode chainRuleMode;
+
+    /**
      * 熔断阈值
      */
     private final GuardThreshold guardThreshold;
@@ -47,14 +53,19 @@ public class ChainOptions {
         return guardThreshold;
     }
 
+    public ChainRuleMode getChainRuleMode() {
+        return chainRuleMode;
+    }
+
     public static ChainOptions.Builder builder() {
         return new ChainOptions.Builder();
     }
 
-    public ChainOptions(Boolean enableGuard, GuardMode guardMode, GuardThreshold guardThreshold) {
+    public ChainOptions(Boolean enableGuard, GuardMode guardMode, GuardThreshold guardThreshold, ChainRuleMode chainRuleMode) {
         this.enableGuard = enableGuard;
         this.guardMode = guardMode;
         this.guardThreshold = guardThreshold;
+        this.chainRuleMode = chainRuleMode;
     }
 
     /**
@@ -63,10 +74,16 @@ public class ChainOptions {
     public static class Builder {
         private Boolean enableGuard = false;
         private GuardMode guardMode = GuardMode.COUNTER;
+        private ChainRuleMode chainRuleMode = ChainRuleMode.VALIDATION;
         private GuardThreshold guardThreshold = new CounterThreshold();
 
         public Builder enableGuard(Boolean enableGuard) {
             this.enableGuard = enableGuard;
+            return this;
+        }
+
+        public Builder chainRuleMode(ChainRuleMode chainRuleMode) {
+            this.chainRuleMode = chainRuleMode;
             return this;
         }
 
@@ -120,7 +137,7 @@ public class ChainOptions {
                         break;
                 }
             }
-            return new ChainOptions(enableGuard, guardMode, guardThreshold);
+            return new ChainOptions(enableGuard, guardMode, guardThreshold, chainRuleMode);
         }
     }
 }
