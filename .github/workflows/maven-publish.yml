@@ -16,7 +16,7 @@ jobs:
           server-id: ossrh
           server-username: 'OSSRH_USERNAME'
           server-password: 'OSSRH_PASSWORD'
-          gpg-passphrase:  'MAVEN_GPG_PASSPHRASE'
+          gpg-passphrase: 'OSSRH_GPG_SECRET_KEY_PASSWORD'
           gpg-private-key: ${{ secrets.OSSRH_GPG_SECRET_KEY }}
       - name: Publish to Maven Central Repo
         run: mvn clean deploy --batch-mode --activate-profiles deploy
