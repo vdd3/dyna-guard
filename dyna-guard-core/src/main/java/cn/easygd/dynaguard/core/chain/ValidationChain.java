@@ -21,6 +21,7 @@ import cn.easygd.dynaguard.domain.enums.ChainRuleMode;
 import cn.easygd.dynaguard.domain.enums.GuardMode;
 import cn.easygd.dynaguard.domain.enums.ValidationErrorEnum;
 import cn.easygd.dynaguard.domain.exception.ResultTypeIllegalException;
+import cn.easygd.dynaguard.domain.exception.ValidationChainEngineException;
 import cn.easygd.dynaguard.domain.exception.ValidationFailedException;
 import cn.easygd.dynaguard.domain.guard.CounterThreshold;
 import cn.easygd.dynaguard.domain.guard.GuardThreshold;
@@ -90,7 +91,10 @@ public class ValidationChain {
         ChainOptions chainOptions = context.getChainOptions();
         Boolean enableGuard = chainOptions.getEnableGuard();
         GuardThreshold guardThreshold = chainOptions.getGuardThreshold();
+        // 熔断模式
         GuardMode guardMode = chainOptions.getGuardMode();
+        // 执行模式
+        ChainRuleMode chainRuleMode = chainOptions.getChainRuleMode();
 
         // 获取配置
         ValidationChainConfig config = ChainConfigHolder.getConfig();
@@ -138,13 +142,18 @@ public class ValidationChain {
                 // 执行
                 result = process(context);
 
-                if (!result.getSuccess()) {
-                    // 获取跟踪信息
-                    ReturnInfo returnInfo = BizTracker.get();
+                // 获取跟踪信息
+                ReturnInfo returnInfo = BizTracker.get();
+                String condition = StringUtils.defaultIfBlank(returnInfo.getTriggerCondition(), "unknown");
+                returnInfo.setTriggerCondition(condition);
+                result.setReturnInfo(returnInfo);
+
+                // 触发次数
+                statistics.incrementConditionCount(this.chainId, result.getNodeName(), condition);
+
+                if (!result.getSuccess() && chainRuleMode == ChainRuleMode.VALIDATION) {
                     // 增加未通过次数
-                    String condition = StringUtils.defaultIfBlank(returnInfo.getTriggerCondition(), "unknown");
                     statistics.incrementValidationCount(this.chainId, result.getNodeName(), condition);
-                    result.setReturnInfo(returnInfo);
                 } else {
                     // 增加通过次数
                     statistics.incrementPassedCount(this.chainId);
@@ -156,7 +165,6 @@ public class ValidationChain {
         } else {
             result = process(context);
         }
-
 
         if (!result.getSuccess()) {
             if (enableGuard && GuardMode.COUNTER == guardMode) {
@@ -195,6 +203,8 @@ public class ValidationChain {
 
             try {
                 validatorResult = validator.execute(script, context);
+            } catch (ValidationChainEngineException | IllegalArgumentException e) {
+                throw e;
             } catch (UnsupportedOperationException e) {
                 throw new ValidationFailedException(ValidationErrorEnum.SECURITY_ERROR, e);
             } catch (Exception e) {
