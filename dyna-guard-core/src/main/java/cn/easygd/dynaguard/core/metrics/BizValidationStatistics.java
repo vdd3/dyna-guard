@@ -33,6 +33,15 @@ public interface BizValidationStatistics {
     void incrementGuardCount(String chainId);
 
     /**
+     * 触发条件次数加1
+     *
+     * @param chainId   链ID
+     * @param nodeName  节点名称
+     * @param condition 拦截条件
+     */
+    void incrementConditionCount(String chainId, String nodeName, String condition);
+
+    /**
      * 拦截次数加1
      *
      * @param chainId   链ID
@@ -64,6 +73,16 @@ public interface BizValidationStatistics {
      * @return 拦截次数
      */
     Long guardCount(String chainId);
+
+    /**
+     * 条件触发次数
+     *
+     * @param chainId   链ID
+     * @param nodeName  节点名称
+     * @param condition 拦截条件
+     * @return 拦截次数
+     */
+    Long conditionCount(String chainId, String nodeName, String condition);
 
     /**
      * 获取拦截次数

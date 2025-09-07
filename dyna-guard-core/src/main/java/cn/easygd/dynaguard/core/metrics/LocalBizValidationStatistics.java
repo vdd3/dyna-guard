@@ -37,6 +37,11 @@ public class LocalBizValidationStatistics extends BaseBizValidationStatistics {
     private static final Map<String, Long> GUARD_COUNT = Maps.newConcurrentMap();
 
     /**
+     * 条件触发次数
+     */
+    private static final Map<String, Map<String, Map<String, Long>>> CONDITION_COUNT = Maps.newConcurrentMap();
+
+    /**
      * 验证次数
      */
     private static final Map<String, Map<String, Map<String, Long>>> VALIDATION_COUNT = Maps.newConcurrentMap();
@@ -69,6 +74,20 @@ public class LocalBizValidationStatistics extends BaseBizValidationStatistics {
     @Override
     public void incrementGuardCount(String chainId) {
         GUARD_COUNT.put(chainId, GUARD_COUNT.getOrDefault(chainId, 0L) + 1);
+    }
+
+    /**
+     * 触发条件次数加1
+     *
+     * @param chainId   链ID
+     * @param nodeName  节点名称
+     * @param condition 拦截条件
+     */
+    @Override
+    public void incrementConditionCount(String chainId, String nodeName, String condition) {
+        CONDITION_COUNT.computeIfAbsent(chainId, k -> Maps.newConcurrentMap())
+                .computeIfAbsent(nodeName, k -> Maps.newConcurrentMap())
+                .compute(condition, (k, v) -> v == null ? 1L : v + 1);
     }
 
     /**
@@ -116,6 +135,21 @@ public class LocalBizValidationStatistics extends BaseBizValidationStatistics {
     @Override
     public Long guardCount(String chainId) {
         return GUARD_COUNT.getOrDefault(chainId, 0L);
+    }
+
+    /**
+     * 条件触发次数
+     *
+     * @param chainId   链ID
+     * @param nodeName  节点名称
+     * @param condition 拦截条件
+     * @return 拦截次数
+     */
+    @Override
+    public Long conditionCount(String chainId, String nodeName, String condition) {
+        return CONDITION_COUNT.getOrDefault(chainId, Maps.newHashMap())
+                .getOrDefault(nodeName, Maps.newHashMap())
+                .getOrDefault(condition, 0L);
     }
 
     /**
