@@ -133,14 +133,14 @@ public class QlExpressScriptValidator extends BaseValidator {
             trace = expressionTraces.get(expressionTraces.size() - 1);
         } else {
             // 获取执行节点的下一个节点
-            int lastIndex = expressionTraces.stream().sorted(Comparator.comparing(ExpressionTrace::getPosition).reversed())
+            Integer lastIndex = expressionTraces.stream().sorted(Comparator.comparing(ExpressionTrace::getPosition).reversed())
                     .filter(ExpressionTrace::isEvaluated)
                     .findFirst()
                     .map(expressionTraces::indexOf)
-                    .orElse(0);
-            int index = lastIndex == 0 ? lastIndex : lastIndex + 1;
+                    .orElse(null);
+            int index = lastIndex == null ? 0 : lastIndex + 1;
             if (index > expressionTraces.size() - 1) {
-                trace = expressionTraces.get(lastIndex);
+                trace = expressionTraces.get(index - 1);
             } else {
                 trace = expressionTraces.get(index);
             }
