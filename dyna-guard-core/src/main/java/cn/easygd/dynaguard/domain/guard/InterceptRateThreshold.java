@@ -111,6 +111,6 @@ public class InterceptRateThreshold implements GuardThreshold, Serializable {
      */
     @Override
     public Boolean isFail() {
-        return null;
+        return fail;
     }
 }
