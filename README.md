@@ -1,6 +1,7 @@
 # dyna-guard - 动态校验框架
 
-dyna-guard 是一个基于 Java 的动态校验框架，支持多种脚本语言和规则引擎。提供了一套灵活的校验链机制，允许开发者通过配置化的方式定义和执行复杂的业务校验逻辑。
+dyna-guard 是一个基于 Java 的动态校验框架，使用配置 + 脚本 / 规则引擎 +
+热更新的方式让企业中的业务校验更加动态，并且还提供了熔断机制对于敏感业务能够有效的提供保护，以及对于校验触发条件的统计，让业务能够更好的感知业务卡点，为以后的业务发展方向能够分析以及制定方案。
 
 ## 技术文档 [点击进入](https://www.yuque.com/yuqueyonghuqdqyqs/kswtr7)
 
@@ -45,7 +46,7 @@ dyna-guard 采用模块化设计，核心模块与 Spring Boot Starter 分离，
 <dependency>
     <groupId>cn.easygd</groupId>
     <artifactId>dyna-guard-spring-boot-starter</artifactId>
-    <version>0.0.5-beta</version>
+    <version>0.0.6-beta</version>
 </dependency>
 ```
 
@@ -58,7 +59,7 @@ dyna-guard 采用模块化设计，核心模块与 Spring Boot Starter 分离，
 <dependency>
     <groupId>cn.easygd</groupId>
     <artifactId>dyna-guard-groovy</artifactId>
-    <version>0.0.5-beta</version>
+    <version>0.0.6-beta</version>
 </dependency>
 ```
 
@@ -67,7 +68,7 @@ dyna-guard 采用模块化设计，核心模块与 Spring Boot Starter 分离，
 <dependency>
     <groupId>cn.easygd</groupId>
     <artifactId>dyna-guard-aviator</artifactId>
-    <version>0.0.5-beta</version>
+    <version>0.0.6-beta</version>
 </dependency>
 ```
 
@@ -76,7 +77,7 @@ dyna-guard 采用模块化设计，核心模块与 Spring Boot Starter 分离，
 <dependency>
     <groupId>cn.easygd</groupId>
     <artifactId>dyna-guard-javascript</artifactId>
-    <version>0.0.5-beta</version>
+    <version>0.0.6-beta</version>
 </dependency>
 ```
 
@@ -100,11 +101,6 @@ validation:
 
   # 链路追踪
   enableBizTrace: false
-
-  # 熔断配置
-  enableGuard: false
-  # 熔断模式
-  guardMode: COUNTER
 
   # 流程文件的路径，支持多个路径，用英文逗号分隔
   chainFilePath: classpath:chain/*Chain.xml,classpath:chain/*Chain.json
@@ -132,6 +128,7 @@ validation:
     fastFailField: fast_fail
     languageField: language
     scriptField: script
+    nodeNameField: node_name
 
   # XML存放chain的配置（用于xml标签映射及监听器）
   xmlChainDataMap:
@@ -149,6 +146,7 @@ validation:
     orderField: order
     messageField: message
     fastFailField: fastFail
+    nodeNameField: name
 
   # JSON存放chain的配置（用于json字段映射及监听器）
   jsonChainDataMap:
@@ -166,6 +164,7 @@ validation:
     messageField: message
     fastFailField: fastFail
     scriptField: script
+    nodeNameField: name
 ```
 
 在 `application.properties` 中添加配置：
@@ -183,10 +182,6 @@ validation.chainFilePath=classpath:chain/*Chain.xml,classpath:chain/*Chain.json
 validation.enableSecurityStrategy=false
 # 链路追踪
 validation.enableBizTrace=false
-# 熔断配置
-validation.enableGuard=false
-# 熔断模式
-validation.guardMode=COUNTER
 # sql数据存放chain的配置，主要用于连接数据以及对字段的映射，默认开启监听
 validation.sqlChain-data-map[enableListener]=true
 validation.sqlChainDataMap[url]=jdbc:mysql://localhost:3306/db
@@ -209,6 +204,7 @@ validation.sqlChainDataMap[messageField]=message
 validation.sqlChainDataMap[fastFailField]=fast_fail
 validation.sqlChainDataMap[languageField]=language
 validation.sqlChainDataMap[scriptField]=script
+validation.sqlChainDataMap[nodeNameField]=node_name
 # xml存放chain的配置，主要用于xml标签的映射，以及监听器
 validation.xmlChainDataMap[enableListener]=true
 # 监听文件的路径
@@ -224,6 +220,7 @@ validation.xmlChainDataMap[languageField]=language
 validation.xmlChainDataMap[orderField]=order
 validation.xmlChainDataMap[messageField]=message
 validation.xmlChainDataMap[fastFailField]=fastFail
+validation.xmlChainDataMap[nodeNameField]=name
 # json存放chain的配置，主要用于json字段的映射，以及监听器
 validation.jsonChainDataMap[enableListener]=true
 # 监听文件的路径
@@ -239,6 +236,7 @@ validation.jsonChainDataMap[orderField]=order
 validation.jsonChainDataMap[messageField]=message
 validation.jsonChainDataMap[fastFailField]=fastFail
 validation.jsonChainDataMap[scriptField]=script
+validation.jsonChainDataMap[nodeNameField]=name
 ```
 
 ### 使用示例
@@ -361,6 +359,7 @@ public class BizService {
     "node": [
       {
         "order": 1,
+        "name": "参数校验节点",
         "script": "",
         "language": "",
         "message": "参数不能为空",
@@ -378,7 +377,7 @@ public class BizService {
 <validation>
     <chain id="user.update">
         <!-- 角色数据权限校验 -->
-        <node language="Groovy" order="1" message="校验失败">
+        <node language="Groovy" order="1" message="校验失败" name="参数校验节点">
             <![CDATA[
             def workNo = param.workNo;
             def roleService = beanContext.getBean("roleService");
@@ -396,7 +395,7 @@ public class BizService {
             ]]>
         </node>
         <!-- 再使用qle对修改的内容进行校验 -->
-        <node language="QLExpress4" order="2" message="校验失败">
+        <node language="QLExpress4" order="2" message="校验失败" name="参数校验节点">
             <![CDATA[
             if (NotNull(param.name) == false) {return false;}
             if (NotNull(param.age) == false) {return false;}
