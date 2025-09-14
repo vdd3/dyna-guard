@@ -95,6 +95,7 @@ public class ValidationChain {
         GuardMode guardMode = chainOptions.getGuardMode();
         // 执行模式
         ChainRuleMode chainRuleMode = chainOptions.getChainRuleMode();
+        boolean isValidationMode = chainRuleMode == ChainRuleMode.VALIDATION;
 
         // 获取配置
         ValidationChainConfig config = ChainConfigHolder.getConfig();
@@ -109,7 +110,7 @@ public class ValidationChain {
         }
 
         ValidationGuard guard = getGuard(globalBeanContext, guardMode, guardThreshold);
-        if (enableGuard) {
+        if (enableGuard && isValidationMode) {
             // 如果这个地方熔断器还是空，那么一定有问题
             if (Objects.isNull(guard)) {
                 throw new ValidationFailedException(ValidationErrorEnum.GUARD_MISS);
@@ -151,7 +152,7 @@ public class ValidationChain {
                 // 触发次数
                 statistics.incrementConditionCount(this.chainId, result.getNodeName(), condition);
 
-                if (!result.getSuccess() && chainRuleMode == ChainRuleMode.VALIDATION) {
+                if (!result.getSuccess() && isValidationMode) {
                     // 增加未通过次数
                     statistics.incrementValidationCount(this.chainId, result.getNodeName(), condition);
                 } else {
@@ -166,7 +167,7 @@ public class ValidationChain {
             result = process(context);
         }
 
-        if (!result.getSuccess()) {
+        if (!result.getSuccess() && isValidationMode) {
             if (enableGuard && GuardMode.COUNTER == guardMode) {
                 ((CounterGuard) guard).increment(this.chainId);
             }
