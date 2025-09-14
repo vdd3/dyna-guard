@@ -31,9 +31,9 @@ public abstract class QlEBaseFunction implements QLFunctionalVarargs {
      * @param size         参数个数
      * @param expectedSize 期望参数个数
      */
-    protected static void checkParamsSize(Integer size, Integer expectedSize) {
+    protected void checkParamsSize(Integer size, Integer expectedSize) {
         if (size < expectedSize) {
-            throw new IllegalArgumentException("参数个数错误，期望" + expectedSize + "个，实际" + size + "个");
+            throw new IllegalArgumentException("参数个数错误，期望最少" + expectedSize + "个，实际" + size + "个");
         }
     }
 

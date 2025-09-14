@@ -9,6 +9,8 @@ import cn.easygd.dynaguard.engine.function.trace.TraceFunction;
 import com.googlecode.aviator.AviatorEvaluator;
 import com.googlecode.aviator.AviatorEvaluatorInstance;
 import com.googlecode.aviator.Expression;
+import com.googlecode.aviator.runtime.function.AbstractVariadicFunction;
+import com.googlecode.aviator.runtime.type.AviatorObject;
 
 import java.util.Map;
 
@@ -78,5 +80,30 @@ public class AviatorValidator extends BaseValidator {
         ENGINE.addFunction(new InGreaterThanRangeFunction());
         ENGINE.addFunction(new InLessThanRangeFunction());
         ENGINE.addFunction(new TraceFunction());
+        new AbstractVariadicFunction() {
+
+            /**
+             * Call with variadic arguments.The subclass must implement this method.
+             *
+             * @param env
+             * @param args
+             * @return
+             * @since 3.0.0
+             */
+            @Override
+            public AviatorObject variadicCall(Map<String, Object> env, AviatorObject... args) {
+                return null;
+            }
+
+            /**
+             * Get the function name
+             *
+             * @return
+             */
+            @Override
+            public String getName() {
+                return null;
+            }
+        };
     }
 }
