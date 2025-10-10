@@ -700,5 +700,6 @@ Welcome to submit Issues and Pull Requests to improve dyna-guard.
 
 ## Contact
 
+<img src="doc/dingtalk.png" width="350">
 <img src="doc/wechat.png" width="350">
 <img src="doc/yangpeng.png" width="350">

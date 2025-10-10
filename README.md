@@ -685,5 +685,6 @@ public class CustomInterceptRateGuard implements InterceptRateGuard {
 
 ## 联系方式
 
+<img src="doc/dingtalk.png" width="350">
 <img src="doc/wechat.png" width="350">
 <img src="doc/yangpeng.png" width="350">
