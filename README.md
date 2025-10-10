@@ -3,7 +3,7 @@
 dyna-guard 是一个基于 Java 的动态校验框架，使用配置 + 脚本 / 规则引擎 +
 热更新的方式让企业中的业务校验更加动态，并且还提供了熔断机制对于敏感业务能够有效的提供保护，以及对于校验触发条件的统计，让业务能够更好的感知业务卡点，为以后的业务发展方向能够分析以及制定方案。
 
-## 技术文档 [点击进入](https://www.yuque.com/yuqueyonghuqdqyqs/kswtr7)
+## 技术文档 [点击进入](https://www.yuque.com/vd_developer/dyna-guard)
 
 ## 示例项目 [点击进入](https://github.com/vdd3/dyna-guard-example)
 

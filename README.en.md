@@ -4,7 +4,7 @@ dyna-guard is a Java-based dynamic validation framework that supports multiple s
 provides a flexible validation chain mechanism, allowing developers to define and execute complex business validation
 logic through configuration.
 
-## Technical Documentation [Click to Enter](https://www.yuque.com/yuqueyonghuqdqyqs/kswtr7)
+## Technical Documentation [Click to Enter](https://www.yuque.com/vd_developer/dyna-guard)
 
 ## Example Project [Click to Enter](https://github.com/vdd3/dyna-guard-example)
 
