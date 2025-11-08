@@ -9,6 +9,7 @@ import cn.easygd.dynaguard.domain.context.ChainOptions;
 import cn.easygd.dynaguard.domain.context.ValidationContext;
 import cn.easygd.dynaguard.domain.enums.GuardMode;
 import cn.easygd.dynaguard.domain.guard.CounterThreshold;
+import cn.easygd.dynaguard.domain.guard.GuardThreshold;
 import cn.easygd.dynaguard.domain.guard.InterceptRateThreshold;
 import cn.easygd.dynaguard.utils.JsonUtils;
 import org.aopalliance.intercept.MethodInterceptor;
@@ -84,14 +85,14 @@ public class ValidationMethodInterceptor implements MethodInterceptor {
         if (dynamicGuard.enableGuard()) {
             builder.enableGuard(true)
                     .guardMode(dynamicGuard.guardMode());
-            String guardThreshold = dynamicGuard.guardThreshold();
+            String guardThresholdJson = dynamicGuard.guardThreshold();
+            GuardThreshold guardThreshold;
             if (GuardMode.COUNTER == dynamicGuard.guardMode()) {
-                CounterThreshold counterThreshold = StringUtils.isNotBlank(guardThreshold) ? JsonUtils.parse(guardThreshold, CounterThreshold.class) : new CounterThreshold();
-                builder.guardThreshold(counterThreshold);
-            } else if (GuardMode.RATE == dynamicGuard.guardMode()) {
-                InterceptRateThreshold interceptRateThreshold = StringUtils.isNotBlank(guardThreshold) ? JsonUtils.parse(guardThreshold, InterceptRateThreshold.class) : new InterceptRateThreshold();
-                builder.guardThreshold(interceptRateThreshold);
+                guardThreshold = StringUtils.isNotBlank(guardThresholdJson) ? JsonUtils.parse(guardThresholdJson, CounterThreshold.class) : new CounterThreshold();
+            } else {
+                guardThreshold = StringUtils.isNotBlank(guardThresholdJson) ? JsonUtils.parse(guardThresholdJson, InterceptRateThreshold.class) : new InterceptRateThreshold();
             }
+            builder.guardThreshold(guardThreshold);
         }
         context.setChainOptions(builder.build());
         chain.execute(context);

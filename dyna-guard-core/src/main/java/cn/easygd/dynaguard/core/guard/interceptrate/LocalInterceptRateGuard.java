@@ -6,6 +6,8 @@ import cn.easygd.dynaguard.domain.exception.GuardException;
 import cn.easygd.dynaguard.domain.guard.GuardThreshold;
 import cn.easygd.dynaguard.domain.guard.InterceptRateThreshold;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -16,6 +18,11 @@ import java.util.List;
  * @author VD
  */
 public class LocalInterceptRateGuard implements InterceptRateGuard {
+
+    /**
+     * 日志
+     */
+    private static final Logger log = LoggerFactory.getLogger(LocalInterceptRateGuard.class);
 
     /**
      * 统计器
@@ -41,6 +48,10 @@ public class LocalInterceptRateGuard implements InterceptRateGuard {
      */
     @Override
     public Boolean isExceedThreshold(String chainId, GuardThreshold guardThreshold) {
+        if (!(guardThreshold instanceof InterceptRateThreshold)) {
+            log.error("guardThreshold is not InterceptRateThreshold");
+            return false;
+        }
         InterceptRateThreshold interceptRateThreshold = (InterceptRateThreshold) guardThreshold;
         // 获取对应的拦截率
         String nodeName = interceptRateThreshold.getNodeName();
