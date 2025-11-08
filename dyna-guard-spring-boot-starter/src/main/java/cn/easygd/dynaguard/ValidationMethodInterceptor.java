@@ -85,12 +85,12 @@ public class ValidationMethodInterceptor implements MethodInterceptor {
             builder.enableGuard(true)
                     .guardMode(dynamicGuard.guardMode());
             String guardThreshold = dynamicGuard.guardThreshold();
-            if (StringUtils.isNotBlank(guardThreshold)) {
-                if (GuardMode.COUNTER == dynamicGuard.guardMode()) {
-                    builder.guardThreshold(JsonUtils.parse(guardThreshold, CounterThreshold.class));
-                } else if (GuardMode.RATE == dynamicGuard.guardMode()) {
-                    builder.guardThreshold(JsonUtils.parse(guardThreshold, InterceptRateThreshold.class));
-                }
+            if (GuardMode.COUNTER == dynamicGuard.guardMode()) {
+                CounterThreshold counterThreshold = StringUtils.isNotBlank(guardThreshold) ? JsonUtils.parse(guardThreshold, CounterThreshold.class) : new CounterThreshold();
+                builder.guardThreshold(counterThreshold);
+            } else if (GuardMode.RATE == dynamicGuard.guardMode()) {
+                InterceptRateThreshold interceptRateThreshold = StringUtils.isNotBlank(guardThreshold) ? JsonUtils.parse(guardThreshold, InterceptRateThreshold.class) : new InterceptRateThreshold();
+                builder.guardThreshold(interceptRateThreshold);
             }
         }
         context.setChainOptions(builder.build());
