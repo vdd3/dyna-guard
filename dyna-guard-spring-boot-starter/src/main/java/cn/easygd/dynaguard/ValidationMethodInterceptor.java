@@ -45,7 +45,7 @@ public class ValidationMethodInterceptor implements MethodInterceptor {
      *
      * @param invocation 方法调用
      * @return 方法执行结果
-     * @throws Throwable 抛出
+     * @throws Throwable 异常
      */
     @Nullable
     @Override
